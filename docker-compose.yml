@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    container_name: for_dogs_server
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/server/dumps:/dumps
+      - ./docker/server/logs:/logs
+    environment:
+      GRADLE_OPTS: "-Xmx1g"
+      TZ: Asia/Seoul
+
+  mysql:
+    container_name: for_dogs_server_mysql_db
+    image: mysql:8.0.23
+    platform: linux/amd64
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql/db:/var/lib/mysql
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+      - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_DATABASE: mysql_db
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+      TZ: Asia/Seoul
