@@ -74,5 +74,12 @@ public class JoinDto {
 
         @Schema(description = "생성된 회원명")
         private String userName;
+
+        public static Response toResponse(UserEntity userEntity) {
+            return Response.builder()
+                    .userId(userEntity.getUserId().getValue())
+                    .userName(userEntity.getName().getValue())
+                    .build();
+        }
     }
 }

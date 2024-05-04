@@ -18,16 +18,11 @@ public class UserService {
     @Transactional
     public JoinDto.Response joinUser(JoinDto.Request request) {
         UserEntity requestUserEntity = request.toEntity();
-
         if (userRepository.existsByUserId(requestUserEntity.getUserId())) {
             throw UserErrorCode.DUPLICATE_USER_ID.toException();
         }
-
         UserEntity saveUserEntity = userRepository.save(requestUserEntity);
 
-        return JoinDto.Response.builder()
-                .userId(saveUserEntity.getUserId().getValue())
-                .userName(saveUserEntity.getName().getValue())
-                .build();
+        return JoinDto.Response.toResponse(saveUserEntity);
     }
 }
