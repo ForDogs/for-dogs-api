@@ -1,0 +1,38 @@
+package com.fordogs.core.presentation;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fordogs.core.util.HttpServletUtil;
+import com.fordogs.core.util.TimeUtil;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+
+@Getter
+@Builder
+public class SuccessResponse<T> {
+
+    @Schema(example = "true", defaultValue = "true")
+    private boolean ok;
+
+    @Schema(example = "/{url}")
+    private String path;
+
+    @Schema(example = "2024-05-02T00:11:24Z")
+    private String timeStamp;
+
+    @Schema
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private T result;
+
+    public static <T> SuccessResponse<T> of(T result) {
+        return SuccessResponse.<T>builder()
+                .ok(true)
+                .path(HttpServletUtil.getUrlAndQueryString())
+                .timeStamp(TimeUtil.toString(ZonedDateTime.now(ZoneOffset.UTC)))
+                .result(result)
+                .build();
+    }
+}
