@@ -3,10 +3,6 @@ package com.fordogs.user.presentation.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.enums.Role;
-import com.fordogs.core.domian.vo.user.Email;
-import com.fordogs.core.domian.vo.user.Id;
-import com.fordogs.core.domian.vo.user.Name;
-import com.fordogs.core.domian.vo.user.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -43,21 +39,13 @@ public class JoinDto {
         private Role role;
 
         public UserEntity toEntity() {
-            return UserEntity.builder()
-                    .userId(Id.builder()
-                            .value(this.userId)
-                            .build())
-                    .name(Name.builder()
-                            .value(this.userName)
-                            .build())
-                    .email(Email.builder()
-                            .id(this.emailId)
-                            .domain(this.emailDomain)
-                            .build())
-                    .password(Password.builder()
-                            .value(this.password)
-                            .build())
-                    .role(UserEntity.getRoleOrDefault(this.role))
+            return UserEntity.JoinBuilder()
+                    .userIdentifier(this.userId)
+                    .name(this.userName)
+                    .emailId(this.emailId)
+                    .emailDomain(this.emailDomain)
+                    .password(this.password)
+                    .role(this.role)
                     .build();
         }
     }
@@ -77,7 +65,7 @@ public class JoinDto {
 
         public static Response toResponse(UserEntity userEntity) {
             return Response.builder()
-                    .userId(userEntity.getUserId().getValue())
+                    .userId(userEntity.getUserIdentifier().getValue())
                     .userName(userEntity.getName().getValue())
                     .build();
         }

@@ -1,12 +1,14 @@
 package com.fordogs.core.domian.entity;
 
 import com.fordogs.core.domian.enums.Role;
-import com.fordogs.core.domian.vo.user.*;
-import com.fordogs.core.domian.vo.user.Id;
+import com.fordogs.core.domian.vo.Id;
+import com.fordogs.core.domian.vo.*;
+import com.fordogs.core.util.PasswordUtil;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name = "user")
@@ -14,9 +16,9 @@ public class UserEntity extends BaseEntity {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "value", column = @Column(name = "userId"))
+            @AttributeOverride(name = "value", column = @Column(name = "userIdentifier"))
     })
-    private Id userId;
+    private Id userIdentifier;
 
     @Embedded
     @AttributeOverrides({
@@ -38,16 +40,16 @@ public class UserEntity extends BaseEntity {
 
     private boolean isDeleted = false;
 
-    @Builder
-    public UserEntity(Id userId, Name name, Email email, Password password, Role role) {
-        this.userId = userId;
-        this.name = name;
-        this.email = email;
-        this.password = EncryptedPassword.encodePassword(password);
-        this.role = role;
+    @Builder(builderMethodName = "JoinBuilder")
+    public UserEntity(String userIdentifier, String name, String emailId, String emailDomain, String password, Role role) {
+        this.userIdentifier = Id.builder().value(userIdentifier).build();
+        this.name = Name.builder().value(name).build();
+        this.email = Email.builder().id(emailId).domain(emailDomain).build();
+        this.password = EncryptedPassword.builder().value(PasswordUtil.encode(password)).build();
+        this.role = getRoleOrDefault(role);
     }
 
-    public static Role getRoleOrDefault(Role role) {
+    public Role getRoleOrDefault(Role role) {
         return role != null ? role : Role.BUYER;
     }
 }

@@ -16,8 +16,8 @@ public class StringValidator {
         return value.length() >= standard;
     }
 
-    public static boolean validateBase64Encoding(String value) {
-        return Pattern.matches("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$", value);
+    public static boolean validateBCryptEncoding(String value) {
+        return Pattern.matches("^\\$2[ayb]\\$\\d\\d\\$.*", value);
     }
 
     public static boolean validateEnglishNumber(String value) {
@@ -34,5 +34,9 @@ public class StringValidator {
 
     public static boolean validateKoreanEnglishNumber(String value) {
         return Pattern.matches("^[a-zA-Zㄱ-ㅎ가-힣0-9]+$", value);
+    }
+
+    public static boolean validateJWTToken(String value) {
+        return Pattern.matches("^[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*$", value);
     }
 }

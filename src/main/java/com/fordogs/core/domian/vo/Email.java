@@ -1,4 +1,4 @@
-package com.fordogs.core.domian.vo.user;
+package com.fordogs.core.domian.vo;
 
 import com.fordogs.core.util.StringValidator;
 import jakarta.persistence.Column;
