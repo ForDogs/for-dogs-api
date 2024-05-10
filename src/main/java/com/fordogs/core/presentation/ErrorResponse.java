@@ -39,6 +39,18 @@ public class ErrorResponse {
                 .build();
     }
 
+    public static ErrorResponse of(Exception exception, String message) {
+        return ErrorResponse.builder()
+                .ok(false)
+                .path(HttpServletUtil.getUrlAndQueryString())
+                .timeStamp(TimeUtil.toString(ZonedDateTime.now(ZoneOffset.UTC)))
+                .error(Error.builder()
+                        .message(message)
+                        .stack(convertStackTraceToStringArray(exception, 10))
+                        .build())
+                .build();
+    }
+
     private static String[] convertStackTraceToStringArray(Throwable throwable, int depth) {
         StackTraceElement[] stackTrace = throwable.getStackTrace();
         int length = Math.min(stackTrace.length, depth);
