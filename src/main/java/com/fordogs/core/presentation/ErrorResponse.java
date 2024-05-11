@@ -1,6 +1,7 @@
 package com.fordogs.core.presentation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fordogs.core.exception.error.BaseErrorCode;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -47,6 +48,18 @@ public class ErrorResponse {
                 .error(Error.builder()
                         .message(message)
                         .stack(convertStackTraceToStringArray(exception, 10))
+                        .build())
+                .build();
+    }
+
+    public static ErrorResponse of(String path, BaseErrorCode baseErrorCod) {
+        return ErrorResponse.builder()
+                .ok(false)
+                .path(path)
+                .timeStamp(TimeUtil.toString(ZonedDateTime.now(ZoneOffset.UTC)))
+                .error(Error.builder()
+                        .message(baseErrorCod.getMessage())
+                        .stack(convertStackTraceToStringArray(baseErrorCod.toException(), 10))
                         .build())
                 .build();
     }

@@ -1,13 +1,17 @@
 package com.fordogs.user.presentation;
 
+import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.HeaderUtil;
 import com.fordogs.user.application.RefreshTokenService;
 import com.fordogs.user.application.UserService;
+import com.fordogs.user.error.UserErrorCode;
 import com.fordogs.user.presentation.dto.JoinDto;
 import com.fordogs.user.presentation.dto.LoginDto;
 import com.fordogs.user.presentation.dto.RefreshTokenDto;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +29,7 @@ public class UserController {
     private final RefreshTokenService refreshTokenService;
 
     @Operation(summary = "회원 가입", operationId = "/users/join")
+    @ApiErrorCode(UserErrorCode.class)
     @PostMapping("/join")
     public ResponseEntity<SuccessResponse<JoinDto.Response>> handleJoinUserRequest(@Valid @RequestBody JoinDto.Request request) {
         JoinDto.Response response = userService.joinUser(request);
@@ -33,6 +38,7 @@ public class UserController {
     }
 
     @Operation(summary = "로그인", operationId = "/users/login")
+    @ApiErrorCode(UserErrorCode.class)
     @PostMapping("/login")
     public ResponseEntity<SuccessResponse<LoginDto.Response>> handleLoginRequest(@Valid @RequestBody LoginDto.Request request) {
         LoginDto.Response response = userService.login(request);
@@ -40,9 +46,11 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "액세스 토큰 재발급", operationId = "/users/refresh-token")
+    @Operation(summary = "액세스 토큰 재발급", description = "HTTP cookie에 RefreshToken을 등록해주세요. [EX] REFRESH_TOKEN={VALUE}", operationId = "/users/refresh-token")
+    @ApiErrorCode(UserErrorCode.class)
     @PostMapping("/refresh-token")
-    public ResponseEntity<SuccessResponse<RefreshTokenDto.Response>> handleRefreshAccessTokenRequest(@RequestHeader(name = "Authorization") String authorizationHeader) {
+    public ResponseEntity<SuccessResponse<RefreshTokenDto.Response>> handleRefreshAccessTokenRequest(
+            @Parameter(name = "AccessToken", required = true, in = ParameterIn.HEADER) @RequestHeader(name = "Authorization") String authorizationHeader) {
         RefreshTokenDto.Response response = refreshTokenService.refreshAccessToken(HeaderUtil.extractAccessToken(authorizationHeader));
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
