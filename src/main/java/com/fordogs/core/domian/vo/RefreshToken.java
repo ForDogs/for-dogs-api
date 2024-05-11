@@ -1,6 +1,6 @@
 package com.fordogs.core.domian.vo;
 
-import com.fordogs.core.util.StringValidator;
+import com.fordogs.core.util.validator.StringValidator;
 import com.fordogs.security.exception.JwtException;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;

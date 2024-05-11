@@ -1,4 +1,4 @@
-package com.fordogs.core.util;
+package com.fordogs.core.util.validator;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
