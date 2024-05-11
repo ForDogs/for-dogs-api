@@ -1,12 +1,14 @@
 package com.fordogs.core.exception;
 
 import com.fordogs.core.presentation.ErrorResponse;
+import com.fordogs.security.exception.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -38,12 +40,31 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorResponse> handleJwtException(JwtException e) {
+        ErrorResponse response = ErrorResponse.of(e);
+        logErrorWithException(e);
+
+        return ResponseEntity.status(UNAUTHORIZED)
+                .body(response);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentValidException(MethodArgumentNotValidException e) {
         ErrorResponse response = ErrorResponse.of(e);
         logErrorWithException(e);
 
         return ResponseEntity.status(determineHttpStatus(e))
+                .body(response);
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<ErrorResponse> handleMissingRequestHeaderException(MissingRequestHeaderException e) {
+        String errorMessage = e.getHeaderName() + " 헤더는 필수 요청 헤더입니다.";
+        ErrorResponse response = ErrorResponse.of(e, errorMessage);
+        logErrorWithException(e);
+
+        return ResponseEntity.status(BAD_REQUEST)
                 .body(response);
     }
 

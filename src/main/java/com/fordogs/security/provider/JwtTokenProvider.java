@@ -1,4 +1,4 @@
-package com.fordogs.security.util;
+package com.fordogs.security.provider;
 
 import com.fordogs.configuraion.properties.TokenProperties;
 import com.fordogs.core.domian.entity.UserEntity;
@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -108,6 +109,42 @@ public class JwtTokenProvider {
         UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    public boolean compareSubjects(String accessToken, String refreshToken) {
+        String accessTokenSubject = extractSubject(accessToken);
+        String refreshTokenSubject = extractSubject(refreshToken);
+        return Objects.equals(accessTokenSubject, refreshTokenSubject);
+    }
+
+    private String extractSubject(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.getSubject();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims().getSubject();
+        }
+    }
+
+    public boolean isTokenExpired(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            Date expiration = claims.getExpiration();
+
+            return expiration != null && expiration.before(new Date());
+        } catch (ExpiredJwtException | IllegalArgumentException e) {
+            return true;
+        }
     }
 
     public boolean validateToken(String authToken) {

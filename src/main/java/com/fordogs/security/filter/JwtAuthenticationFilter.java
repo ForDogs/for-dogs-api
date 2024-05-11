@@ -1,7 +1,8 @@
 package com.fordogs.security.filter;
 
+import com.fordogs.core.util.HeaderUtil;
 import com.fordogs.security.exception.JwtException;
-import com.fordogs.security.util.JwtTokenProvider;
+import com.fordogs.security.provider.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,14 +17,11 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    public static final String TOKEN_HEADER = "Authorization";
-    public static final String TOKEN_PREFIX = "Bearer ";
-
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = resolveAccessToken(request);
+        String accessToken = HeaderUtil.extractAccessToken(request);
         if (accessToken != null) {
             try {
                 if (jwtTokenProvider.validateToken(accessToken)) {
@@ -36,13 +34,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
-    }
-
-    private String resolveAccessToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(TOKEN_HEADER);
-        if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
-            return bearerToken.substring(TOKEN_PREFIX.length());
-        }
-        return null;
     }
 }

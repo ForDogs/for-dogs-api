@@ -1,5 +1,6 @@
 package com.fordogs.core.util;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -50,6 +51,24 @@ public class HttpServletUtil {
             headerMap.put(headerName, headerValue);
         }
         return headerMap;
+    }
+
+    public static Optional<String> getCookie(String cookieName) {
+        HttpServletRequest request = getHttpServletRequest();
+        if (request == null || cookieName == null) {
+            return Optional.empty();
+        }
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(cookieName)) {
+                    return Optional.ofNullable(cookie.getValue());
+                }
+            }
+        }
+
+        return Optional.empty();
     }
 
     private static HttpServletRequest getHttpServletRequest() {

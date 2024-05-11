@@ -5,7 +5,7 @@ import com.fordogs.security.handler.CustomAccessDeniedHandler;
 import com.fordogs.security.handler.CustomAuthenticationEntryPoint;
 import com.fordogs.security.filter.JwtAuthenticationFilter;
 import com.fordogs.security.provider.CustomUserDetailsServiceProvider;
-import com.fordogs.security.util.JwtTokenProvider;
+import com.fordogs.security.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
