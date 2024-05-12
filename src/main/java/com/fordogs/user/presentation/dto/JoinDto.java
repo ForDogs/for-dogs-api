@@ -39,7 +39,7 @@ public class JoinDto {
         private Role role;
 
         public UserEntity toEntity() {
-            return UserEntity.JoinBuilder()
+            return UserEntity.builder()
                     .userIdentifier(this.userId)
                     .name(this.userName)
                     .emailId(this.emailId)

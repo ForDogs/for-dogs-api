@@ -40,17 +40,13 @@ public class UserEntity extends BaseEntity {
 
     private boolean isDeleted = false;
 
-    @Builder(builderMethodName = "JoinBuilder")
+    @Builder
     public UserEntity(String userIdentifier, String name, String emailId, String emailDomain, String password, Role role) {
         this.userIdentifier = Id.builder().value(userIdentifier).build();
         this.name = Name.builder().value(name).build();
         this.email = Email.builder().id(emailId).domain(emailDomain).build();
         this.password = EncryptedPassword.builder().value(PasswordUtil.encode(password)).build();
-        this.role = getRoleOrDefault(role);
-    }
-
-    public Role getRoleOrDefault(Role role) {
-        return role != null ? role : Role.BUYER;
+        this.role = role != null ? role : Role.BUYER;
     }
 
     public void disableAccount() {

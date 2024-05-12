@@ -21,10 +21,14 @@ public class RefreshTokenEntity extends BaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserEntity user;
 
-    public static RefreshTokenEntity createRefreshTokenEntity(UserEntity user, RefreshToken token) {
+    public static RefreshTokenEntity create(UserEntity user, RefreshToken refreshToken) {
+        if (user == null || refreshToken == null) {
+            throw new IllegalArgumentException("user 및 refreshToken은 null이 될 수 없습니다.");
+        }
+
         return RefreshTokenEntity.builder()
                 .user(user)
-                .token(token)
+                .token(refreshToken)
                 .build();
     }
 }

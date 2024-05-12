@@ -26,7 +26,7 @@ public class RefreshTokenService {
     @Transactional
     public RefreshToken createRefreshToken(UserEntity userEntity) {
         RefreshToken refreshToken = jwtTokenProvider.generateRefreshToken(userEntity);
-        refreshTokenRepository.save(RefreshTokenEntity.createRefreshTokenEntity(userEntity, refreshToken));
+        refreshTokenRepository.save(RefreshTokenEntity.create(userEntity, refreshToken));
 
         return refreshToken;
     }
