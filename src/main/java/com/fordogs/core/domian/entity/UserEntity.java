@@ -52,4 +52,8 @@ public class UserEntity extends BaseEntity {
     public Role getRoleOrDefault(Role role) {
         return role != null ? role : Role.BUYER;
     }
+
+    public void disableAccount() {
+        this.isDeleted = true;
+    }
 }

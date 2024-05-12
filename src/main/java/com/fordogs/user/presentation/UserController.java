@@ -31,7 +31,8 @@ public class UserController {
     @Operation(summary = "회원 가입", operationId = "/users/join")
     @ApiErrorCode(UserErrorCode.class)
     @PostMapping("/join")
-    public ResponseEntity<SuccessResponse<JoinDto.Response>> handleJoinUserRequest(@Valid @RequestBody JoinDto.Request request) {
+    public ResponseEntity<SuccessResponse<JoinDto.Response>> handleJoinUserRequest(
+            @Valid @RequestBody JoinDto.Request request) {
         JoinDto.Response response = userService.joinUser(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
@@ -40,7 +41,8 @@ public class UserController {
     @Operation(summary = "로그인", operationId = "/users/login")
     @ApiErrorCode(UserErrorCode.class)
     @PostMapping("/login")
-    public ResponseEntity<SuccessResponse<LoginDto.Response>> handleLoginRequest(@Valid @RequestBody LoginDto.Request request) {
+    public ResponseEntity<SuccessResponse<LoginDto.Response>> handleLoginRequest(
+            @Valid @RequestBody LoginDto.Request request) {
         LoginDto.Response response = userService.login(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
@@ -54,5 +56,15 @@ public class UserController {
         RefreshTokenDto.Response response = refreshTokenService.refreshAccessToken(HeaderUtil.extractAccessToken(authorizationHeader));
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "회원 탈퇴", operationId = "/users/{userId}/deactivation")
+    @ApiErrorCode(UserErrorCode.class)
+    @DeleteMapping("/{userId}/deactivation")
+    public ResponseEntity<SuccessResponse<Object>> handleDeactivateUserRequest(
+            @Parameter(name = "회원 ID", required = true, example = "hong1234", in = ParameterIn.PATH) @PathVariable String userId) {
+        userService.deactivateUser(userId);
+
+        return new ResponseEntity<>(SuccessResponse.of(null), HttpStatus.NO_CONTENT);
     }
 }

@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: for-dogs-api
+    name: for-dogs
   jpa:
     hibernate:
       ddl-auto: none

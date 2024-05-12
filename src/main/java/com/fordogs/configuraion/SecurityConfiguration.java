@@ -1,9 +1,9 @@
 package com.fordogs.configuraion;
 
 import com.fordogs.core.util.PasswordUtil;
+import com.fordogs.security.filter.JwtAuthenticationFilter;
 import com.fordogs.security.handler.CustomAccessDeniedHandler;
 import com.fordogs.security.handler.CustomAuthenticationEntryPoint;
-import com.fordogs.security.filter.JwtAuthenticationFilter;
 import com.fordogs.security.provider.CustomUserDetailsServiceProvider;
 import com.fordogs.security.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +38,7 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(authorizeRequest -> authorizeRequest
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/docs").permitAll()
+                .requestMatchers("/users/{userId}/deactivation").denyAll()
                 .requestMatchers("/users/**").permitAll()
                 .anyRequest().authenticated()
         );

@@ -134,7 +134,7 @@ public class SwaggerConfiguration {
         if (operation.getParameters() != null) {
             for (Parameter parameter : operation.getParameters()) {
                 if (parameter.getIn().equals(ParameterIn.PATH.toString())) {
-                    String pathVariable = parameter.getExample().toString();
+                    String pathVariable = parameter.getExample() != null ? parameter.getExample().toString() : "";
                     urlPath = urlPath.replace("{" + parameter.getName() + "}", pathVariable);
                 }
                 if (parameter.getIn().equals(ParameterIn.QUERY.toString())) {

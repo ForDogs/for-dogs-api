@@ -40,7 +40,7 @@ public class UserService {
     @Transactional
     public LoginDto.Response login(LoginDto.Request request) {
         UserEntity userEntity = userRepository.findByUserIdentifier(Id.builder().value(request.getUserId()).build())
-                .orElseThrow(UserErrorCode.LOGIN_ID_FAILED::toException);
+                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
         if (!(PasswordUtil.matches(request.getPassword(), userEntity.getPassword().getValue()))) {
             throw UserErrorCode.LOGIN_PASSWORD_FAILED.toException();
         }
@@ -54,5 +54,15 @@ public class UserService {
         AccessToken accessToken = jwtTokenProvider.generateAccessToken(userEntity);
 
         return LoginDto.Response.toResponse(userEntity, refreshToken, accessToken);
+    }
+
+    @Transactional
+    public void deactivateUser(String userIdentifier) {
+        UserEntity userEntity = userRepository.findByUserIdentifier(Id.builder().value(userIdentifier).build())
+                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
+        if (userEntity.isDeleted()) {
+            throw UserErrorCode.ALREADY_DISABLED.toException();
+        }
+        userEntity.disableAccount();
     }
 }
