@@ -26,10 +26,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        Object jwtException = request.getAttribute("JwtException");
-        if (jwtException instanceof JwtException) {
-            ErrorResponse errorResponse = ErrorResponse.of((JwtException) jwtException);
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        Object exception = request.getAttribute("JwtException");
+        if (exception instanceof JwtException jwtException) {
+            ErrorResponse errorResponse = ErrorResponse.of(jwtException);
+            response.setStatus(jwtException.getHttpStatus().value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.getOutputStream().write(new ObjectMapper().writeValueAsBytes(errorResponse));

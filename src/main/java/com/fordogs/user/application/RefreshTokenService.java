@@ -4,9 +4,9 @@ import com.fordogs.core.domian.entity.RefreshTokenEntity;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.RefreshToken;
+import com.fordogs.security.exception.error.JwtErrorCode;
 import com.fordogs.core.infrastructure.RefreshTokenRepository;
 import com.fordogs.core.util.HttpServletUtil;
-import com.fordogs.security.exception.JwtException;
 import com.fordogs.security.provider.JwtTokenProvider;
 import com.fordogs.user.presentation.dto.RefreshTokenDto;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RefreshTokenService {
+
+    private static final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
@@ -32,17 +34,17 @@ public class RefreshTokenService {
     @Transactional
     public RefreshTokenDto.Response refreshAccessToken(String accessToken) {
         if (!jwtTokenProvider.isTokenExpired(accessToken)) {
-            throw new JwtException("AccessToken 유효기간이 남아있습니다.");
+            throw JwtErrorCode.TOKEN_VALIDITY_REMAINING.toException();
         }
-        String refreshToken = HttpServletUtil.getCookie("REFRESH_TOKEN")
-                .orElseThrow(() -> new JwtException("요청된 쿠키에 'REFRESH_TOKEN' 이름의 쿠키 값이 존재하지 않습니다."));
+        String refreshToken = HttpServletUtil.getCookie(REFRESH_TOKEN_COOKIE_NAME)
+                .orElseThrow(JwtErrorCode.MISSING_REFRESH_TOKEN::toException);
         if (!jwtTokenProvider.compareSubjects(accessToken, refreshToken)) {
-            throw new JwtException("AccessToken과 RefreshToken의 토큰 발급자가 일치하지 않습니다.");
+            throw JwtErrorCode.TOKEN_ISSUER_MISMATCH.toException();
         }
         RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByToken(RefreshToken.builder().value(refreshToken).build())
-                .orElseThrow(() -> new JwtException("쿠키에 저장되어 있는 RefreshToken 값은 유효하지 않은 값입니다."));
+                .orElseThrow(JwtErrorCode.INVALID_REFRESH_TOKEN::toException);
         if (jwtTokenProvider.isTokenExpired(refreshTokenEntity.getToken().getValue())) {
-            throw new JwtException("RefreshToken 유효기간이 만료되었습니다. 다시 로그인해주세요.");
+            throw JwtErrorCode.EXPIRED_REFRESH_TOKEN.toException();
         }
         String refreshedAccessToken = jwtTokenProvider.generateAccessToken(refreshTokenEntity.getUser()).getValue();
 

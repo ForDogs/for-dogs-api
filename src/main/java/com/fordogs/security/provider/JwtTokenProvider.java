@@ -4,7 +4,7 @@ import com.fordogs.configuraion.properties.TokenProperties;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.RefreshToken;
-import com.fordogs.security.exception.JwtException;
+import com.fordogs.security.exception.error.JwtErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
@@ -51,7 +51,7 @@ public class JwtTokenProvider {
 
     private String encodeBase64SecretKey() {
         if (tokenProperties.getSecretKey() == null) {
-            throw new JwtException("토큰 발행을 위한 SecretKey 값이 존재하지 않습니다.");
+            throw JwtErrorCode.NO_SECRET_KEY.toException();
         }
 
         return Encoders.BASE64.encode(tokenProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
@@ -68,7 +68,7 @@ public class JwtTokenProvider {
         final String role = user.getRole().name();
 
         if (userIdentifier == null) {
-            throw new JwtException("AccessToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
+            throw JwtErrorCode.NO_USER_DATA_FOR_ACCESS_TOKEN.toException();
         }
         Date now = new Date();
         String jwt = Jwts.builder()
@@ -86,7 +86,7 @@ public class JwtTokenProvider {
         final String userIdentifier = user.getUserIdentifier().getValue();
 
         if (userIdentifier == null) {
-            throw new JwtException("RefreshToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
+            throw JwtErrorCode.NO_USER_DATA_FOR_REFRESH_TOKEN.toException();
         }
         Date now = new Date();
         String jwt = Jwts.builder()
@@ -152,15 +152,15 @@ public class JwtTokenProvider {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
-            throw new JwtException("토큰의 서명이 올바르지 않습니다.", ex);
+            throw JwtErrorCode.INVALID_SIGNATURE.toException();
         } catch (MalformedJwtException ex) {
-            throw new JwtException("토큰의 구조가 올바르지 않습니다.", ex);
+            throw JwtErrorCode.MALFORMED_TOKEN.toException();
         } catch (ExpiredJwtException ex) {
-            throw new JwtException("토큰의 유효 기한이 만료되었습니다.", ex);
+            throw JwtErrorCode.EXPIRED_TOKEN.toException();
         } catch (UnsupportedJwtException ex) {
-            throw new JwtException("지원되지 않는 토큰 형식입니다.", ex);
+            throw JwtErrorCode.UNSUPPORTED_TOKEN.toException();
         } catch (IllegalArgumentException ex) {
-            throw new JwtException("토큰의 클레임이 비어있거나 유효하지 않습니다.", ex);
+            throw JwtErrorCode.INVALID_CLAIMS.toException();
         }
     }
 }
