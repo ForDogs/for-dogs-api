@@ -38,7 +38,7 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(authorizeRequest -> authorizeRequest
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/docs").permitAll()
-                .requestMatchers("/users/{userId}/deactivation").denyAll()
+                .requestMatchers("/users/{userId}/deactivation").authenticated()
                 .requestMatchers("/users/**").permitAll()
                 .anyRequest().authenticated()
         );

@@ -62,7 +62,7 @@ public class UserController {
     @ApiErrorCode(UserErrorCode.class)
     @DeleteMapping("/{userId}/deactivation")
     public ResponseEntity<SuccessResponse<Object>> handleDeactivateUserRequest(
-            @Parameter(name = "회원 ID", required = true, example = "hong1234", in = ParameterIn.PATH) @PathVariable String userId) {
+            @Parameter(name = "회원 ID", required = true, example = "hong1234", in = ParameterIn.PATH) @PathVariable(name = "userId") String userId) {
         userService.deactivateUser(userId);
 
         return new ResponseEntity<>(SuccessResponse.of(null), HttpStatus.NO_CONTENT);
