@@ -3,6 +3,7 @@ package com.fordogs.user.presentation;
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.HeaderUtil;
+import com.fordogs.security.exception.error.JwtErrorCode;
 import com.fordogs.user.application.RefreshTokenService;
 import com.fordogs.user.application.UserService;
 import com.fordogs.user.error.UserErrorCode;
@@ -48,8 +49,8 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "액세스 토큰 재발급", description = "HTTP cookie에 RefreshToken을 등록해주세요. [EX] REFRESH_TOKEN={VALUE}", operationId = "/users/refresh-token")
-    @ApiErrorCode(UserErrorCode.class)
+    @Operation(summary = "액세스 토큰 재발급", description = "요청 시 HTTP Cookie에 RefreshToken이 존재해야 합니다. [EX] REFRESH_TOKEN={VALUE}", operationId = "/users/refresh-token")
+    @ApiErrorCode({UserErrorCode.class, JwtErrorCode.class})
     @PostMapping("/refresh-token")
     public ResponseEntity<SuccessResponse<RefreshTokenDto.Response>> handleRefreshAccessTokenRequest(
             @Parameter(name = "AccessToken", required = true, in = ParameterIn.HEADER) @RequestHeader(name = "Authorization") String authorizationHeader) {
