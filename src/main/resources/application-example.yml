@@ -1,9 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:mysql://{host:port}/{database}?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true&useSSL=false&characterEncoding=UTF-8
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username:
-    password:
-
-token:
-  secret-key:
