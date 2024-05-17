@@ -12,8 +12,8 @@ public class StringValidator {
         return !value.isBlank();
     }
 
-    public static boolean validateMinimumLength(String value, int standard) {
-        return value.length() >= standard;
+    public static boolean validateLength(String value, int minLength, int maxLength) {
+        return value.length() >= minLength && value.length() <= maxLength;
     }
 
     public static boolean validateBCryptEncoding(String value) {
@@ -38,5 +38,19 @@ public class StringValidator {
 
     public static boolean validateJWTToken(String value) {
         return Pattern.matches("^[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*$", value);
+    }
+
+    public static boolean validateNoConsecutiveChars(String value) {
+        for (int i = 0; i < value.length() - 2; i++) {
+            char first = value.charAt(i);
+            char second = value.charAt(i + 1);
+            char third = value.charAt(i + 2);
+
+            if ((first + 1 == second && second + 1 == third) ||
+                    (first - 1 == second && second - 1 == third)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

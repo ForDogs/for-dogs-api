@@ -3,6 +3,10 @@ package com.fordogs.user.presentation.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.enums.Role;
+import com.fordogs.core.domian.vo.Email;
+import com.fordogs.core.domian.vo.Id;
+import com.fordogs.core.domian.vo.Name;
+import com.fordogs.core.domian.vo.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -40,11 +44,19 @@ public class JoinDto {
 
         public UserEntity toEntity() {
             return UserEntity.builder()
-                    .userIdentifier(this.userId)
-                    .name(this.userName)
-                    .emailId(this.emailId)
-                    .emailDomain(this.emailDomain)
-                    .password(this.password)
+                    .userIdentifier(Id.builder()
+                            .value(this.userId)
+                            .build())
+                    .name(Name.builder()
+                            .value(this.userName)
+                            .build())
+                    .email(Email.builder()
+                            .id(this.emailId)
+                            .domain(this.emailDomain)
+                            .build())
+                    .password(Password.builder()
+                            .value(this.password)
+                            .build())
                     .role(this.role)
                     .build();
         }

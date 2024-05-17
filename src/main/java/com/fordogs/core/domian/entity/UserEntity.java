@@ -41,11 +41,13 @@ public class UserEntity extends BaseEntity {
     private boolean isDeleted = false;
 
     @Builder
-    public UserEntity(String userIdentifier, String name, String emailId, String emailDomain, String password, Role role) {
-        this.userIdentifier = Id.builder().value(userIdentifier).build();
-        this.name = Name.builder().value(name).build();
-        this.email = Email.builder().id(emailId).domain(emailDomain).build();
-        this.password = EncryptedPassword.builder().value(PasswordUtil.encode(password)).build();
+    public UserEntity(Id userIdentifier, Name name, Email email, Password password, Role role) {
+        this.userIdentifier = userIdentifier;
+        this.name = name;
+        this.email = email;
+        this.password = EncryptedPassword.builder()
+                .value(PasswordUtil.encode(password.getValue()))
+                .build();
         this.role = role != null ? role : Role.BUYER;
     }
 
