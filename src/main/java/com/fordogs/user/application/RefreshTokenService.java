@@ -4,7 +4,7 @@ import com.fordogs.core.domian.entity.RefreshTokenEntity;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.RefreshToken;
-import com.fordogs.security.exception.error.JwtErrorCode;
+import com.fordogs.core.exception.error.JwtErrorCode;
 import com.fordogs.core.infrastructure.RefreshTokenRepository;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.security.provider.JwtTokenProvider;

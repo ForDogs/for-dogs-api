@@ -3,7 +3,7 @@ package com.fordogs.security.provider;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.Id;
 import com.fordogs.core.infrastructure.UserRepository;
-import com.fordogs.user.error.UserErrorCode;
+import com.fordogs.core.exception.error.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

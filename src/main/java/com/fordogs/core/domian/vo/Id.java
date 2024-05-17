@@ -1,5 +1,6 @@
 package com.fordogs.core.domian.vo;
 
+import com.fordogs.core.exception.error.UserErrorCode;
 import com.fordogs.core.util.validator.StringValidator;
 import jakarta.persistence.Embeddable;
 import lombok.*;
@@ -18,11 +19,8 @@ public class Id extends WrapperObject<String> {
 
     @Override
     protected void validate(String value) {
-        if (!StringValidator.validateNonBlank(value)) {
-            throw new IllegalArgumentException("ID는 공백일 수 없습니다.");
-        }
-        if (!StringValidator.validateKoreanEnglishNumber(value)) {
-            throw new IllegalArgumentException("ID는 한글, 영문, 숫자만 입력 가능합니다.");
+        if (!StringValidator.validateEnglishNumber(value)) {
+            throw UserErrorCode.INVALID_ID_FORMAT.toException();
         }
     }
 }

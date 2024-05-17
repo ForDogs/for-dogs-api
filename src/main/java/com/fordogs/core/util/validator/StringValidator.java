@@ -8,10 +8,6 @@ import java.util.regex.Pattern;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StringValidator {
 
-    public static boolean validateNonBlank(String value) {
-        return !value.isBlank();
-    }
-
     public static boolean validateLength(String value, int minLength, int maxLength) {
         return value.length() >= minLength && value.length() <= maxLength;
     }
@@ -32,8 +28,8 @@ public class StringValidator {
         return Pattern.matches("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d\\s]).*$", value);
     }
 
-    public static boolean validateKoreanEnglishNumber(String value) {
-        return Pattern.matches("^[a-zA-Zㄱ-ㅎ가-힣0-9]+$", value);
+    public static boolean validateKoreanEnglish(String value) {
+        return Pattern.matches("^[a-zA-Zㄱ-ㅎ가-힣]+$", value);
     }
 
     public static boolean validateJWTToken(String value) {

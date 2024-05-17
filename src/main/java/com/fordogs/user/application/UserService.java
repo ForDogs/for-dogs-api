@@ -7,7 +7,7 @@ import com.fordogs.core.domian.vo.RefreshToken;
 import com.fordogs.core.infrastructure.UserRepository;
 import com.fordogs.core.util.PasswordUtil;
 import com.fordogs.security.provider.JwtTokenProvider;
-import com.fordogs.user.error.UserErrorCode;
+import com.fordogs.core.exception.error.UserErrorCode;
 import com.fordogs.user.presentation.dto.JoinDto;
 import com.fordogs.user.presentation.dto.LoginDto;
 import lombok.RequiredArgsConstructor;

@@ -52,14 +52,14 @@ public class ErrorResponse {
                 .build();
     }
 
-    public static ErrorResponse of(String path, BaseErrorCode baseErrorCod) {
+    public static ErrorResponse of(String path, BaseErrorCode baseErrorCode) {
         return ErrorResponse.builder()
                 .ok(false)
                 .path(path)
                 .timeStamp(TimeUtil.toString(ZonedDateTime.now(ZoneOffset.UTC)))
                 .error(Error.builder()
-                        .message(baseErrorCod.getMessage())
-                        .stack(convertStackTraceToStringArray(baseErrorCod.toException(), 10))
+                        .message(baseErrorCode.getMessage())
+                        .stack(convertStackTraceToStringArray(baseErrorCode.toException(), 10))
                         .build())
                 .build();
     }
@@ -86,6 +86,7 @@ public class ErrorResponse {
 
     @Getter
     @Schema
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Error {
 
         @Schema(example = "존재하지 않는 값입니다.")

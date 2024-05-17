@@ -1,7 +1,6 @@
 package com.fordogs.core.exception;
 
 import com.fordogs.core.presentation.ErrorResponse;
-import com.fordogs.security.exception.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +9,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -51,10 +51,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentValidException(MethodArgumentNotValidException e) {
-        ErrorResponse response = ErrorResponse.of(e);
+        String errorMessage = buildErrorMessage(e);
+        ErrorResponse response = ErrorResponse.of(e, errorMessage);
         logErrorWithException(e);
 
-        return ResponseEntity.status(determineHttpStatus(e))
+        return ResponseEntity.status(e.getStatusCode())
                 .body(response);
     }
 
@@ -88,10 +89,10 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
-    private HttpStatus determineHttpStatus(MethodArgumentNotValidException e) {
-        ResponseStatus responseStatus = e.getClass().getAnnotation(ResponseStatus.class);
-
-        return responseStatus == null ? BAD_REQUEST : responseStatus.value();
+    private String buildErrorMessage(MethodArgumentNotValidException e) {
+        return e.getBindingResult().getFieldErrors().stream()
+                .map(fieldError -> "[" + fieldError.getField() + ": " + fieldError.getDefaultMessage() + "]")
+                .collect(Collectors.joining(", "));
     }
 
     private void logErrorWithException(Exception exception) {

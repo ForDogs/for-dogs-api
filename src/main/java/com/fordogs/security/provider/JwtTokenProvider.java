@@ -4,7 +4,7 @@ import com.fordogs.configuraion.properties.TokenProperties;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.RefreshToken;
-import com.fordogs.security.exception.error.JwtErrorCode;
+import com.fordogs.core.exception.error.JwtErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
@@ -51,7 +51,7 @@ public class JwtTokenProvider {
 
     private String encodeBase64SecretKey() {
         if (tokenProperties.getSecretKey() == null) {
-            throw JwtErrorCode.NO_SECRET_KEY.toException();
+            throw new IllegalArgumentException("토큰 발행을 위한 SecretKey 값이 존재하지 않습니다.");
         }
 
         return Encoders.BASE64.encode(tokenProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
@@ -68,7 +68,7 @@ public class JwtTokenProvider {
         final String role = user.getRole().name();
 
         if (userIdentifier == null) {
-            throw JwtErrorCode.NO_USER_DATA_FOR_ACCESS_TOKEN.toException();
+            throw new IllegalArgumentException("AccessToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
         }
         Date now = new Date();
         String jwt = Jwts.builder()
@@ -86,7 +86,7 @@ public class JwtTokenProvider {
         final String userIdentifier = user.getUserIdentifier().getValue();
 
         if (userIdentifier == null) {
-            throw JwtErrorCode.NO_USER_DATA_FOR_REFRESH_TOKEN.toException();
+            throw new IllegalArgumentException("RefreshToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
         }
         Date now = new Date();
         String jwt = Jwts.builder()

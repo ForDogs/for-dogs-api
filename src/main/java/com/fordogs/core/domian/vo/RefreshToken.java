@@ -1,7 +1,6 @@
 package com.fordogs.core.domian.vo;
 
 import com.fordogs.core.util.validator.StringValidator;
-import com.fordogs.security.exception.error.JwtErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -22,7 +21,7 @@ public class RefreshToken extends WrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!StringValidator.validateJWTToken(value)) {
-            throw JwtErrorCode.INVALID_REFRESH_TOKEN_FORMAT.toException();
+            throw new IllegalArgumentException("RefreshToken이 JWT 토큰 형식이 아닙니다.");
         }
     }
 }
