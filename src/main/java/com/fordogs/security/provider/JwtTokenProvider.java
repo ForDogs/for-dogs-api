@@ -14,7 +14,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,39 +63,11 @@ public class JwtTokenProvider {
     }
 
     public AccessToken generateAccessToken(UserEntity user) {
-        final String userIdentifier = user.getUserIdentifier().getValue();
-        final String role = user.getRole().name();
-
-        if (userIdentifier == null) {
-            throw new IllegalArgumentException("AccessToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
-        }
-        Date now = new Date();
-        String jwt = Jwts.builder()
-                .setSubject(userIdentifier)
-                .claim(CLAIMS_ROLE, role)
-                .setIssuedAt(now)
-                .setExpiration(DateUtils.addHours(now, ACCESS_TOKEN_EXPIRATION_HOURS))
-                .signWith(secretKey)
-                .compact();
-
-        return new AccessToken(jwt);
+        return AccessToken.createToken(user, secretKey, ACCESS_TOKEN_EXPIRATION_HOURS);
     }
 
     public RefreshToken generateRefreshToken(UserEntity user) {
-        final String userIdentifier = user.getUserIdentifier().getValue();
-
-        if (userIdentifier == null) {
-            throw new IllegalArgumentException("RefreshToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
-        }
-        Date now = new Date();
-        String jwt = Jwts.builder()
-                .setSubject(userIdentifier)
-                .setIssuedAt(now)
-                .setExpiration(DateUtils.addDays(now, REFRESH_TOKEN_EXPIRATION_DAYS))
-                .signWith(secretKey)
-                .compact();
-
-        return new RefreshToken(jwt);
+        return RefreshToken.createToken(user, secretKey, REFRESH_TOKEN_EXPIRATION_DAYS);
     }
 
     public Authentication getAuthentication(String token) {

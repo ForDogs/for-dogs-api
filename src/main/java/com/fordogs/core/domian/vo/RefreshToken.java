@@ -1,11 +1,17 @@
 package com.fordogs.core.domian.vo;
 
+import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.util.validator.StringValidator;
+import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.time.DateUtils;
+
+import java.security.Key;
+import java.util.Date;
 
 @Getter
 @Embeddable
@@ -23,5 +29,23 @@ public class RefreshToken extends WrapperObject<String> {
         if (!StringValidator.validateJWTToken(value)) {
             throw new IllegalArgumentException("RefreshToken이 JWT 토큰 형식이 아닙니다.");
         }
+    }
+
+    public static RefreshToken createToken(UserEntity user, Key secretKey, int expirationDays) {
+        final String userIdentifier = user.getUserIdentifier().getValue();
+
+        if (userIdentifier == null) {
+            throw new IllegalArgumentException("RefreshToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
+        }
+
+        Date now = new Date();
+        String jwt = Jwts.builder()
+                .setSubject(userIdentifier)
+                .setIssuedAt(now)
+                .setExpiration(DateUtils.addDays(now, expirationDays))
+                .signWith(secretKey)
+                .compact();
+
+        return RefreshToken.builder().value(jwt).build();
     }
 }
