@@ -10,10 +10,6 @@ spring:
     show-sql: true
     open-in-view: true
 
-logging:
-  level:
-    org.hibernate.SQL: debug
-
 springdoc:
   use-fqn: true
   api-docs:
@@ -25,4 +21,3 @@ springdoc:
     path: /docs
     defaultModelsExpandDepth: 3
     default-model-expand-depth: 3
-
