@@ -49,6 +49,7 @@ public class UserEntity extends BaseEntity {
                 .value(PasswordUtil.encode(password.getValue()))
                 .build();
         this.role = role != null ? role : Role.BUYER;
+        this.isDeleted = false;
     }
 
     public void disableAccount() {

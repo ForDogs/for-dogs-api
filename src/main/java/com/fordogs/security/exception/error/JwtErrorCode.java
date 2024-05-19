@@ -1,6 +1,7 @@
-package com.fordogs.core.exception.error;
+package com.fordogs.security.exception.error;
 
-import com.fordogs.core.exception.JwtException;
+import com.fordogs.security.exception.JwtException;
+import com.fordogs.core.exception.error.BaseErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

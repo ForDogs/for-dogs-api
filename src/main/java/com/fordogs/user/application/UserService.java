@@ -7,7 +7,7 @@ import com.fordogs.core.domian.vo.RefreshToken;
 import com.fordogs.core.infrastructure.UserRepository;
 import com.fordogs.core.util.PasswordUtil;
 import com.fordogs.security.provider.JwtTokenProvider;
-import com.fordogs.core.exception.error.UserErrorCode;
+import com.fordogs.user.error.UserErrorCode;
 import com.fordogs.user.presentation.dto.JoinDto;
 import com.fordogs.user.presentation.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +39,7 @@ public class UserService {
 
     @Transactional
     public LoginDto.Response login(LoginDto.Request request) {
-        UserEntity userEntity = userRepository.findByUserIdentifier(Id.builder().value(request.getUserId()).build())
-                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
+        UserEntity userEntity = findUserByIdentifier(request.getUserId());
         if (!(PasswordUtil.matches(request.getPassword(), userEntity.getPassword().getValue()))) {
             throw UserErrorCode.LOGIN_PASSWORD_FAILED.toException();
         }
@@ -58,11 +57,15 @@ public class UserService {
 
     @Transactional
     public void deactivateUser(String userIdentifier) {
-        UserEntity userEntity = userRepository.findByUserIdentifier(Id.builder().value(userIdentifier).build())
-                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
+        UserEntity userEntity = findUserByIdentifier(userIdentifier);
         if (userEntity.isDeleted()) {
             throw UserErrorCode.ALREADY_DISABLED.toException();
         }
         userEntity.disableAccount();
+    }
+
+    private UserEntity findUserByIdentifier(String userIdentifier) {
+        return userRepository.findByUserIdentifier(Id.builder().value(userIdentifier).build())
+                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
     }
 }

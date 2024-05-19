@@ -1,7 +1,7 @@
 package com.fordogs.security.filter;
 
 import com.fordogs.core.util.HeaderUtil;
-import com.fordogs.core.exception.JwtException;
+import com.fordogs.security.exception.JwtException;
 import com.fordogs.security.provider.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

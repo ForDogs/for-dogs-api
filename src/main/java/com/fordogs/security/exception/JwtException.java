@@ -1,4 +1,4 @@
-package com.fordogs.core.exception;
+package com.fordogs.security.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

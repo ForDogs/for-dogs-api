@@ -2,7 +2,7 @@ package com.fordogs.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fordogs.core.presentation.ErrorResponse;
-import com.fordogs.core.exception.JwtException;
+import com.fordogs.security.exception.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;

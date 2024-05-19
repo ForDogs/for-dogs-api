@@ -4,7 +4,7 @@ import com.fordogs.configuraion.properties.TokenProperties;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.RefreshToken;
-import com.fordogs.core.exception.error.JwtErrorCode;
+import com.fordogs.security.exception.error.JwtErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;

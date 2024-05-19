@@ -1,7 +1,7 @@
 package com.fordogs.core.domian.vo;
 
-import com.fordogs.core.exception.error.UserErrorCode;
 import com.fordogs.core.util.validator.StringValidator;
+import com.fordogs.user.error.UserErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -11,6 +11,9 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Password extends WrapperObject<String> {
 
+    private static final int MIN_LENGTH = 10;
+    private static final int MAX_LENGTH = 16;
+
     @Builder
     public Password(String value) {
         super(value);
@@ -19,7 +22,7 @@ public class Password extends WrapperObject<String> {
 
     @Override
     protected void validate(String value) {
-        if (!StringValidator.validateLength(value, 10, 16)) {
+        if (!StringValidator.validateLength(value, MIN_LENGTH, MAX_LENGTH)) {
             throw UserErrorCode.INVALID_PASSWORD_LENGTH.toException();
         }
         if (!StringValidator.validatePasswordPattern(value)) {
