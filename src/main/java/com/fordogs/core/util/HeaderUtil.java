@@ -11,17 +11,25 @@ public class HeaderUtil {
     public static final String TOKEN_PREFIX = "Bearer ";
 
     public static String extractAccessToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(TOKEN_HEADER);
-        if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
-            return bearerToken.substring(TOKEN_PREFIX.length());
+        try {
+            String bearerToken = request.getHeader(TOKEN_HEADER);
+            if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
+                return bearerToken.substring(TOKEN_PREFIX.length());
+            }
+            return null;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("액세스 토큰을 추출하는 중 오류가 발생했습니다.", e);
         }
-        return null;
     }
 
     public static String extractAccessToken(String bearerToken) {
-        if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
-            return bearerToken.substring(TOKEN_PREFIX.length());
+        try {
+            if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
+                return bearerToken.substring(TOKEN_PREFIX.length());
+            }
+            return null;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("액세스 토큰을 추출하는 중 오류가 발생했습니다.", e);
         }
-        return null;
     }
 }

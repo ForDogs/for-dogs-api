@@ -17,13 +17,16 @@ public class TimeUtil {
 
     public static String toString(ZonedDateTime zonedDateTime) {
         try {
+            if (zonedDateTime == null) {
+                return null;
+            }
             if (zonedDateTime.getZone().equals(ZoneOffset.UTC)) {
                 return zonedDateTime.format(UTC_FORMATTER);
             } else {
                 return zonedDateTime.format(STANDARD_FORMATTER);
             }
         } catch (DateTimeException e) {
-            return null;
+            throw new IllegalArgumentException("ZonedDateTime을 문자열로 변환하는 중 예외가 발생했습니다.", e);
         }
     }
 }

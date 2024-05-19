@@ -15,10 +15,18 @@ public class PasswordUtil {
     }
 
     public static String encode(String rawPassword) {
-        return PasswordUtil.passwordEncoder.encode(rawPassword);
+        try {
+            return PasswordUtil.passwordEncoder.encode(rawPassword);
+        } catch (Exception e) {
+            throw new IllegalStateException("비밀번호를 인코딩하는 중 예외가 발생했습니다.", e);
+        }
     }
 
     public static boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return PasswordUtil.passwordEncoder.matches(rawPassword, encodedPassword);
+        try {
+            return PasswordUtil.passwordEncoder.matches(rawPassword, encodedPassword);
+        } catch (Exception e) {
+            throw new IllegalStateException("비밀번호를 비교하는 중 예외가 발생했습니다.", e);
+        }
     }
 }
