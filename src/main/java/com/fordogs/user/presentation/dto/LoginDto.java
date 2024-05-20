@@ -2,10 +2,12 @@ package com.fordogs.user.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fordogs.core.domian.entity.UserEntity;
+import com.fordogs.core.domian.enums.Role;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.RefreshToken;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 public class LoginDto {
@@ -23,6 +25,10 @@ public class LoginDto {
         @Schema(description = "회원 비밀번호", requiredMode = Schema.RequiredMode.REQUIRED, example = "P@ssw0rd123!")
         @NotBlank(message = "비밀번호를 입력해주세요.")
         private String password;
+
+        @Schema(description = "회원 역할", requiredMode = Schema.RequiredMode.REQUIRED, allowableValues = {"SELLER", "BUYER"})
+        @NotNull(message = "회원 역할을 입력해주세요.")
+        private Role role;
     }
 
     @Schema(description = "로그인 응답")

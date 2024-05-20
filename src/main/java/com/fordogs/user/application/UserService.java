@@ -40,6 +40,9 @@ public class UserService {
     @Transactional
     public LoginDto.Response login(LoginDto.Request request) {
         UserEntity userEntity = findUserByIdentifier(request.getUserId());
+        if (!(request.getRole().equals(userEntity.getRole()))) {
+            throw UserErrorCode.USER_ROLE_MISMATCH.toException();
+        }
         if (!(PasswordUtil.matches(request.getPassword(), userEntity.getPassword().getValue()))) {
             throw UserErrorCode.LOGIN_PASSWORD_FAILED.toException();
         }

@@ -13,6 +13,7 @@ public enum UserErrorCode implements BaseErrorCode<DomainException> {
     DUPLICATE_USER_ID(HttpStatus.BAD_REQUEST, "이미 사용 중인 회원 ID입니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "아이디와 일치하는 회원을 찾을 수 없습니다."),
     LOGIN_PASSWORD_FAILED(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
+    USER_ROLE_MISMATCH(HttpStatus.BAD_REQUEST, "회원 역할이 일치하지 않습니다."),
     USER_DISABLED(HttpStatus.BAD_REQUEST, "비활성화된 회원입니다. 로그인이 불가능합니다."),
     ALREADY_DISABLED(HttpStatus.BAD_REQUEST, "이미 비활성화된 회원입니다."),
 
