@@ -18,6 +18,9 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AccessToken extends WrapperObject<String> {
 
+    private static final String CLAIMS_USER_ID = "id";
+    private static final String CLAIMS_ROLE = "role";
+
     @Builder
     public AccessToken(String value) {
         super(value);
@@ -32,17 +35,19 @@ public class AccessToken extends WrapperObject<String> {
     }
 
     public static AccessToken createToken(UserEntity user, Key secretKey, int expirationHours) {
+        final String userId = user.getId().toString();
         final String userIdentifier = user.getUserIdentifier().getValue();
         final String role = user.getRole().name();
 
-        if (userIdentifier == null) {
+        if (userId == null && userIdentifier == null) {
             throw new IllegalArgumentException("AccessToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
         }
 
         Date now = new Date();
         String jwt = Jwts.builder()
                 .setSubject(userIdentifier)
-                .claim("role", role)
+                .claim(CLAIMS_USER_ID, userId)
+                .claim(CLAIMS_ROLE, role)
                 .setIssuedAt(now)
                 .setExpiration(DateUtils.addHours(now, expirationHours))
                 .signWith(secretKey)

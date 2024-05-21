@@ -11,7 +11,6 @@ import com.fordogs.user.error.UserErrorCode;
 import com.fordogs.user.presentation.dto.JoinDto;
 import com.fordogs.user.presentation.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,9 +48,6 @@ public class UserService {
         if (userEntity.isDeleted()) {
             throw UserErrorCode.USER_DISABLED.toException();
         }
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(request.getUserId(), request.getPassword());
-        authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userEntity);
         AccessToken accessToken = jwtTokenProvider.generateAccessToken(userEntity);
 

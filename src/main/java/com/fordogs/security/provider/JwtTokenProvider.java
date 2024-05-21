@@ -30,18 +30,15 @@ import java.util.Objects;
 public class JwtTokenProvider {
 
     @Getter(AccessLevel.NONE)
-    private static final String CLAIMS_ROLE = "role";
-
-    @Getter(AccessLevel.NONE)
     private static final int ACCESS_TOKEN_EXPIRATION_HOURS = 12;
 
     @Getter(AccessLevel.NONE)
     private static final int REFRESH_TOKEN_EXPIRATION_DAYS = 14;
 
+    private Key secretKey;
+
     private final UserDetailsService userDetailsService;
     private final TokenProperties tokenProperties;
-
-    private Key secretKey;
 
     @PostConstruct
     protected void init() {
@@ -79,12 +76,13 @@ public class JwtTokenProvider {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
 
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
     }
 
     public boolean compareSubjects(String accessToken, String refreshToken) {
         String accessTokenSubject = extractSubject(accessToken);
         String refreshTokenSubject = extractSubject(refreshToken);
+
         return Objects.equals(accessTokenSubject, refreshTokenSubject);
     }
 
