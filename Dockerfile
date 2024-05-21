@@ -16,4 +16,4 @@ COPY --from=build /app/build/libs/*.jar /app/app.jar
 EXPOSE 80
 
 # Set the command to run the application with custom configuration
-ENTRYPOINT ["java", "-Xmx256m", "-Xms256m", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/dumps", "-XX:+PrintGCDetails", "-Xlog:gc*:file=/logs/gc.log:time:filesize=50M", "-jar", "-Dspring.profiles.active=local","/app/app.jar"]
+ENTRYPOINT ["java", "-Xmx1g", "-Xms1g", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=200", "-XX:+HeapDumpOnOutOfMemoryError", "-XX:HeapDumpPath=/dumps", "-XX:+PrintGCDetails", "-Xlog:gc*:file=/logs/gc.log:time:filesize=50M", "-jar", "-Dspring.profiles.active=local", "/app/app.jar"]
