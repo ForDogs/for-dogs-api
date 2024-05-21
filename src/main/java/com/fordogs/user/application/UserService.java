@@ -11,7 +11,6 @@ import com.fordogs.user.error.UserErrorCode;
 import com.fordogs.user.presentation.dto.JoinDto;
 import com.fordogs.user.presentation.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RefreshTokenService refreshTokenService;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
@@ -39,14 +37,14 @@ public class UserService {
     @Transactional
     public LoginDto.Response login(LoginDto.Request request) {
         UserEntity userEntity = findUserByIdentifier(request.getUserId());
-        if (!(request.getRole().equals(userEntity.getRole()))) {
+        if (!(request.getUserRole().equals(userEntity.getRole()))) {
             throw UserErrorCode.USER_ROLE_MISMATCH.toException();
         }
-        if (!(PasswordUtil.matches(request.getPassword(), userEntity.getPassword().getValue()))) {
+        if (!(PasswordUtil.matches(request.getUserPassword(), userEntity.getPassword().getValue()))) {
             throw UserErrorCode.LOGIN_PASSWORD_FAILED.toException();
         }
         if (userEntity.isDeleted()) {
-            throw UserErrorCode.USER_DISABLED.toException();
+            throw UserErrorCode.ALREADY_DISABLED.toException();
         }
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userEntity);
         AccessToken accessToken = jwtTokenProvider.generateAccessToken(userEntity);

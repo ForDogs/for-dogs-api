@@ -29,18 +29,18 @@ public class JoinDto {
 
         @Schema(description = "회원 이메일 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "honggildong")
         @NotBlank(message = "이메일 ID를 입력해주세요.")
-        private String emailId;
+        private String userEmailId;
 
         @Schema(description = "회원 이메일 도메인", requiredMode = Schema.RequiredMode.REQUIRED, example = "gmail.com")
         @NotBlank(message = "이메일 도메인을 입력해주세요.")
-        private String emailDomain;
+        private String userEmailDomain;
 
         @Schema(description = "회원 비밀번호", requiredMode = Schema.RequiredMode.REQUIRED, example = "P@ssw0rd123!")
         @NotBlank(message = "비밀번호를 입력해주세요.")
-        private String password;
+        private String userPassword;
 
-        @Schema(description = "회원 역할", defaultValue = "BUYER", allowableValues = {"SELLER", "BUYER"})
-        private Role role;
+        @Schema(description = "회원 역할", defaultValue = "BUYER")
+        private Role userRole;
 
         public UserEntity toEntity() {
             return UserEntity.builder()
@@ -51,13 +51,13 @@ public class JoinDto {
                             .value(this.userName)
                             .build())
                     .email(Email.builder()
-                            .id(this.emailId)
-                            .domain(this.emailDomain)
+                            .id(this.userEmailId)
+                            .domain(this.userEmailDomain)
                             .build())
                     .password(Password.builder()
-                            .value(this.password)
+                            .value(this.userPassword)
                             .build())
-                    .role(this.role)
+                    .role(this.userRole)
                     .build();
         }
     }

@@ -22,13 +22,13 @@ public class LoginDto {
         @NotBlank(message = "회원 ID를 입력해주세요.")
         private String userId;
 
-        @Schema(description = "회원 비밀번호", requiredMode = Schema.RequiredMode.REQUIRED, example = "P@ssw0rd123!")
+        @Schema(description = "회원 비밀번호", requiredMode = Schema.RequiredMode.REQUIRED, example = "P@ssw0rd13!")
         @NotBlank(message = "비밀번호를 입력해주세요.")
-        private String password;
+        private String userPassword;
 
-        @Schema(description = "회원 역할", requiredMode = Schema.RequiredMode.REQUIRED, allowableValues = {"SELLER", "BUYER"})
+        @Schema(description = "회원 역할", requiredMode = Schema.RequiredMode.REQUIRED)
         @NotNull(message = "회원 역할을 입력해주세요.")
-        private Role role;
+        private Role userRole;
     }
 
     @Schema(description = "로그인 응답")
