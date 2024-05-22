@@ -1,5 +1,6 @@
 package com.fordogs.configuraion;
 
+import com.fordogs.core.domian.enums.Role;
 import com.fordogs.core.util.PasswordUtil;
 import com.fordogs.security.filter.JwtAuthenticationFilter;
 import com.fordogs.security.handler.CustomAccessDeniedHandler;
@@ -26,6 +27,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
+    private static final String ROLE_SELLER = Role.SELLER.name();
+    private static final String ROLE_BUYER = Role.BUYER.name();
+
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
@@ -45,9 +49,10 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(authorizeRequest -> authorizeRequest
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/docs").permitAll()
-                .requestMatchers("/users/{userId}/deactivation").authenticated()
                 .requestMatchers("/users/**").permitAll()
                 .requestMatchers("/test/request").permitAll()
+                .requestMatchers("/users/{userId}/deactivation").authenticated()
+                .requestMatchers("/products").hasAuthority(ROLE_SELLER)
                 .anyRequest().authenticated()
         );
 

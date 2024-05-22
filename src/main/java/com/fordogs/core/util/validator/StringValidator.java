@@ -3,6 +3,7 @@ package com.fordogs.core.util.validator;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -17,7 +18,7 @@ public class StringValidator {
     }
 
     public static boolean validateEnglishNumber(String value) {
-        return Pattern.matches("^[a-zA-Z0-9]+$", value);
+        return Pattern.matches("^[a-zA-Z0-9]+$", value.trim());
     }
 
     public static boolean validateEmailDomainPattern(String value) {
@@ -48,5 +49,15 @@ public class StringValidator {
             }
         }
         return true;
+    }
+
+    public static boolean validateContainsProfanity(String value, String profanityRegex) {
+        if (value == null) {
+            return false;
+        }
+        Pattern pattern = Pattern.compile(profanityRegex);
+        Matcher matcher = pattern.matcher(value);
+
+        return matcher.find();
     }
 }

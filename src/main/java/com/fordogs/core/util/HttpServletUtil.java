@@ -6,10 +6,11 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HttpServletUtil {
@@ -17,7 +18,7 @@ public class HttpServletUtil {
     public static String getHttpMethod() {
         try {
             return Optional
-                    .ofNullable(getHttpServletRequest())
+                    .of(getHttpServletRequest())
                     .map(HttpServletRequest::getMethod)
                     .orElse(null);
         } catch (Exception e) {
@@ -28,7 +29,7 @@ public class HttpServletUtil {
     public static String getUrlAndQueryString() {
         try {
             return Optional
-                    .ofNullable(getHttpServletRequest())
+                    .of(getHttpServletRequest())
                     .map(request -> request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : ""))
                     .orElse(null);
         } catch (Exception e) {
@@ -36,23 +37,9 @@ public class HttpServletUtil {
         }
     }
 
-    public static URI createUriWithPostIdFromCurrentRequest(UUID newPostId) {
-        try {
-            return ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{postId}")
-                    .buildAndExpand(newPostId.toString())
-                    .toUri();
-        } catch (Exception e) {
-            throw new IllegalStateException("현재 요청에서 포스트 ID를 사용하여 URI를 생성하는 중 예외가 발생했습니다.", e);
-        }
-    }
-
     public static Map<String, String> requestToHeaderMap() {
         try {
             HttpServletRequest request = getHttpServletRequest();
-            if (request == null) {
-                return new HashMap<>();
-            }
             Map<String, String> headerMap = new HashMap<>();
             Enumeration<String> headerNames = request.getHeaderNames();
             if (headerNames == null) {
@@ -69,10 +56,17 @@ public class HttpServletUtil {
         }
     }
 
+    public static Object getRequestAttribute(String attributeName) {
+        HttpServletRequest request = getHttpServletRequest();
+
+        return Optional.ofNullable(request.getAttribute(attributeName))
+                .orElseThrow(() -> new IllegalArgumentException("요청의 속성 '" + attributeName + "'가 존재하지 않습니다."));
+    }
+
     public static Optional<String> getCookie(String cookieName) {
         try {
             HttpServletRequest request = getHttpServletRequest();
-            if (request == null || cookieName == null) {
+            if (cookieName == null) {
                 return Optional.empty();
             }
 
@@ -95,7 +89,7 @@ public class HttpServletUtil {
         try {
             return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         } catch (IllegalStateException ignored) {
-            return null;
+            throw new IllegalStateException("HTTPServletRequest를 가져오는 도중 예외가 발생했습니다.");
         }
     }
 }

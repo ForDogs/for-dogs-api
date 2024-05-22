@@ -19,5 +19,5 @@ public abstract class WrapperObject<T> {
         this.value = value;
     }
 
-    protected abstract void validate(String value);
+    protected abstract void validate(T value);
 }

@@ -11,8 +11,6 @@ import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
-import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,10 +27,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    @Getter(AccessLevel.NONE)
+    private static final String CLAIMS_USER_ID = "id";
     private static final int ACCESS_TOKEN_EXPIRATION_HOURS = 12;
-
-    @Getter(AccessLevel.NONE)
     private static final int REFRESH_TOKEN_EXPIRATION_DAYS = 14;
 
     private Key secretKey;
@@ -84,6 +80,20 @@ public class JwtTokenProvider {
         String refreshTokenSubject = extractSubject(refreshToken);
 
         return Objects.equals(accessTokenSubject, refreshTokenSubject);
+    }
+
+    public String extractId(String accessToken) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(accessToken)
+                    .getBody();
+
+            return claims.get(CLAIMS_USER_ID, String.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("요청된 AccessToken 클레임에서 Id를 추출하는 과정에서 예외가 발생하였습니다.", e);
+        }
     }
 
     private String extractSubject(String token) {
