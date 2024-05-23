@@ -141,7 +141,8 @@ public class SwaggerConfiguration {
                     if (queryString.length() > 0) {
                         queryString.append("&");
                     }
-                    queryString.append(parameter.getName()).append("=").append(parameter.getExample().toString());
+                    queryString.append(parameter.getName()).append("=")
+                            .append((parameter.getExample() != null) ? parameter.getExample().toString() : "");
                 }
             }
         }
