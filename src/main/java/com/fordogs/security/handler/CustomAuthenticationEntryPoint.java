@@ -1,6 +1,7 @@
 package com.fordogs.security.handler;
 
-import com.fordogs.security.exception.JwtException;
+import com.fordogs.core.util.constants.RequestAttributesConstants;
+import com.fordogs.security.exception.SecurityAuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,9 +23,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        Object exception = request.getAttribute("JwtException");
-        if (exception instanceof JwtException jwtException) {
-            resolver.resolveException(request, response, null, jwtException);
+        Object exception = request.getAttribute(RequestAttributesConstants.SECURITY_AUTHENTICATION_EXCEPTION);
+        if (exception instanceof SecurityAuthenticationException securityAuthenticationException) {
+            resolver.resolveException(request, response, null, securityAuthenticationException);
         } else {
             resolver.resolveException(request, response, null, authException);
         }

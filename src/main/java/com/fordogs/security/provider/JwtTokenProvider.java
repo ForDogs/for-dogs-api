@@ -4,7 +4,7 @@ import com.fordogs.configuraion.properties.TokenProperties;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.RefreshToken;
-import com.fordogs.security.exception.error.JwtErrorCode;
+import com.fordogs.security.exception.error.SecurityErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
@@ -135,15 +135,15 @@ public class JwtTokenProvider {
             Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
-            throw JwtErrorCode.INVALID_SIGNATURE.toException();
+            throw SecurityErrorCode.INVALID_SIGNATURE.toException();
         } catch (MalformedJwtException ex) {
-            throw JwtErrorCode.MALFORMED_TOKEN.toException();
+            throw SecurityErrorCode.MALFORMED_TOKEN.toException();
         } catch (ExpiredJwtException ex) {
-            throw JwtErrorCode.EXPIRED_TOKEN.toException();
+            throw SecurityErrorCode.EXPIRED_TOKEN.toException();
         } catch (UnsupportedJwtException ex) {
-            throw JwtErrorCode.UNSUPPORTED_TOKEN.toException();
+            throw SecurityErrorCode.UNSUPPORTED_TOKEN.toException();
         } catch (IllegalArgumentException ex) {
-            throw JwtErrorCode.INVALID_CLAIMS.toException();
+            throw SecurityErrorCode.INVALID_CLAIMS.toException();
         }
     }
 }

@@ -3,7 +3,7 @@ package com.fordogs.security.provider;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.Id;
 import com.fordogs.core.infrastructure.UserRepository;
-import com.fordogs.user.error.UserErrorCode;
+import com.fordogs.security.exception.error.SecurityErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +19,10 @@ public class CustomUserDetailsServiceProvider implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByUserIdentifier(Id.builder().value(username).build())
-                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
+                .orElseThrow(SecurityErrorCode.USER_NOT_FOUND::toException);
+        if (userEntity.isDeleted()) {
+            throw SecurityErrorCode.USER_DISABLED.toException();
+        }
 
         return new CustomUserDetails(userEntity);
     }

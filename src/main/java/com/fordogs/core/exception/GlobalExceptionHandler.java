@@ -1,7 +1,7 @@
 package com.fordogs.core.exception;
 
 import com.fordogs.core.presentation.ErrorResponse;
-import com.fordogs.security.exception.JwtException;
+import com.fordogs.security.exception.SecurityAuthenticationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +41,8 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
-    @ExceptionHandler(JwtException.class)
-    public ResponseEntity<ErrorResponse> handleJwtException(JwtException e) {
+    @ExceptionHandler(SecurityAuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleSecurityAuthenticationException(SecurityAuthenticationException e) {
         ErrorResponse response = ErrorResponse.of(e);
         logErrorWithException(e);
 
