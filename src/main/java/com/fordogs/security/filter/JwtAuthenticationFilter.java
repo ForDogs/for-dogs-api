@@ -32,6 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (JwtException e) {
                 SecurityContextHolder.clearContext();
                 request.setAttribute("JwtException", e);
+                response.sendError(e.getHttpStatus().value(), e.getMessage()); // permitAll()로 설정된 경로에서도 토큰으로 인해 발생한 예외 처리 진행
             }
         }
         filterChain.doFilter(request, response);

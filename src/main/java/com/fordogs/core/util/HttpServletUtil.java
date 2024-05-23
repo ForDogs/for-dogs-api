@@ -59,8 +59,7 @@ public class HttpServletUtil {
     public static Object getRequestAttribute(String attributeName) {
         HttpServletRequest request = getHttpServletRequest();
 
-        return Optional.ofNullable(request.getAttribute(attributeName))
-                .orElseThrow(() -> new IllegalArgumentException("요청의 속성 '" + attributeName + "'가 존재하지 않습니다."));
+        return request.getAttribute(attributeName);
     }
 
     public static Optional<String> getCookie(String cookieName) {

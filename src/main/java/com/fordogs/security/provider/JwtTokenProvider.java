@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -82,7 +83,10 @@ public class JwtTokenProvider {
         return Objects.equals(accessTokenSubject, refreshTokenSubject);
     }
 
-    public String extractId(String accessToken) {
+    public UUID extractId(String accessToken) {
+        if (accessToken == null) {
+            return null;
+        }
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(secretKey)
@@ -90,7 +94,7 @@ public class JwtTokenProvider {
                     .parseClaimsJws(accessToken)
                     .getBody();
 
-            return claims.get(CLAIMS_USER_ID, String.class);
+            return UUID.fromString(claims.get(CLAIMS_USER_ID, String.class));
         } catch (Exception e) {
             throw new IllegalArgumentException("요청된 AccessToken 클레임에서 Id를 추출하는 과정에서 예외가 발생하였습니다.", e);
         }
