@@ -17,4 +17,12 @@ public class ConverterUtil {
             throw new IllegalArgumentException("배열을 JSON으로 변환하는 중 오류가 발생했습니다.", e);
         }
     }
+
+    public static String[] convertJsonToArray(String json) {
+        try {
+            return objectMapper.readValue(json, String[].class);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("JSON을 배열로 변환하는 중 오류가 발생했습니다.", e);
+        }
+    }
 }

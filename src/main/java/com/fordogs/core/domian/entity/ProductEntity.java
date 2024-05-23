@@ -13,7 +13,7 @@ import lombok.*;
 @Entity(name = "product")
 public class ProductEntity extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", referencedColumnName = "id", nullable = false)
     private UserEntity seller;
 

@@ -10,6 +10,7 @@ import com.fordogs.security.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -52,7 +53,8 @@ public class SecurityConfiguration {
                 .requestMatchers("/users/**").permitAll()
                 .requestMatchers("/test/request").permitAll()
                 .requestMatchers("/users/{userId}/deactivation").authenticated()
-                .requestMatchers("/products").hasAuthority(ROLE_SELLER)
+                .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority(ROLE_SELLER)
                 .anyRequest().authenticated()
         );
 

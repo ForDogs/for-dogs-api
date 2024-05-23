@@ -7,7 +7,10 @@ import com.fordogs.core.infrastructure.UserRepository;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.product.error.ProductErrorCode;
 import com.fordogs.product.presentation.dto.CreateProductDto;
+import com.fordogs.product.presentation.dto.ReadProductDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +28,7 @@ public class ProductService {
 
     @Transactional
     public CreateProductDto.Response createProduct(CreateProductDto.Request request) {
-        UUID userId = UUID.fromString((String) HttpServletUtil.getRequestAttribute(USER_ID_REQUEST_ATTRIBUTE));
+        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(USER_ID_REQUEST_ATTRIBUTE);
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(ProductErrorCode.TOKEN_USER_NOT_FOUND::toException);
         if (productRepository.existsByName(request.getProductName())) {
@@ -34,5 +37,14 @@ public class ProductService {
         ProductEntity saveProductEntity = productRepository.save(request.toEntity(userEntity));
 
         return CreateProductDto.Response.toResponse(saveProductEntity);
+    }
+
+    public Page<ReadProductDto.Response> findProducts(Pageable pageable) {
+        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(USER_ID_REQUEST_ATTRIBUTE);
+        Page<ProductEntity> products = (userId != null)
+                ? productRepository.findBySellerId(userId, pageable)
+                : productRepository.findAll(pageable);
+
+        return products.map(ReadProductDto.Response::toResponse);
     }
 }
