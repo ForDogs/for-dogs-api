@@ -4,7 +4,9 @@ import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.Id;
 import com.fordogs.core.domian.vo.RefreshToken;
+import com.fordogs.core.exception.error.JwtErrorCode;
 import com.fordogs.core.infrastructure.UserRepository;
+import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.PasswordUtil;
 import com.fordogs.security.provider.JwtTokenProvider;
 import com.fordogs.user.error.UserErrorCode;
@@ -13,6 +15,8 @@ import com.fordogs.user.presentation.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -36,7 +40,8 @@ public class UserService {
 
     @Transactional
     public LoginDto.Response login(LoginDto.Request request) {
-        UserEntity userEntity = findUserByIdentifier(request.getUserId());
+        UserEntity userEntity = userRepository.findByUserIdentifier(Id.builder().value(request.getUserId()).build())
+                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
         if (!(request.getUserRole().equals(userEntity.getRole()))) {
             throw UserErrorCode.USER_ROLE_MISMATCH.toException();
         }
@@ -53,16 +58,10 @@ public class UserService {
     }
 
     @Transactional
-    public void deactivateUser(String userIdentifier) {
-        UserEntity userEntity = findUserByIdentifier(userIdentifier);
-        if (userEntity.isDeleted()) {
-            throw UserErrorCode.ALREADY_DISABLED.toException();
-        }
+    public void deactivateUser() {
+        UUID userId = HttpServletUtil.extractUserId();
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(JwtErrorCode.TOKEN_USER_NOT_FOUND::toException);
         userEntity.disableAccount();
-    }
-
-    private UserEntity findUserByIdentifier(String userIdentifier) {
-        return userRepository.findByUserIdentifier(Id.builder().value(userIdentifier).build())
-                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
     }
 }

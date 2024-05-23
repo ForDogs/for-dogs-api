@@ -3,7 +3,7 @@ package com.fordogs.user.presentation;
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.HeaderUtil;
-import com.fordogs.security.exception.error.JwtErrorCode;
+import com.fordogs.core.exception.error.JwtErrorCode;
 import com.fordogs.user.application.RefreshTokenService;
 import com.fordogs.user.application.UserService;
 import com.fordogs.user.error.UserErrorCode;
@@ -59,13 +59,12 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "회원 탈퇴", operationId = "/users/{userId}/deactivation")
+    @Operation(summary = "회원 탈퇴", operationId = "/users/deactivation")
     @ApiErrorCode(UserErrorCode.class)
-    @DeleteMapping("/{userId}/deactivation")
-    public ResponseEntity<SuccessResponse<Object>> handleDeactivateUserRequest(
-            @Parameter(name = "회원 ID", required = true, example = "hong1234", in = ParameterIn.PATH) @PathVariable(name = "userId") String userId) {
-        userService.deactivateUser(userId);
+    @DeleteMapping("/deactivation")
+    public ResponseEntity<SuccessResponse<Object>> handleDeactivateUserRequest() {
+        userService.deactivateUser();
 
-        return new ResponseEntity<>(SuccessResponse.of(null), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
