@@ -2,6 +2,8 @@ package com.fordogs.product.application;
 
 import com.fordogs.core.domian.entity.ProductEntity;
 import com.fordogs.core.domian.entity.UserEntity;
+import com.fordogs.core.domian.vo.Id;
+import com.fordogs.core.exception.error.JwtErrorCode;
 import com.fordogs.core.infrastructure.ProductRepository;
 import com.fordogs.core.infrastructure.UserRepository;
 import com.fordogs.core.util.HttpServletUtil;
@@ -21,16 +23,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductService {
 
-    public static final String USER_ID_REQUEST_ATTRIBUTE = "userId";
-
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
     @Transactional
     public CreateProductDto.Response createProduct(CreateProductDto.Request request) {
-        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(USER_ID_REQUEST_ATTRIBUTE);
+        UUID userId = HttpServletUtil.extractUserId();
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(ProductErrorCode.TOKEN_USER_NOT_FOUND::toException);
+                .orElseThrow(JwtErrorCode.TOKEN_USER_NOT_FOUND::toException);
         if (productRepository.existsByName(request.getProductName())) {
             throw ProductErrorCode.PRODUCT_ALREADY_EXISTS.toException();
         }
@@ -39,10 +39,9 @@ public class ProductService {
         return CreateProductDto.Response.toResponse(saveProductEntity);
     }
 
-    public Page<ReadProductDto.Response> findProducts(Pageable pageable) {
-        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(USER_ID_REQUEST_ATTRIBUTE);
-        Page<ProductEntity> products = (userId != null)
-                ? productRepository.findBySellerId(userId, pageable)
+    public Page<ReadProductDto.Response> findProducts(String sellerId, Pageable pageable) {
+        Page<ProductEntity> products = (sellerId != null)
+                ? productRepository.findBySellerUserIdentifier(Id.builder().value(sellerId).build(), pageable)
                 : productRepository.findAll(pageable);
 
         return products.map(ReadProductDto.Response::toResponse);

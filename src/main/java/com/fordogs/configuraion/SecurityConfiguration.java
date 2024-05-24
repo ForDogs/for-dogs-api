@@ -51,10 +51,12 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(authorizeRequest -> authorizeRequest
                 .requestMatchers(HttpMethod.DELETE, "/users/deactivation").authenticated()
                 .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority(ROLE_SELLER)
+
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/docs").permitAll()
                 .requestMatchers("/users/**").permitAll()
                 .requestMatchers("/test/request").permitAll()
-                .requestMatchers( "/products/**").permitAll()
+                .requestMatchers("/products/**").permitAll()
+
                 .anyRequest().authenticated()
         );
 

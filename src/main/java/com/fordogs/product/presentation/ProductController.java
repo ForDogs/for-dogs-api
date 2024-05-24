@@ -6,8 +6,8 @@ import com.fordogs.product.application.ProductService;
 import com.fordogs.product.error.ProductErrorCode;
 import com.fordogs.product.presentation.dto.CreateProductDto;
 import com.fordogs.product.presentation.dto.ReadProductDto;
-import com.fordogs.security.exception.error.JwtErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +37,13 @@ public class ProductController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "상품 검색 및 필터링", operationId = "/products", description = "AccessToken을 통해 회원이 등록한 전체 상품을 조회할 수 있습니다.")
-    @ApiErrorCode(JwtErrorCode.class)
+    @Operation(summary = "상품 검색 및 필터링", operationId = "/products")
+    @ApiErrorCode(ProductErrorCode.class)
     @GetMapping
     public ResponseEntity<SuccessResponse<Page<ReadProductDto.Response>>> handleFindProductsRequest(
+            @Parameter(name = "seller", example = "hong1234") @RequestParam(required = false, value = "seller") String sellerId,
             @ParameterObject @PageableDefault Pageable pageable) {
-        Page<ReadProductDto.Response> response = productService.findProducts(pageable);
+        Page<ReadProductDto.Response> response = productService.findProducts(sellerId, pageable);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
