@@ -3,7 +3,7 @@ package com.fordogs.product.presentation;
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.product.application.ProductService;
-import com.fordogs.product.error.ProductErrorCode;
+import com.fordogs.core.exception.error.ProductErrorCode;
 import com.fordogs.product.presentation.dto.CreateProductDto;
 import com.fordogs.product.presentation.dto.ReadProductDto;
 import io.swagger.v3.oas.annotations.Operation;

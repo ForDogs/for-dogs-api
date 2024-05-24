@@ -1,7 +1,6 @@
-package com.fordogs.user.error;
+package com.fordogs.core.exception.error;
 
 import com.fordogs.core.exception.DomainException;
-import com.fordogs.core.exception.error.BaseErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

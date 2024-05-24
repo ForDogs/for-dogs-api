@@ -17,7 +17,7 @@ public enum SecurityErrorCode implements BaseErrorCode<SecurityAuthenticationExc
     INVALID_CLAIMS(HttpStatus.UNAUTHORIZED, "토큰 클레임이 비어있거나 유효하지 않습니다."),
 
     USER_DISABLED(HttpStatus.UNAUTHORIZED, "탈퇴한 회원은 이용할 수 없습니다."),
-    USER_NOT_FOUND(HttpStatus.UNAUTHORIZED, "사용자 정보를 찾을 수 없습니다.");
+    TOKEN_USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "토큰에서 추출한 사용자 정보를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
 

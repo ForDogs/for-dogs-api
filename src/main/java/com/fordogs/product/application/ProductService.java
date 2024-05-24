@@ -3,11 +3,11 @@ package com.fordogs.product.application;
 import com.fordogs.core.domian.entity.ProductEntity;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.Id;
-import com.fordogs.core.exception.error.JwtErrorCode;
+import com.fordogs.core.exception.error.ProductErrorCode;
+import com.fordogs.core.exception.error.UserErrorCode;
 import com.fordogs.core.infrastructure.ProductRepository;
 import com.fordogs.core.infrastructure.UserRepository;
 import com.fordogs.core.util.HttpServletUtil;
-import com.fordogs.product.error.ProductErrorCode;
 import com.fordogs.product.presentation.dto.CreateProductDto;
 import com.fordogs.product.presentation.dto.ReadProductDto;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class ProductService {
     public CreateProductDto.Response createProduct(CreateProductDto.Request request) {
         UUID userId = HttpServletUtil.extractUserId();
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(JwtErrorCode.TOKEN_USER_NOT_FOUND::toException);
+                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
         if (productRepository.existsByName(request.getProductName())) {
             throw ProductErrorCode.PRODUCT_ALREADY_EXISTS.toException();
         }

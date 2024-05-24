@@ -1,6 +1,6 @@
 package com.fordogs.core.domian.vo;
 
-import com.fordogs.product.error.ProductErrorCode;
+import com.fordogs.core.exception.error.ProductErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 

@@ -6,7 +6,7 @@ import com.fordogs.core.util.HeaderUtil;
 import com.fordogs.core.exception.error.JwtErrorCode;
 import com.fordogs.user.application.RefreshTokenService;
 import com.fordogs.user.application.UserService;
-import com.fordogs.user.error.UserErrorCode;
+import com.fordogs.core.exception.error.UserErrorCode;
 import com.fordogs.user.presentation.dto.JoinDto;
 import com.fordogs.user.presentation.dto.LoginDto;
 import com.fordogs.user.presentation.dto.RefreshTokenDto;

@@ -4,12 +4,11 @@ import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.Id;
 import com.fordogs.core.domian.vo.RefreshToken;
-import com.fordogs.core.exception.error.JwtErrorCode;
+import com.fordogs.core.exception.error.UserErrorCode;
 import com.fordogs.core.infrastructure.UserRepository;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.PasswordUtil;
 import com.fordogs.security.provider.JwtTokenProvider;
-import com.fordogs.user.error.UserErrorCode;
 import com.fordogs.user.presentation.dto.JoinDto;
 import com.fordogs.user.presentation.dto.LoginDto;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +60,7 @@ public class UserService {
     public void deactivateUser() {
         UUID userId = HttpServletUtil.extractUserId();
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(JwtErrorCode.TOKEN_USER_NOT_FOUND::toException);
+                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
         userEntity.disableAccount();
     }
 }
