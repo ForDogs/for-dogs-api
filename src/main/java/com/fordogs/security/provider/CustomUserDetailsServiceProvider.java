@@ -18,7 +18,7 @@ public class CustomUserDetailsServiceProvider implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByUserIdentifier(Id.builder().value(username).build())
+        UserEntity userEntity = userRepository.findByAccount(Id.builder().value(username).build())
                 .orElseThrow(SecurityErrorCode.TOKEN_USER_NOT_FOUND::toException);
         if (userEntity.isDeleted()) {
             throw SecurityErrorCode.USER_DISABLED.toException();

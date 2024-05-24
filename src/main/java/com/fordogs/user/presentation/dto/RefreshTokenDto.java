@@ -25,7 +25,7 @@ public class RefreshTokenDto {
 
         public static RefreshTokenDto.Response toResponse(UserEntity userEntity, AccessToken accessToken) {
             return RefreshTokenDto.Response.builder()
-                    .userId(userEntity.getUserIdentifier().getValue())
+                    .userId(userEntity.getAccount().getValue())
                     .accessToken(accessToken.getValue())
                     .build();
         }

@@ -49,7 +49,7 @@ public class LoginDto {
 
         public static LoginDto.Response toResponse(UserEntity userEntity, RefreshToken refreshToken, AccessToken accessToken) {
             return LoginDto.Response.builder()
-                    .userId(userEntity.getUserIdentifier().getValue())
+                    .userId(userEntity.getAccount().getValue())
                     .refreshToken(refreshToken.getValue())
                     .accessToken(accessToken.getValue())
                     .build();

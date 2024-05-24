@@ -16,9 +16,9 @@ public class UserEntity extends BaseEntity {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "value", column = @Column(name = "userIdentifier"))
+            @AttributeOverride(name = "value", column = @Column(name = "account"))
     })
-    private Id userIdentifier;
+    private Id account;
 
     @Embedded
     @AttributeOverrides({
@@ -41,8 +41,8 @@ public class UserEntity extends BaseEntity {
     private boolean isDeleted = false;
 
     @Builder
-    public UserEntity(Id userIdentifier, Name name, Email email, Password password, Role role) {
-        this.userIdentifier = userIdentifier;
+    public UserEntity(Id account, Name name, Email email, Password password, Role role) {
+        this.account = account;
         this.name = name;
         this.email = email;
         this.password = EncryptedPassword.builder()

@@ -36,16 +36,16 @@ public class AccessToken extends WrapperObject<String> {
 
     public static AccessToken createToken(UserEntity user, Key secretKey, int expirationHours) {
         final String userId = user.getId().toString();
-        final String userIdentifier = user.getUserIdentifier().getValue();
+        final String account = user.getAccount().getValue();
         final String role = user.getRole().name();
 
-        if (userId == null && userIdentifier == null) {
+        if (userId == null && account == null) {
             throw new IllegalArgumentException("AccessToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
         }
 
         Date now = new Date();
         String jwt = Jwts.builder()
-                .setSubject(userIdentifier)
+                .setSubject(account)
                 .claim(CLAIMS_USER_ID, userId)
                 .claim(CLAIMS_ROLE, role)
                 .setIssuedAt(now)

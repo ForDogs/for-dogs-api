@@ -20,7 +20,7 @@ public class CustomUserDetails implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(UserEntity user) {
-        this.username = user.getUserIdentifier().getValue();
+        this.username = user.getAccount().getValue();
         this.password = user.getPassword().getValue();
         this.authorities = getAuthorities(user.getRole().name());
     }

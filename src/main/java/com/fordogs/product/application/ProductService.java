@@ -41,7 +41,7 @@ public class ProductService {
 
     public Page<ReadProductDto.Response> findProducts(String sellerId, Pageable pageable) {
         Page<ProductEntity> products = (sellerId != null)
-                ? productRepository.findBySellerUserIdentifier(Id.builder().value(sellerId).build(), pageable)
+                ? productRepository.findBySellerAccount(Id.builder().value(sellerId).build(), pageable)
                 : productRepository.findAll(pageable);
 
         return products.map(ReadProductDto.Response::toResponse);

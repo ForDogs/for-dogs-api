@@ -11,5 +11,5 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<ProductEntity, UUID> {
     boolean existsByName(String name);
 
-    Page<ProductEntity> findBySellerUserIdentifier(Id identifier, Pageable pageable);
+    Page<ProductEntity> findBySellerAccount(Id account, Pageable pageable);
 }

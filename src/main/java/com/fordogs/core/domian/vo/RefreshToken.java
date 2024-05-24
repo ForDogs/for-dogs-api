@@ -32,15 +32,15 @@ public class RefreshToken extends WrapperObject<String> {
     }
 
     public static RefreshToken createToken(UserEntity user, Key secretKey, int expirationDays) {
-        final String userIdentifier = user.getUserIdentifier().toString();
+        final String account = user.getAccount().toString();
 
-        if (userIdentifier == null) {
+        if (account == null) {
             throw new IllegalArgumentException("RefreshToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
         }
 
         Date now = new Date();
         String jwt = Jwts.builder()
-                .setSubject(userIdentifier)
+                .setSubject(account)
                 .setIssuedAt(now)
                 .setExpiration(DateUtils.addDays(now, expirationDays))
                 .signWith(secretKey)

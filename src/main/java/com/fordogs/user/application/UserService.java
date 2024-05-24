@@ -29,7 +29,7 @@ public class UserService {
     @Transactional
     public JoinDto.Response joinUser(JoinDto.Request request) {
         UserEntity requestedUserEntity = request.toEntity();
-        if (userRepository.existsByUserIdentifier(requestedUserEntity.getUserIdentifier())) {
+        if (userRepository.existsByAccount(requestedUserEntity.getAccount())) {
             throw UserErrorCode.DUPLICATE_USER_ID.toException();
         }
         UserEntity savedUserEntity = userRepository.save(requestedUserEntity);
@@ -39,7 +39,7 @@ public class UserService {
 
     @Transactional
     public LoginDto.Response login(LoginDto.Request request) {
-        UserEntity userEntity = userRepository.findByUserIdentifier(Id.builder().value(request.getUserId()).build())
+        UserEntity userEntity = userRepository.findByAccount(Id.builder().value(request.getUserId()).build())
                 .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
         if (!(request.getUserRole().equals(userEntity.getRole()))) {
             throw UserErrorCode.USER_ROLE_MISMATCH.toException();

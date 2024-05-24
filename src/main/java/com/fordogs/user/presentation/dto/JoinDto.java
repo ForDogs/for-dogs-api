@@ -44,7 +44,7 @@ public class JoinDto {
 
         public UserEntity toEntity() {
             return UserEntity.builder()
-                    .userIdentifier(Id.builder()
+                    .account(Id.builder()
                             .value(this.userId)
                             .build())
                     .name(Name.builder()
@@ -77,7 +77,7 @@ public class JoinDto {
 
         public static Response toResponse(UserEntity userEntity) {
             return Response.builder()
-                    .userId(userEntity.getUserIdentifier().getValue())
+                    .userId(userEntity.getAccount().getValue())
                     .userName(userEntity.getName().getValue())
                     .build();
         }
