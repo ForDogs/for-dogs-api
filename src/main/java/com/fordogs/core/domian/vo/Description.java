@@ -1,6 +1,6 @@
 package com.fordogs.core.domian.vo;
 
-import com.fordogs.core.exception.error.ProductErrorCode;
+import com.fordogs.core.exception.error.ProductServiceErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -27,10 +27,10 @@ public class Description extends WrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!validateLength(value, MIN_LENGTH, MAX_LENGTH)) {
-            throw ProductErrorCode.INVALID_DESCRIPTION_LENGTH.toException();
+            throw ProductServiceErrorCode.INVALID_DESCRIPTION_LENGTH.toException();
         }
         if (validateContainsProfanity(value, PROFANITY_REGEX)) {
-            throw ProductErrorCode.PROFANITY_IN_DESCRIPTION.toException();
+            throw ProductServiceErrorCode.PROFANITY_IN_DESCRIPTION.toException();
         }
     }
 }

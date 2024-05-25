@@ -4,7 +4,7 @@ import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.Id;
 import com.fordogs.core.domian.vo.RefreshToken;
-import com.fordogs.core.exception.error.UserErrorCode;
+import com.fordogs.core.exception.error.UserServiceErrorCode;
 import com.fordogs.core.infrastructure.UserRepository;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.PasswordUtil;
@@ -31,7 +31,7 @@ public class UserService {
     public JoinDto.Response joinUser(JoinDto.Request request) {
         UserEntity requestedUserEntity = request.toEntity();
         if (userRepository.existsByAccount(requestedUserEntity.getAccount())) {
-            throw UserErrorCode.DUPLICATE_USER_ID.toException();
+            throw UserServiceErrorCode.DUPLICATE_USER_ID.toException();
         }
         UserEntity savedUserEntity = userRepository.save(requestedUserEntity);
 
@@ -41,17 +41,17 @@ public class UserService {
     @Transactional
     public LoginDto.Response login(LoginDto.Request request) {
         UserEntity userEntity = userRepository.findByAccount(Id.builder().value(request.getUserId()).build())
-                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
+                .orElseThrow(UserServiceErrorCode.USER_NOT_FOUND::toException);
         if (!(request.getUserRole().equals(userEntity.getRole()))) {
-            throw UserErrorCode.USER_ROLE_MISMATCH.toException();
+            throw UserServiceErrorCode.USER_ROLE_MISMATCH.toException();
         }
         if (!(PasswordUtil.matches(request.getUserPassword(), userEntity.getPassword().getValue()))) {
-            throw UserErrorCode.LOGIN_PASSWORD_FAILED.toException();
+            throw UserServiceErrorCode.LOGIN_PASSWORD_FAILED.toException();
         }
-        if (userEntity.isDeleted()) {
-            throw UserErrorCode.ALREADY_DISABLED.toException();
+        if (!userEntity.isEnabled()) {
+            throw UserServiceErrorCode.USER_DISABLED.toException();
         }
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userEntity);
+        RefreshToken refreshToken = refreshTokenService.generateAndSaveRefreshToken(userEntity);
         AccessToken accessToken = jwtTokenProvider.generateAccessToken(userEntity);
 
         return LoginDto.Response.toResponse(userEntity, refreshToken, accessToken);
@@ -61,7 +61,7 @@ public class UserService {
     public void deactivateUser() {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
-        userEntity.disableAccount();
+                .orElseThrow(UserServiceErrorCode.USER_NOT_FOUND::toException);
+        userEntity.disable();
     }
 }

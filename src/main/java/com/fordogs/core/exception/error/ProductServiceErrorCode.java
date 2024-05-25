@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum ProductErrorCode implements BaseErrorCode<DomainException> {
+public enum ProductServiceErrorCode implements BaseErrorCode<DomainException> {
 
     PRODUCT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "같은 이름의 상품이 이미 존재합니다."),
 

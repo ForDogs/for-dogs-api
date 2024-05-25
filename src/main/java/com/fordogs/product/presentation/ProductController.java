@@ -1,11 +1,12 @@
 package com.fordogs.product.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
+import com.fordogs.core.exception.error.ProductServiceErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.product.application.ProductService;
-import com.fordogs.core.exception.error.ProductErrorCode;
 import com.fordogs.product.presentation.dto.CreateProductDto;
 import com.fordogs.product.presentation.dto.ReadProductDto;
+import com.fordogs.core.exception.error.SecurityServiceErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,7 +29,7 @@ public class ProductController {
     private final ProductService productService;
 
     @Operation(summary = "상품 등록", operationId = "/products", description = "판매자(SELLER) 회원 전용 API")
-    @ApiErrorCode(ProductErrorCode.class)
+    @ApiErrorCode({ProductServiceErrorCode.class, SecurityServiceErrorCode.class})
     @PostMapping
     public ResponseEntity<SuccessResponse<CreateProductDto.Response>> handleCreateProductRequest(
             @Valid @RequestBody CreateProductDto.Request request) {
@@ -38,7 +39,7 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 검색 및 필터링", operationId = "/products")
-    @ApiErrorCode(ProductErrorCode.class)
+    @ApiErrorCode(ProductServiceErrorCode.class)
     @GetMapping
     public ResponseEntity<SuccessResponse<Page<ReadProductDto.Response>>> handleFindProductsRequest(
             @Parameter(name = "seller", example = "hong1234") @RequestParam(required = false, value = "seller") String sellerId,

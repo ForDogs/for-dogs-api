@@ -23,7 +23,7 @@ public class RefreshTokenEntity extends BaseEntity {
 
     public static RefreshTokenEntity create(UserEntity user, RefreshToken refreshToken) {
         if (user == null || refreshToken == null) {
-            throw new IllegalArgumentException("필수 인자가 부족하여 RefreshTokenEntity를 생성할 수 없습니다.");
+            throw new IllegalArgumentException("회원 정보와 토큰이 유효하지 않아 RefreshTokenEntity 생성이 불가합니다.");
         }
 
         return RefreshTokenEntity.builder()

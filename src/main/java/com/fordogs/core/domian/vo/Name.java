@@ -1,7 +1,7 @@
 package com.fordogs.core.domian.vo;
 
 import com.fordogs.core.util.validator.StringValidator;
-import com.fordogs.core.exception.error.UserErrorCode;
+import com.fordogs.core.exception.error.UserServiceErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -20,7 +20,7 @@ public class Name extends WrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!StringValidator.validateKoreanEnglish(value)) {
-            throw UserErrorCode.INVALID_NAME_FORMAT.toException();
+            throw UserServiceErrorCode.INVALID_NAME_FORMAT.toException();
         }
     }
 }
