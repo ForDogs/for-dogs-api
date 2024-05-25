@@ -39,7 +39,7 @@ public class ProductEntity extends BaseEntity {
     @Column(columnDefinition = "JSON")
     private String images;
 
-    private boolean isDeleted = false;
+    private boolean enabled = true;
 
     @Builder
     public ProductEntity(UserEntity seller, String name, Price price, int quantity, Description description, Category category, String[] images) {
@@ -50,6 +50,6 @@ public class ProductEntity extends BaseEntity {
         this.description = description;
         this.category = category != null ? category : Category.NONE;
         this.images = ConverterUtil.convertArrayToJson(images);
-        this.isDeleted = false;
+        this.enabled = true;
     }
 }

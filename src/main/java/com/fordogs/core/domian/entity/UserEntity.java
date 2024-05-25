@@ -38,7 +38,7 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role = Role.BUYER;
 
-    private boolean isDeleted = false;
+    private boolean enabled = true;
 
     @Builder
     public UserEntity(Id account, Name name, Email email, Password password, Role role) {
@@ -49,10 +49,10 @@ public class UserEntity extends BaseEntity {
                 .value(PasswordUtil.encode(password.getValue()))
                 .build();
         this.role = role != null ? role : Role.BUYER;
-        this.isDeleted = false;
+        this.enabled = true;
     }
 
-    public void disableAccount() {
-        this.isDeleted = true;
+    public void disable() {
+        this.enabled = false;
     }
 }
