@@ -6,11 +6,11 @@ import com.fordogs.core.exception.error.UserServiceErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.HeaderUtil;
 import com.fordogs.core.exception.error.SecurityServiceErrorCode;
-import com.fordogs.user.application.RefreshTokenService;
-import com.fordogs.user.application.UserService;
-import com.fordogs.user.presentation.dto.JoinDto;
-import com.fordogs.user.presentation.dto.LoginDto;
-import com.fordogs.user.presentation.dto.RefreshTokenDto;
+import com.fordogs.user.application.UserRefreshTokenService;
+import com.fordogs.user.application.UserManagementService;
+import com.fordogs.user.presentation.dto.UserJoinDto;
+import com.fordogs.user.presentation.dto.UserLoginDto;
+import com.fordogs.user.presentation.dto.UserRefreshTokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -27,15 +27,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
-    private final RefreshTokenService refreshTokenService;
+    private final UserManagementService userManagementService;
+    private final UserRefreshTokenService userRefreshTokenService;
 
     @Operation(summary = "회원 가입", operationId = "/users/join")
     @ApiErrorCode(UserServiceErrorCode.class)
     @PostMapping("/join")
-    public ResponseEntity<SuccessResponse<JoinDto.Response>> handleJoinUserRequest(
-            @Valid @RequestBody JoinDto.Request request) {
-        JoinDto.Response response = userService.joinUser(request);
+    public ResponseEntity<SuccessResponse<UserJoinDto.Response>> handleJoinUserRequest(
+            @Valid @RequestBody UserJoinDto.Request request) {
+        UserJoinDto.Response response = userManagementService.joinUser(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
@@ -43,9 +43,9 @@ public class UserController {
     @Operation(summary = "로그인", operationId = "/users/login")
     @ApiErrorCode(UserServiceErrorCode.class)
     @PostMapping("/login")
-    public ResponseEntity<SuccessResponse<LoginDto.Response>> handleLoginRequest(
-            @Valid @RequestBody LoginDto.Request request) {
-        LoginDto.Response response = userService.login(request);
+    public ResponseEntity<SuccessResponse<UserLoginDto.Response>> handleLoginRequest(
+            @Valid @RequestBody UserLoginDto.Request request) {
+        UserLoginDto.Response response = userManagementService.login(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
@@ -53,9 +53,9 @@ public class UserController {
     @Operation(summary = "액세스 토큰 재발급", description = "요청 시 HTTP Cookie에 RefreshToken이 존재해야 합니다. [EX] REFRESH_TOKEN={VALUE}", operationId = "/users/refresh-token")
     @ApiErrorCode(RefreshTokenServiceErrorCode.class)
     @PostMapping("/refresh-token")
-    public ResponseEntity<SuccessResponse<RefreshTokenDto.Response>> handleRefreshAccessTokenRequest(
+    public ResponseEntity<SuccessResponse<UserRefreshTokenDto.Response>> handleRefreshAccessTokenRequest(
             @Parameter(name = "AccessToken", required = true, in = ParameterIn.HEADER) @RequestHeader(name = "Authorization") String authorizationHeader) {
-        RefreshTokenDto.Response response = refreshTokenService.refreshAccessToken(HeaderUtil.extractAccessToken(authorizationHeader));
+        UserRefreshTokenDto.Response response = userRefreshTokenService.refreshAccessToken(HeaderUtil.extractAccessToken(authorizationHeader));
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
@@ -64,7 +64,7 @@ public class UserController {
     @ApiErrorCode({UserServiceErrorCode.class, SecurityServiceErrorCode.class})
     @DeleteMapping("/deactivation")
     public ResponseEntity<SuccessResponse<Object>> handleDeactivateUserRequest() {
-        userService.deactivateUser();
+        userManagementService.deactivateUser();
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

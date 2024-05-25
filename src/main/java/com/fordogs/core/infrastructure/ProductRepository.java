@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<ProductEntity, UUID> {
+
     boolean existsByName(String name);
 
     Page<ProductEntity> findBySellerAccountAndEnabledTrue(Id account, Pageable pageable);

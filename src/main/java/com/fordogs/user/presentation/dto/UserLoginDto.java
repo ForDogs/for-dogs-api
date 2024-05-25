@@ -1,7 +1,7 @@
 package com.fordogs.user.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fordogs.core.domian.entity.UserEntity;
+import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.enums.Role;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.RefreshToken;
@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-public class LoginDto {
+public class UserLoginDto {
 
     @Schema(description = "로그인 요청")
     @Getter
@@ -47,9 +47,9 @@ public class LoginDto {
         @Schema(description = "Access Token")
         private String accessToken;
 
-        public static LoginDto.Response toResponse(UserEntity userEntity, RefreshToken refreshToken, AccessToken accessToken) {
-            return LoginDto.Response.builder()
-                    .userId(userEntity.getAccount().getValue())
+        public static UserLoginDto.Response toResponse(UserManagementEntity userManagementEntity, RefreshToken refreshToken, AccessToken accessToken) {
+            return UserLoginDto.Response.builder()
+                    .userId(userManagementEntity.getAccount().getValue())
                     .refreshToken(refreshToken.getValue())
                     .accessToken(accessToken.getValue())
                     .build();

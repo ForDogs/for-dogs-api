@@ -2,7 +2,7 @@ package com.fordogs.product.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fordogs.core.domian.entity.ProductEntity;
-import com.fordogs.core.domian.entity.UserEntity;
+import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.enums.Category;
 import com.fordogs.core.domian.vo.Description;
 import com.fordogs.core.domian.vo.Price;
@@ -41,7 +41,7 @@ public class ProductCreateDto {
         @Schema(description = "상품 카테고리", defaultValue = "NONE")
         private Category productCategory;
 
-        public ProductEntity toEntity(UserEntity userEntity) {
+        public ProductEntity toEntity(UserManagementEntity userManagementEntity) {
             return ProductEntity.builder()
                     .name(this.productName)
                     .price(Price.builder().value(this.productPrice).build())
@@ -49,7 +49,7 @@ public class ProductCreateDto {
                     .description(Description.builder().value(this.productDescription).build())
                     .images(this.productImages)
                     .category(this.productCategory)
-                    .seller(userEntity)
+                    .seller(userManagementEntity)
                     .build();
         }
     }

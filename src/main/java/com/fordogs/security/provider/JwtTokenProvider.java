@@ -1,7 +1,7 @@
 package com.fordogs.security.provider;
 
 import com.fordogs.configuraion.properties.TokenProperties;
-import com.fordogs.core.domian.entity.UserEntity;
+import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.RefreshToken;
 import com.fordogs.core.exception.error.SecurityServiceErrorCode;
@@ -56,11 +56,11 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public AccessToken generateAccessToken(UserEntity user) {
+    public AccessToken generateAccessToken(UserManagementEntity user) {
         return AccessToken.createToken(user, secretKey, ACCESS_TOKEN_EXPIRATION_HOURS);
     }
 
-    public RefreshToken generateRefreshToken(UserEntity user) {
+    public RefreshToken generateRefreshToken(UserManagementEntity user) {
         return RefreshToken.createToken(user, secretKey, REFRESH_TOKEN_EXPIRATION_DAYS);
     }
 

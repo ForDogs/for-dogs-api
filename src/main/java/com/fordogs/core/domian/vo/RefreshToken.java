@@ -1,6 +1,6 @@
 package com.fordogs.core.domian.vo;
 
-import com.fordogs.core.domian.entity.UserEntity;
+import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.util.validator.StringValidator;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
@@ -31,7 +31,7 @@ public class RefreshToken extends WrapperObject<String> {
         }
     }
 
-    public static RefreshToken createToken(UserEntity user, Key secretKey, int expirationDays) {
+    public static RefreshToken createToken(UserManagementEntity user, Key secretKey, int expirationDays) {
         final String account = user.getAccount().getValue();
 
         if (account == null) {

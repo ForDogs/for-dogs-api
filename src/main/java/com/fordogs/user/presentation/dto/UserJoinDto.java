@@ -1,7 +1,7 @@
 package com.fordogs.user.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fordogs.core.domian.entity.UserEntity;
+import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.enums.Role;
 import com.fordogs.core.domian.vo.Email;
 import com.fordogs.core.domian.vo.Id;
@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-public class JoinDto {
+public class UserJoinDto {
 
     @Schema(description = "회원 가입 요청")
     @Getter
@@ -42,8 +42,8 @@ public class JoinDto {
         @Schema(description = "회원 역할", defaultValue = "BUYER")
         private Role userRole;
 
-        public UserEntity toEntity() {
-            return UserEntity.builder()
+        public UserManagementEntity toEntity() {
+            return UserManagementEntity.builder()
                     .account(Id.builder()
                             .value(this.userId)
                             .build())
@@ -75,10 +75,10 @@ public class JoinDto {
         @Schema(description = "생성된 회원명")
         private String userName;
 
-        public static Response toResponse(UserEntity userEntity) {
+        public static Response toResponse(UserManagementEntity userManagementEntity) {
             return Response.builder()
-                    .userId(userEntity.getAccount().getValue())
-                    .userName(userEntity.getName().getValue())
+                    .userId(userManagementEntity.getAccount().getValue())
+                    .userName(userManagementEntity.getName().getValue())
                     .build();
         }
     }

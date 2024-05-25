@@ -1,11 +1,11 @@
 package com.fordogs.product.application;
 
 import com.fordogs.core.domian.entity.ProductEntity;
-import com.fordogs.core.domian.entity.UserEntity;
+import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.vo.Id;
 import com.fordogs.core.exception.error.ProductServiceErrorCode;
 import com.fordogs.core.infrastructure.ProductRepository;
-import com.fordogs.core.infrastructure.UserRepository;
+import com.fordogs.core.infrastructure.UserManagementRepository;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.constants.RequestAttributesConstants;
 import com.fordogs.product.presentation.dto.ProductCreateDto;
@@ -25,17 +25,17 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
+    private final UserManagementRepository userManagementRepository;
 
     @Transactional
     public ProductCreateDto.Response createProduct(ProductCreateDto.Request request) {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
-        UserEntity userEntity = userRepository.findById(userId)
+        UserManagementEntity userManagementEntity = userManagementRepository.findById(userId)
                 .orElseThrow(ProductServiceErrorCode.USER_NOT_FOUND::toException);
         if (productRepository.existsByName(request.getProductName())) {
             throw ProductServiceErrorCode.PRODUCT_ALREADY_EXISTS.toException();
         }
-        ProductEntity saveProductEntity = productRepository.save(request.toEntity(userEntity));
+        ProductEntity saveProductEntity = productRepository.save(request.toEntity(userManagementEntity));
 
         return ProductCreateDto.Response.toResponse(saveProductEntity);
     }

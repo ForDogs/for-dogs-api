@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name = "user")
-public class UserEntity extends BaseEntity {
+public class UserManagementEntity extends BaseEntity {
 
     @Embedded
     @AttributeOverrides({
@@ -41,7 +41,7 @@ public class UserEntity extends BaseEntity {
     private boolean enabled = true;
 
     @Builder
-    public UserEntity(Id account, Name name, Email email, Password password, Role role) {
+    public UserManagementEntity(Id account, Name name, Email email, Password password, Role role) {
         this.account = account;
         this.name = name;
         this.email = email;

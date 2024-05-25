@@ -15,7 +15,7 @@ public class ProductEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", referencedColumnName = "id", nullable = false)
-    private UserEntity seller;
+    private UserManagementEntity seller;
 
     private String name;
 
@@ -42,7 +42,7 @@ public class ProductEntity extends BaseEntity {
     private boolean enabled = true;
 
     @Builder
-    public ProductEntity(UserEntity seller, String name, Price price, int quantity, Description description, Category category, String[] images) {
+    public ProductEntity(UserManagementEntity seller, String name, Price price, int quantity, Description description, Category category, String[] images) {
         this.seller = seller;
         this.name = name;
         this.price = price;

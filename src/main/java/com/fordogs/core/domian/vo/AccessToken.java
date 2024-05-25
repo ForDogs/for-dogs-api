@@ -1,6 +1,6 @@
 package com.fordogs.core.domian.vo;
 
-import com.fordogs.core.domian.entity.UserEntity;
+import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.util.validator.StringValidator;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
@@ -34,7 +34,7 @@ public class AccessToken extends WrapperObject<String> {
         }
     }
 
-    public static AccessToken createToken(UserEntity user, Key secretKey, int expirationHours) {
+    public static AccessToken createToken(UserManagementEntity user, Key secretKey, int expirationHours) {
         final String userId = user.getId().toString();
         final String account = user.getAccount().getValue();
         final String role = user.getRole().name();
