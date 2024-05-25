@@ -38,13 +38,13 @@ public class RefreshTokenService {
         }
         String refreshToken = HttpServletUtil.getCookie(REFRESH_TOKEN_COOKIE_NAME)
                 .orElseThrow(JwtErrorCode.MISSING_REFRESH_TOKEN::toException);
-        if (!jwtTokenProvider.compareSubjects(accessToken, refreshToken)) {
-            throw JwtErrorCode.TOKEN_ISSUER_MISMATCH.toException();
+        if (jwtTokenProvider.isTokenExpired(refreshToken)) {
+            throw JwtErrorCode.EXPIRED_REFRESH_TOKEN.toException();
         }
         RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findByToken(RefreshToken.builder().value(refreshToken).build())
                 .orElseThrow(JwtErrorCode.INVALID_REFRESH_TOKEN::toException);
-        if (jwtTokenProvider.isTokenExpired(refreshTokenEntity.getToken().getValue())) {
-            throw JwtErrorCode.EXPIRED_REFRESH_TOKEN.toException();
+        if (!jwtTokenProvider.compareSubjects(accessToken, refreshToken)) {
+            throw JwtErrorCode.TOKEN_ISSUER_MISMATCH.toException();
         }
         String refreshedAccessToken = jwtTokenProvider.generateAccessToken(refreshTokenEntity.getUser()).getValue();
 

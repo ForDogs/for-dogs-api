@@ -121,12 +121,14 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-
             Date expiration = claims.getExpiration();
 
             return expiration != null && expiration.before(new Date());
-        } catch (ExpiredJwtException | IllegalArgumentException e) {
+        } catch (ExpiredJwtException ex) {
             return true;
+        } catch (JwtException ex) {
+            validateToken(token);
+            return false;
         }
     }
 

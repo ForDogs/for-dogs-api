@@ -32,7 +32,7 @@ public class RefreshToken extends WrapperObject<String> {
     }
 
     public static RefreshToken createToken(UserEntity user, Key secretKey, int expirationDays) {
-        final String account = user.getAccount().toString();
+        final String account = user.getAccount().getValue();
 
         if (account == null) {
             throw new IllegalArgumentException("RefreshToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
