@@ -4,13 +4,13 @@ import com.fordogs.core.domian.entity.ProductEntity;
 import com.fordogs.core.domian.entity.UserEntity;
 import com.fordogs.core.domian.vo.Id;
 import com.fordogs.core.exception.error.ProductServiceErrorCode;
-import com.fordogs.core.exception.error.UserServiceErrorCode;
 import com.fordogs.core.infrastructure.ProductRepository;
 import com.fordogs.core.infrastructure.UserRepository;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.constants.RequestAttributesConstants;
-import com.fordogs.product.presentation.dto.CreateProductDto;
-import com.fordogs.product.presentation.dto.ReadProductDto;
+import com.fordogs.product.presentation.dto.ProductCreateDto;
+import com.fordogs.product.presentation.dto.ProductDetailDto;
+import com.fordogs.product.presentation.dto.ProductListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,23 +28,30 @@ public class ProductService {
     private final UserRepository userRepository;
 
     @Transactional
-    public CreateProductDto.Response createProduct(CreateProductDto.Request request) {
+    public ProductCreateDto.Response createProduct(ProductCreateDto.Request request) {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(UserServiceErrorCode.USER_NOT_FOUND::toException);
+                .orElseThrow(ProductServiceErrorCode.USER_NOT_FOUND::toException);
         if (productRepository.existsByName(request.getProductName())) {
             throw ProductServiceErrorCode.PRODUCT_ALREADY_EXISTS.toException();
         }
         ProductEntity saveProductEntity = productRepository.save(request.toEntity(userEntity));
 
-        return CreateProductDto.Response.toResponse(saveProductEntity);
+        return ProductCreateDto.Response.toResponse(saveProductEntity);
     }
 
-    public Page<ReadProductDto.Response> findProducts(String sellerId, Pageable pageable) {
-        Page<ProductEntity> products = (sellerId != null)
-                ? productRepository.findBySellerAccount(Id.builder().value(sellerId).build(), pageable)
-                : productRepository.findAll(pageable);
+    public Page<ProductListDto.Response> findProducts(String sellerId, Pageable pageable) {
+        Page<ProductEntity> productEntities = (sellerId != null)
+                ? productRepository.findBySellerAccountAndEnabledTrue(Id.builder().value(sellerId).build(), pageable)
+                : productRepository.findAllByEnabledTrue(pageable);
 
-        return products.map(ReadProductDto.Response::toResponse);
+        return productEntities.map(ProductListDto.Response::toResponse);
+    }
+
+    public ProductDetailDto.Response findOneProduct(String productId) {
+        ProductEntity productEntity = productRepository.findByIdAndEnabledTrue(UUID.fromString(productId))
+                .orElseThrow(ProductServiceErrorCode.PRODUCT_NOT_FOUND::toException);
+
+        return ProductDetailDto.Response.toResponse(productEntity);
     }
 }

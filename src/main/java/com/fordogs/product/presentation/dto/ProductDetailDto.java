@@ -11,14 +11,17 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
-public class ReadProductDto {
+public class ProductDetailDto {
 
-    @Schema(description = "상품 검색 응답")
+    @Schema(description = "상품 상세 검색 응답")
     @Getter
     @Setter
     @Builder
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Response {
+
+        @Schema(description = "상품 판매자 ID")
+        private String productSeller;
 
         @Schema(description = "상품 ID")
         private String productId;
@@ -32,6 +35,9 @@ public class ReadProductDto {
         @Schema(description = "상품 수량")
         private int productQuantity;
 
+        @Schema(description = "상품 설명")
+        private String productDescription;
+
         @Schema(description = "상품 카테고리")
         private Category productCategory;
 
@@ -40,10 +46,12 @@ public class ReadProductDto {
 
         public static Response toResponse(ProductEntity productEntity) {
             return Response.builder()
+                    .productSeller(productEntity.getSeller().getAccount().getValue())
                     .productId(productEntity.getId().toString())
                     .productName(productEntity.getName())
                     .productPrice(productEntity.getPrice().getValue())
                     .productQuantity(productEntity.getQuantity())
+                    .productDescription(productEntity.getDescription().getValue())
                     .productCategory(productEntity.getCategory())
                     .productImages(ConverterUtil.convertJsonToArray(productEntity.getImages()))
                     .build();

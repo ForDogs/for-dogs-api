@@ -13,7 +13,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
-public class CreateProductDto {
+public class ProductCreateDto {
 
     @Schema(description = "상품 등록 요청")
     @Getter

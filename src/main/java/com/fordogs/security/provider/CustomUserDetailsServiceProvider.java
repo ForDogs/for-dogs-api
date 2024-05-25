@@ -19,7 +19,7 @@ public class CustomUserDetailsServiceProvider implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByAccount(Id.builder().value(username).build())
-                .orElseThrow(SecurityServiceErrorCode.TOKEN_USER_NOT_FOUND::toException);
+                .orElseThrow(SecurityServiceErrorCode.USER_DISABLED::toException);
         if (!userEntity.isEnabled()) {
             throw SecurityServiceErrorCode.USER_DISABLED.toException();
         }
