@@ -49,7 +49,7 @@ public class AccessToken extends WrapperObject<String> {
                 .claim(CLAIMS_USER_ID, userId)
                 .claim(CLAIMS_ROLE, role)
                 .setIssuedAt(now)
-                .setExpiration(DateUtils.addHours(now, expirationHours))
+                .setExpiration(DateUtils.addMinutes(now, expirationHours))
                 .signWith(secretKey)
                 .compact();
 

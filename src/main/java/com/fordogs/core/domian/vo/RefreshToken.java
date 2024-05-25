@@ -42,7 +42,7 @@ public class RefreshToken extends WrapperObject<String> {
         String jwt = Jwts.builder()
                 .setSubject(account)
                 .setIssuedAt(now)
-                .setExpiration(DateUtils.addDays(now, expirationDays))
+                .setExpiration(DateUtils.addMinutes(now, expirationDays))
                 .signWith(secretKey)
                 .compact();
 

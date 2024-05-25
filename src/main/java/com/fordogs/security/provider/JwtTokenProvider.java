@@ -29,8 +29,8 @@ import java.util.UUID;
 public class JwtTokenProvider {
 
     private static final String CLAIMS_USER_ID = "id";
-    private static final int ACCESS_TOKEN_EXPIRATION_HOURS = 12;
-    private static final int REFRESH_TOKEN_EXPIRATION_DAYS = 14;
+    private static final int ACCESS_TOKEN_EXPIRATION_HOURS = 5;
+    private static final int REFRESH_TOKEN_EXPIRATION_DAYS = 15;
 
     private Key secretKey;
 
