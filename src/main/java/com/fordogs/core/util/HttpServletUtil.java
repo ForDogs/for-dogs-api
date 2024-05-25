@@ -1,6 +1,5 @@
 package com.fordogs.core.util;
 
-import com.fordogs.core.util.constants.RequestAttributesConstants;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
@@ -8,7 +7,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HttpServletUtil {
@@ -76,11 +78,7 @@ public class HttpServletUtil {
         }
     }
 
-    public static UUID extractUserId() {
-        return (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
-    }
-
-    private static Object getRequestAttribute(String attributeName) {
+    public static Object getRequestAttribute(String attributeName) {
         HttpServletRequest request = getHttpServletRequest();
 
         return request.getAttribute(attributeName);

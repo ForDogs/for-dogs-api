@@ -8,6 +8,7 @@ import com.fordogs.core.exception.error.UserErrorCode;
 import com.fordogs.core.infrastructure.UserRepository;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.PasswordUtil;
+import com.fordogs.core.util.constants.RequestAttributesConstants;
 import com.fordogs.security.provider.JwtTokenProvider;
 import com.fordogs.user.presentation.dto.JoinDto;
 import com.fordogs.user.presentation.dto.LoginDto;
@@ -58,7 +59,7 @@ public class UserService {
 
     @Transactional
     public void deactivateUser() {
-        UUID userId = HttpServletUtil.extractUserId();
+        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
         userEntity.disableAccount();

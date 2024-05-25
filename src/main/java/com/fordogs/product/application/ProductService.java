@@ -8,6 +8,7 @@ import com.fordogs.core.exception.error.UserErrorCode;
 import com.fordogs.core.infrastructure.ProductRepository;
 import com.fordogs.core.infrastructure.UserRepository;
 import com.fordogs.core.util.HttpServletUtil;
+import com.fordogs.core.util.constants.RequestAttributesConstants;
 import com.fordogs.product.presentation.dto.CreateProductDto;
 import com.fordogs.product.presentation.dto.ReadProductDto;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class ProductService {
 
     @Transactional
     public CreateProductDto.Response createProduct(CreateProductDto.Request request) {
-        UUID userId = HttpServletUtil.extractUserId();
+        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
         if (productRepository.existsByName(request.getProductName())) {
