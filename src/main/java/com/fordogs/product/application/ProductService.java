@@ -5,12 +5,12 @@ import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.vo.Id;
 import com.fordogs.core.exception.error.ProductServiceErrorCode;
 import com.fordogs.core.infrastructure.ProductRepository;
-import com.fordogs.core.infrastructure.UserManagementRepository;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.constants.RequestAttributesConstants;
 import com.fordogs.product.presentation.dto.ProductCreateDto;
 import com.fordogs.product.presentation.dto.ProductDetailDto;
 import com.fordogs.product.presentation.dto.ProductListDto;
+import com.fordogs.user.application.UserManagementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,13 +25,12 @@ import java.util.UUID;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final UserManagementRepository userManagementRepository;
+    private final UserManagementService userManagementService;
 
     @Transactional
     public ProductCreateDto.Response createProduct(ProductCreateDto.Request request) {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
-        UserManagementEntity userManagementEntity = userManagementRepository.findById(userId)
-                .orElseThrow(ProductServiceErrorCode.USER_NOT_FOUND::toException);
+        UserManagementEntity userManagementEntity = userManagementService.findById(userId);
         if (productRepository.existsByName(request.getProductName())) {
             throw ProductServiceErrorCode.PRODUCT_ALREADY_EXISTS.toException();
         }
@@ -48,7 +47,7 @@ public class ProductService {
         return productEntities.map(ProductListDto.Response::toResponse);
     }
 
-    public ProductDetailDto.Response findOneProduct(String productId) {
+    public ProductDetailDto.Response findProductDetails(String productId) {
         ProductEntity productEntity = productRepository.findByIdAndEnabledTrue(UUID.fromString(productId))
                 .orElseThrow(ProductServiceErrorCode.PRODUCT_NOT_FOUND::toException);
 

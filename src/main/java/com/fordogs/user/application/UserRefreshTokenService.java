@@ -20,8 +20,8 @@ public class UserRefreshTokenService {
 
     private static final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
 
-    private final JwtTokenProvider jwtTokenProvider;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public RefreshToken generateAndSaveRefreshToken(UserManagementEntity userManagementEntity) {

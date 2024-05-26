@@ -54,9 +54,9 @@ public class ProductController {
     @Operation(summary = "상품 상세 검색", operationId = "/products/{productId}")
     @ApiErrorCode(ProductServiceErrorCode.class)
     @GetMapping("/{productId}")
-    public ResponseEntity<SuccessResponse<ProductDetailDto.Response>> handleFindOneProductsRequest(
+    public ResponseEntity<SuccessResponse<ProductDetailDto.Response>> handleFindProductDetailsRequest(
             @Parameter(name = "상품 ID", required = true, example = "11ef1a87-caa6-2dd1-b72d-9713d59057a1", in = ParameterIn.PATH) @PathVariable(name = "productId") String productId) {
-        ProductDetailDto.Response response = productService.findOneProduct(productId);
+        ProductDetailDto.Response response = productService.findProductDetails(productId);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }

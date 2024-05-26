@@ -4,6 +4,7 @@ import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.Id;
 import com.fordogs.core.domian.vo.RefreshToken;
+import com.fordogs.core.exception.error.ProductServiceErrorCode;
 import com.fordogs.core.exception.error.UserServiceErrorCode;
 import com.fordogs.core.infrastructure.UserManagementRepository;
 import com.fordogs.core.util.HttpServletUtil;
@@ -23,9 +24,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserManagementService {
 
-    private final UserRefreshTokenService userRefreshTokenService;
-    private final JwtTokenProvider jwtTokenProvider;
     private final UserManagementRepository userManagementRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserRefreshTokenService userRefreshTokenService;
 
     @Transactional
     public UserJoinDto.Response joinUser(UserJoinDto.Request request) {
@@ -60,8 +61,12 @@ public class UserManagementService {
     @Transactional
     public void deactivateUser() {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
-        UserManagementEntity userManagementEntity = userManagementRepository.findById(userId)
-                .orElseThrow(UserServiceErrorCode.USER_NOT_FOUND::toException);
+        UserManagementEntity userManagementEntity = findById(userId);
         userManagementEntity.disable();
+    }
+
+    public UserManagementEntity findById(UUID userId) {
+        return userManagementRepository.findById(userId)
+                .orElseThrow(ProductServiceErrorCode.USER_NOT_FOUND::toException);
     }
 }
