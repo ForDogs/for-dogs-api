@@ -13,9 +13,9 @@ public interface ProductRepository extends JpaRepository<ProductEntity, UUID> {
 
     boolean existsByName(String name);
 
-    Page<ProductEntity> findBySellerAccountAndEnabledTrue(Id account, Pageable pageable);
+    Page<ProductEntity> findBySellerAccountAndSellerEnabledTrueAndEnabledTrue(Id account, Pageable pageable);
 
-    Page<ProductEntity> findAllByEnabledTrue(Pageable pageable);
+    Page<ProductEntity> findAllBySellerEnabledTrueAndEnabledTrue(Pageable pageable);
 
-    Optional<ProductEntity> findByIdAndEnabledTrue(UUID id);
+    Optional<ProductEntity> findByIdAndSellerEnabledTrueAndEnabledTrue(UUID id);
 }

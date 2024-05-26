@@ -41,14 +41,14 @@ public class ProductService {
 
     public Page<ProductListDto.Response> findProducts(String sellerId, Pageable pageable) {
         Page<ProductEntity> productEntities = (sellerId != null)
-                ? productRepository.findBySellerAccountAndEnabledTrue(Id.builder().value(sellerId).build(), pageable)
-                : productRepository.findAllByEnabledTrue(pageable);
+                ? productRepository.findBySellerAccountAndSellerEnabledTrueAndEnabledTrue(Id.builder().value(sellerId).build(), pageable)
+                : productRepository.findAllBySellerEnabledTrueAndEnabledTrue(pageable);
 
         return productEntities.map(ProductListDto.Response::toResponse);
     }
 
     public ProductDetailDto.Response findProductDetails(String productId) {
-        ProductEntity productEntity = productRepository.findByIdAndEnabledTrue(UUID.fromString(productId))
+        ProductEntity productEntity = productRepository.findByIdAndSellerEnabledTrueAndEnabledTrue(UUID.fromString(productId))
                 .orElseThrow(ProductServiceErrorCode.PRODUCT_NOT_FOUND::toException);
 
         return ProductDetailDto.Response.toResponse(productEntity);
