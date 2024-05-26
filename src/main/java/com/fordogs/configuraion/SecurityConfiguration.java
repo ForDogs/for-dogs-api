@@ -50,6 +50,7 @@ public class SecurityConfiguration {
 
         http.authorizeHttpRequests(authorizeRequest -> authorizeRequest
                 .requestMatchers(HttpMethod.DELETE, "/users/deactivation").authenticated()
+                .requestMatchers(HttpMethod.GET, "/users/profile").authenticated()
 
                 .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority(ROLE_SELLER)
 

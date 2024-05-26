@@ -11,6 +11,7 @@ import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.PasswordUtil;
 import com.fordogs.core.util.constants.RequestAttributesConstants;
 import com.fordogs.security.provider.JwtTokenProvider;
+import com.fordogs.user.presentation.dto.UserDetailDto;
 import com.fordogs.user.presentation.dto.UserJoinDto;
 import com.fordogs.user.presentation.dto.UserLoginDto;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +64,13 @@ public class UserManagementService {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
         UserManagementEntity userManagementEntity = findById(userId);
         userManagementEntity.disable();
+    }
+
+    public UserDetailDto.Response findUserDetails() {
+        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
+        UserManagementEntity userManagementEntity = findById(userId);
+
+        return UserDetailDto.Response.toResponse(userManagementEntity);
     }
 
     public UserManagementEntity findById(UUID userId) {

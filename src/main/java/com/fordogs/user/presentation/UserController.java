@@ -2,12 +2,13 @@ package com.fordogs.user.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.exception.error.RefreshTokenServiceErrorCode;
+import com.fordogs.core.exception.error.SecurityServiceErrorCode;
 import com.fordogs.core.exception.error.UserServiceErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.HeaderUtil;
-import com.fordogs.core.exception.error.SecurityServiceErrorCode;
-import com.fordogs.user.application.UserRefreshTokenService;
 import com.fordogs.user.application.UserManagementService;
+import com.fordogs.user.application.UserRefreshTokenService;
+import com.fordogs.user.presentation.dto.UserDetailDto;
 import com.fordogs.user.presentation.dto.UserJoinDto;
 import com.fordogs.user.presentation.dto.UserLoginDto;
 import com.fordogs.user.presentation.dto.UserRefreshTokenDto;
@@ -67,5 +68,14 @@ public class UserController {
         userManagementService.deactivateUser();
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Operation(summary = "회원 정보 조회", operationId = "/users/profile")
+    @ApiErrorCode({UserServiceErrorCode.class, SecurityServiceErrorCode.class})
+    @GetMapping("/profile")
+    public ResponseEntity<SuccessResponse<UserDetailDto.Response>> handleFindUserDetailsRequest() {
+        UserDetailDto.Response response = userManagementService.findUserDetails();
+
+        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 }
