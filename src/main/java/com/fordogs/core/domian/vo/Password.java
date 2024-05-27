@@ -1,7 +1,7 @@
 package com.fordogs.core.domian.vo;
 
 import com.fordogs.core.util.validator.StringValidator;
-import com.fordogs.core.exception.error.UserServiceErrorCode;
+import com.fordogs.core.exception.error.UserManagementServiceErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -23,13 +23,13 @@ public class Password extends WrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!StringValidator.validateLength(value, MIN_LENGTH, MAX_LENGTH)) {
-            throw UserServiceErrorCode.INVALID_PASSWORD_LENGTH.toException();
+            throw UserManagementServiceErrorCode.INVALID_PASSWORD_LENGTH.toException();
         }
         if (!StringValidator.validatePasswordPattern(value)) {
-            throw UserServiceErrorCode.INVALID_PASSWORD_PATTERN.toException();
+            throw UserManagementServiceErrorCode.INVALID_PASSWORD_PATTERN.toException();
         }
         if (!StringValidator.validateNoConsecutiveChars(value)) {
-            throw UserServiceErrorCode.INVALID_PASSWORD_CONSECUTIVE_CHARS.toException();
+            throw UserManagementServiceErrorCode.INVALID_PASSWORD_CONSECUTIVE_CHARS.toException();
         }
     }
 }

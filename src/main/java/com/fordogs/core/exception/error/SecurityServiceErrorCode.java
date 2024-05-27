@@ -15,8 +15,8 @@ public enum SecurityServiceErrorCode implements BaseErrorCode<SecurityAuthentica
     UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, "지원되지 않는 토큰 형식입니다."),
     INVALID_CLAIMS(HttpStatus.UNAUTHORIZED, "토큰 클레임이 비어있거나 유효하지 않습니다."),
 
-    USER_NOT_FOUND(UserServiceErrorCode.USER_NOT_FOUND.getHttpStatus(), UserServiceErrorCode.USER_NOT_FOUND.getMessage()),
-    USER_DISABLED(UserServiceErrorCode.USER_DISABLED.getHttpStatus(), UserServiceErrorCode.USER_DISABLED.getMessage());
+    USER_NOT_FOUND(UserManagementServiceErrorCode.USER_NOT_FOUND.getHttpStatus(), UserManagementServiceErrorCode.USER_NOT_FOUND.getMessage()),
+    USER_DISABLED(UserManagementServiceErrorCode.USER_DISABLED.getHttpStatus(), UserManagementServiceErrorCode.USER_DISABLED.getMessage());
 
     private final HttpStatus httpStatus;
 

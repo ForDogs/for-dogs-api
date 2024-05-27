@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum UserServiceErrorCode implements BaseErrorCode<DomainException> {
+public enum UserManagementServiceErrorCode implements BaseErrorCode<DomainException> {
 
     DUPLICATE_USER_ID(HttpStatus.BAD_REQUEST, "이미 사용 중인 회원 ID입니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "아이디와 일치하는 회원을 찾을 수 없습니다."),

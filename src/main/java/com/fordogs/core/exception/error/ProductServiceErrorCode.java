@@ -16,7 +16,7 @@ public enum ProductServiceErrorCode implements BaseErrorCode<DomainException> {
     PROFANITY_IN_DESCRIPTION(HttpStatus.BAD_REQUEST, "설명에 욕설이 포함되어 있습니다."),
     INVALID_PRICE(HttpStatus.BAD_REQUEST, "가격은 음수가 될 수 없습니다."),
 
-    USER_NOT_FOUND(UserServiceErrorCode.USER_NOT_FOUND.getHttpStatus(), UserServiceErrorCode.USER_NOT_FOUND.getMessage());
+    USER_NOT_FOUND(UserManagementServiceErrorCode.USER_NOT_FOUND.getHttpStatus(), UserManagementServiceErrorCode.USER_NOT_FOUND.getMessage());
 
     private final HttpStatus httpStatus;
 
