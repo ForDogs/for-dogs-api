@@ -35,11 +35,11 @@ public class UserJoinDto {
         @NotBlank(message = "이메일 도메인을 입력해주세요.")
         private String userEmailDomain;
 
-        @Schema(description = "회원 비밀번호", requiredMode = Schema.RequiredMode.REQUIRED, example = "P@ssw0rd123!")
+        @Schema(description = "회원 비밀번호", requiredMode = Schema.RequiredMode.REQUIRED, example = "P@ssw0rd13!")
         @NotBlank(message = "비밀번호를 입력해주세요.")
         private String userPassword;
 
-        @Schema(description = "회원 역할", defaultValue = "BUYER")
+        @Schema(description = "회원 역할", defaultValue = "BUYER", example = "SELLER")
         private Role userRole;
 
         public UserManagementEntity toEntity() {
