@@ -12,6 +12,10 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -29,7 +33,6 @@ public class S3ImageUploader {
         if (imageFile.isEmpty() || Objects.isNull(imageFile.getOriginalFilename())) {
             throw S3ErrorCode.IMAGE_FILE_EMPTY.toException();
         }
-
         String originalFilename = validateImageFilename(imageFile.getOriginalFilename());
         String storedFilename = UUID.randomUUID().toString().substring(0, 10) + originalFilename;
 
@@ -55,19 +58,6 @@ public class S3ImageUploader {
         return ImageUploadResponse.toResponse(originalFilename, fileUrl);
     }
 
-    public void deleteImage(String imagePath) {
-        try {
-            DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
-                    .bucket(s3Properties.getS3().getBucketName())
-                    .key(imagePath)
-                    .build();
-
-            s3Client.deleteObject(deleteRequest);
-        } catch (Exception e) {
-            throw S3ErrorCode.S3_BUCKET_DELETE_FAILED.toException();
-        }
-    }
-
     private String validateImageFilename(String filename) {
         int lastDotIndex = filename.lastIndexOf(".");
         if (lastDotIndex == -1) {
@@ -79,5 +69,30 @@ public class S3ImageUploader {
         }
 
         return filename;
+    }
+
+    public void deleteImage(String imagePath) {
+        String key = extractKeyFromImageUrl(imagePath);
+        try {
+            DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                    .bucket(s3Properties.getS3().getBucketName())
+                    .key(key)
+                    .build();
+
+            s3Client.deleteObject(deleteRequest);
+        } catch (Exception e) {
+            throw S3ErrorCode.S3_BUCKET_DELETE_FAILED.toException();
+        }
+    }
+
+    private String extractKeyFromImageUrl(String imagePath) {
+        try {
+            URL url = new URL(imagePath);
+            String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
+
+            return decodingKey.substring(1);
+        } catch (MalformedURLException e){
+            throw S3ErrorCode.INVALID_IMAGE_URL.toException();
+        }
     }
 }

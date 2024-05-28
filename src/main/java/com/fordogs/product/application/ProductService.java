@@ -70,4 +70,10 @@ public class ProductService {
 
         return ProductImageFileUploadDto.Response.toResponse(imageUploadResponseList);
     }
+
+    public void deleteProductImages(String[] imageUrls) {
+        for (String imageUrl : imageUrls) {
+            s3ImageUploader.deleteImage(imageUrl);
+        }
+    }
 }

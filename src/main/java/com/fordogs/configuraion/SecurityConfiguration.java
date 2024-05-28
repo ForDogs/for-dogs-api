@@ -52,7 +52,9 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.DELETE, "/users/deactivation").authenticated()
                 .requestMatchers(HttpMethod.GET, "/users/profile").authenticated()
 
-                .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority(ROLE_SELLER)
+                .requestMatchers(HttpMethod.POST, "/products").hasAuthority(ROLE_SELLER)
+                .requestMatchers(HttpMethod.POST, "/products/images/upload").hasAuthority(ROLE_SELLER)
+                .requestMatchers(HttpMethod.DELETE, "/products/images").hasAuthority(ROLE_SELLER)
 
                 .requestMatchers("/swagger-ui/**", "/api-docs/**", "/docs").permitAll()
                 .requestMatchers("/users/**").permitAll()

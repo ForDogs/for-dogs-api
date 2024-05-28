@@ -34,7 +34,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @Operation(summary = "상품 등록", operationId = "/products", description = "판매자(SELLER) 회원 전용 API")
+    @Operation(summary = "상품 등록", operationId = "/products")
     @ApiErrorCode({ProductServiceErrorCode.class, SecurityServiceErrorCode.class})
     @PostMapping
     public ResponseEntity<SuccessResponse<ProductCreateDto.Response>> handleCreateProductRequest(
@@ -65,13 +65,23 @@ public class ProductController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 
-    @Operation(summary = "상품 이미지 파일 업로드", operationId = "/products/upload", description = "업로드 가능 이미지 확장자: jpg, jpeg, png, gif")
+    @Operation(summary = "상품 이미지 파일 업로드", operationId = "/products/images/upload", description = "업로드 가능 이미지 확장자: jpg, jpeg, png, gif")
     @ApiErrorCode({S3ErrorCode.class, SecurityServiceErrorCode.class})
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/images/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SuccessResponse<ProductImageFileUploadDto.Response>> handleUploadProductImagesRequest(
             @RequestPart(value = "imageFiles") MultipartFile[] imageFiles) {
         ProductImageFileUploadDto.Response response = productService.uploadProductImages(imageFiles);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "상품 이미지 파일 삭제", operationId = "/products/images")
+    @ApiErrorCode({S3ErrorCode.class, SecurityServiceErrorCode.class})
+    @DeleteMapping(value = "/images")
+    public ResponseEntity<SuccessResponse<Object>> handleDeleteProductImagesRequest(
+            @Parameter(name = "상품 이미지 URL", required = true, example = "https://bucket/product.jpg", in = ParameterIn.QUERY) @RequestParam("imageUrls") String[] imageUrls) {
+        productService.deleteProductImages(imageUrls);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
