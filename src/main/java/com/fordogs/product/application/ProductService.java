@@ -4,7 +4,7 @@ import com.fordogs.core.domian.entity.ProductEntity;
 import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.enums.Category;
 import com.fordogs.core.domian.specification.ProductSpecification;
-import com.fordogs.core.exception.error.ProductServiceErrorCode;
+import com.fordogs.core.exception.error.ProductErrorCode;
 import com.fordogs.core.infrastructure.ProductRepository;
 import com.fordogs.core.infrastructure.aws.s3.S3ImageUploader;
 import com.fordogs.core.infrastructure.aws.s3.dto.ImageUploadResponse;
@@ -40,7 +40,7 @@ public class ProductService {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
         UserManagementEntity userManagementEntity = userManagementService.findById(userId);
         if (productRepository.existsByName(request.getProductName())) {
-            throw ProductServiceErrorCode.PRODUCT_ALREADY_EXISTS.toException();
+            throw ProductErrorCode.PRODUCT_ALREADY_EXISTS.toException();
         }
         ProductEntity saveProductEntity = productRepository.save(request.toEntity(userManagementEntity));
 
@@ -54,7 +54,7 @@ public class ProductService {
 
     public ProductDetailDto.Response findProductDetails(String productId) {
         ProductEntity productEntity = productRepository.findByIdAndSellerEnabledTrueAndEnabledTrue(UUID.fromString(productId))
-                .orElseThrow(ProductServiceErrorCode.PRODUCT_NOT_FOUND::toException);
+                .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
 
         return ProductDetailDto.Response.toResponse(productEntity);
     }

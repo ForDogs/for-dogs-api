@@ -4,7 +4,7 @@ import com.fordogs.core.domian.entity.UserRefreshTokenEntity;
 import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.RefreshToken;
-import com.fordogs.core.exception.error.UserRefreshTokenServiceErrorCode;
+import com.fordogs.core.exception.error.UserRefreshTokenErrorCode;
 import com.fordogs.core.infrastructure.UserRefreshTokenRepository;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.security.provider.JwtTokenProvider;
@@ -34,20 +34,20 @@ public class UserRefreshTokenService {
     @Transactional
     public UserRefreshTokenDto.Response refreshAccessToken(String accessToken) {
         if (!jwtTokenProvider.isTokenExpired(accessToken)) {
-            throw UserRefreshTokenServiceErrorCode.TOKEN_VALIDITY_REMAINING.toException();
+            throw UserRefreshTokenErrorCode.TOKEN_VALIDITY_REMAINING.toException();
         }
         String refreshToken = HttpServletUtil.getCookie(REFRESH_TOKEN_COOKIE_NAME)
-                .orElseThrow(UserRefreshTokenServiceErrorCode.MISSING_REFRESH_TOKEN::toException);
+                .orElseThrow(UserRefreshTokenErrorCode.MISSING_REFRESH_TOKEN::toException);
         if (jwtTokenProvider.isTokenExpired(refreshToken)) {
-            throw UserRefreshTokenServiceErrorCode.EXPIRED_REFRESH_TOKEN.toException();
+            throw UserRefreshTokenErrorCode.EXPIRED_REFRESH_TOKEN.toException();
         }
         UserRefreshTokenEntity userRefreshTokenEntity = userRefreshTokenRepository.findByToken(RefreshToken.builder().value(refreshToken).build())
-                .orElseThrow(UserRefreshTokenServiceErrorCode.INVALID_REFRESH_TOKEN::toException);
+                .orElseThrow(UserRefreshTokenErrorCode.INVALID_REFRESH_TOKEN::toException);
         if (!userRefreshTokenEntity.getUser().isEnabled()) {
-            throw UserRefreshTokenServiceErrorCode.USER_DISABLED.toException();
+            throw UserRefreshTokenErrorCode.USER_DISABLED.toException();
         }
         if (!jwtTokenProvider.compareSubjects(accessToken, refreshToken)) {
-            throw UserRefreshTokenServiceErrorCode.TOKEN_ISSUER_MISMATCH.toException();
+            throw UserRefreshTokenErrorCode.TOKEN_ISSUER_MISMATCH.toException();
         }
         String refreshedAccessToken = jwtTokenProvider.generateAccessToken(userRefreshTokenEntity.getUser()).getValue();
 

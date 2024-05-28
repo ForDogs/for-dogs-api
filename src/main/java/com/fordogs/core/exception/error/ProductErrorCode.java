@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum ProductServiceErrorCode implements BaseErrorCode<DomainException> {
+public enum ProductErrorCode implements BaseErrorCode<DomainException> {
 
     PRODUCT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "같은 이름의 상품이 이미 존재합니다."),
     PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST, "아이디와 일치하는 상품을 찾을 수 없습니다."),
@@ -17,7 +17,7 @@ public enum ProductServiceErrorCode implements BaseErrorCode<DomainException> {
     INVALID_PRICE(HttpStatus.BAD_REQUEST, "가격은 음수가 될 수 없습니다."),
     INVALID_CATEGORY_NAME(HttpStatus.BAD_REQUEST, "유효하지 않은 카테고리 이름입니다."),
 
-    USER_NOT_FOUND(UserManagementServiceErrorCode.USER_NOT_FOUND.getHttpStatus(), UserManagementServiceErrorCode.USER_NOT_FOUND.getMessage());
+    USER_NOT_FOUND(UserManagementErrorCode.USER_NOT_FOUND.getHttpStatus(), UserManagementErrorCode.USER_NOT_FOUND.getMessage());
 
     private final HttpStatus httpStatus;
 

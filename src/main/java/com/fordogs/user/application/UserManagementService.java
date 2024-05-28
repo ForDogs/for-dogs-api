@@ -4,8 +4,8 @@ import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.Id;
 import com.fordogs.core.domian.vo.RefreshToken;
-import com.fordogs.core.exception.error.ProductServiceErrorCode;
-import com.fordogs.core.exception.error.UserManagementServiceErrorCode;
+import com.fordogs.core.exception.error.ProductErrorCode;
+import com.fordogs.core.exception.error.UserManagementErrorCode;
 import com.fordogs.core.infrastructure.UserManagementRepository;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.PasswordUtil;
@@ -33,7 +33,7 @@ public class UserManagementService {
     public UserJoinDto.Response joinUser(UserJoinDto.Request request) {
         UserManagementEntity requestedUserManagementEntity = request.toEntity();
         if (userManagementRepository.existsByAccount(requestedUserManagementEntity.getAccount())) {
-            throw UserManagementServiceErrorCode.DUPLICATE_USER_ID.toException();
+            throw UserManagementErrorCode.DUPLICATE_USER_ID.toException();
         }
         UserManagementEntity savedUserManagementEntity = userManagementRepository.save(requestedUserManagementEntity);
 
@@ -43,15 +43,15 @@ public class UserManagementService {
     @Transactional
     public UserLoginDto.Response login(UserLoginDto.Request request) {
         UserManagementEntity userManagementEntity = userManagementRepository.findByAccount(Id.builder().value(request.getUserId()).build())
-                .orElseThrow(UserManagementServiceErrorCode.USER_NOT_FOUND::toException);
+                .orElseThrow(UserManagementErrorCode.USER_NOT_FOUND::toException);
         if (!(request.getUserRole().equals(userManagementEntity.getRole()))) {
-            throw UserManagementServiceErrorCode.USER_ROLE_MISMATCH.toException();
+            throw UserManagementErrorCode.USER_ROLE_MISMATCH.toException();
         }
         if (!(PasswordUtil.matches(request.getUserPassword(), userManagementEntity.getPassword().getValue()))) {
-            throw UserManagementServiceErrorCode.LOGIN_PASSWORD_FAILED.toException();
+            throw UserManagementErrorCode.LOGIN_PASSWORD_FAILED.toException();
         }
         if (!userManagementEntity.isEnabled()) {
-            throw UserManagementServiceErrorCode.USER_DISABLED.toException();
+            throw UserManagementErrorCode.USER_DISABLED.toException();
         }
         RefreshToken refreshToken = userRefreshTokenService.generateAndSaveRefreshToken(userManagementEntity);
         AccessToken accessToken = jwtTokenProvider.generateAccessToken(userManagementEntity);
@@ -75,6 +75,6 @@ public class UserManagementService {
 
     public UserManagementEntity findById(UUID userId) {
         return userManagementRepository.findById(userId)
-                .orElseThrow(ProductServiceErrorCode.USER_NOT_FOUND::toException);
+                .orElseThrow(ProductErrorCode.USER_NOT_FOUND::toException);
     }
 }

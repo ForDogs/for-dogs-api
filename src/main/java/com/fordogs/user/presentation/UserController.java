@@ -1,9 +1,9 @@
 package com.fordogs.user.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
-import com.fordogs.core.exception.error.UserRefreshTokenServiceErrorCode;
-import com.fordogs.core.exception.error.SecurityServiceErrorCode;
-import com.fordogs.core.exception.error.UserManagementServiceErrorCode;
+import com.fordogs.core.exception.error.UserRefreshTokenErrorCode;
+import com.fordogs.core.exception.error.SecurityErrorCode;
+import com.fordogs.core.exception.error.UserManagementErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.HeaderUtil;
 import com.fordogs.user.application.UserManagementService;
@@ -32,7 +32,7 @@ public class UserController {
     private final UserRefreshTokenService userRefreshTokenService;
 
     @Operation(summary = "회원 가입", operationId = "/users/join")
-    @ApiErrorCode(UserManagementServiceErrorCode.class)
+    @ApiErrorCode(UserManagementErrorCode.class)
     @PostMapping("/join")
     public ResponseEntity<SuccessResponse<UserJoinDto.Response>> handleJoinUserRequest(
             @Valid @RequestBody UserJoinDto.Request request) {
@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @Operation(summary = "로그인", operationId = "/users/login")
-    @ApiErrorCode(UserManagementServiceErrorCode.class)
+    @ApiErrorCode(UserManagementErrorCode.class)
     @PostMapping("/login")
     public ResponseEntity<SuccessResponse<UserLoginDto.Response>> handleLoginRequest(
             @Valid @RequestBody UserLoginDto.Request request) {
@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @Operation(summary = "액세스 토큰 재발급", description = "요청 시 HTTP Cookie에 RefreshToken이 존재해야 합니다. [EX] REFRESH_TOKEN={VALUE}", operationId = "/users/refresh-token")
-    @ApiErrorCode(UserRefreshTokenServiceErrorCode.class)
+    @ApiErrorCode(UserRefreshTokenErrorCode.class)
     @PostMapping("/refresh-token")
     public ResponseEntity<SuccessResponse<UserRefreshTokenDto.Response>> handleRefreshAccessTokenRequest(
             @Parameter(name = "AccessToken", required = true, in = ParameterIn.HEADER) @RequestHeader(name = "Authorization") String authorizationHeader) {
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @Operation(summary = "회원 탈퇴", operationId = "/users/deactivation")
-    @ApiErrorCode({UserManagementServiceErrorCode.class, SecurityServiceErrorCode.class})
+    @ApiErrorCode({UserManagementErrorCode.class, SecurityErrorCode.class})
     @DeleteMapping("/deactivation")
     public ResponseEntity<SuccessResponse<Object>> handleDeactivateUserRequest() {
         userManagementService.deactivateUser();
@@ -71,7 +71,7 @@ public class UserController {
     }
 
     @Operation(summary = "회원 정보 조회", operationId = "/users/profile")
-    @ApiErrorCode({UserManagementServiceErrorCode.class, SecurityServiceErrorCode.class})
+    @ApiErrorCode({UserManagementErrorCode.class, SecurityErrorCode.class})
     @GetMapping("/profile")
     public ResponseEntity<SuccessResponse<UserDetailDto.Response>> handleFindUserDetailsRequest() {
         UserDetailDto.Response response = userManagementService.findUserDetails();

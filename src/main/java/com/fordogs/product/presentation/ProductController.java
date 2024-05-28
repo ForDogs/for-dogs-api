@@ -2,9 +2,9 @@ package com.fordogs.product.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.domian.enums.Category;
-import com.fordogs.core.exception.error.ProductServiceErrorCode;
+import com.fordogs.core.exception.error.ProductErrorCode;
 import com.fordogs.core.exception.error.S3ErrorCode;
-import com.fordogs.core.exception.error.SecurityServiceErrorCode;
+import com.fordogs.core.exception.error.SecurityErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.product.application.ProductService;
 import com.fordogs.product.presentation.dto.ProductCreateDto;
@@ -36,7 +36,7 @@ public class ProductController {
     private final ProductService productService;
 
     @Operation(summary = "상품 등록", operationId = "/products")
-    @ApiErrorCode({ProductServiceErrorCode.class, SecurityServiceErrorCode.class})
+    @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
     @PostMapping
     public ResponseEntity<SuccessResponse<ProductCreateDto.Response>> handleCreateProductRequest(
             @Valid @RequestBody ProductCreateDto.Request request) {
@@ -46,7 +46,7 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 전체 검색 및 필터링", operationId = "/products")
-    @ApiErrorCode(ProductServiceErrorCode.class)
+    @ApiErrorCode(ProductErrorCode.class)
     @GetMapping
     public ResponseEntity<SuccessResponse<Page<ProductListDto.Response>>> handleFindProductsRequest(
             @Parameter(name = "seller", example = "hong1234", in = ParameterIn.QUERY) @RequestParam(required = false, value = "seller") String sellerId,
@@ -58,7 +58,7 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 상세 검색", operationId = "/products/{productId}")
-    @ApiErrorCode(ProductServiceErrorCode.class)
+    @ApiErrorCode(ProductErrorCode.class)
     @GetMapping("/{productId}")
     public ResponseEntity<SuccessResponse<ProductDetailDto.Response>> handleFindProductDetailsRequest(
             @Parameter(name = "상품 ID", required = true, example = "11ef1a87-caa6-2dd1-b72d-9713d59057a1", in = ParameterIn.PATH) @PathVariable(name = "productId") String productId) {
@@ -68,7 +68,7 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 이미지 파일 업로드", operationId = "/products/images/upload", description = "업로드 가능 이미지 확장자: jpg, jpeg, png, gif")
-    @ApiErrorCode({S3ErrorCode.class, SecurityServiceErrorCode.class})
+    @ApiErrorCode({S3ErrorCode.class, SecurityErrorCode.class})
     @PostMapping(value = "/images/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SuccessResponse<ProductImageFileUploadDto.Response>> handleUploadProductImagesRequest(
             @RequestPart(value = "imageFiles") MultipartFile[] imageFiles) {
@@ -78,7 +78,7 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 이미지 파일 삭제", operationId = "/products/images")
-    @ApiErrorCode({S3ErrorCode.class, SecurityServiceErrorCode.class})
+    @ApiErrorCode({S3ErrorCode.class, SecurityErrorCode.class})
     @DeleteMapping(value = "/images")
     public ResponseEntity<SuccessResponse<Object>> handleDeleteProductImagesRequest(
             @Parameter(name = "상품 이미지 URL", required = true, example = "https://bucket/product.jpg", in = ParameterIn.QUERY) @RequestParam("imageUrls") String[] imageUrls) {
