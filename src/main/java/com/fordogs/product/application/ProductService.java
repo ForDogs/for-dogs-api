@@ -36,7 +36,7 @@ public class ProductService {
     private final S3ImageUploader s3ImageUploader;
 
     @Transactional
-    public ProductCreateDto.Response createProduct(ProductCreateDto.Request request) {
+    public ProductCreateDto.Response addProduct(ProductCreateDto.Request request) {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
         UserManagementEntity userManagementEntity = userManagementService.findById(userId);
         if (productRepository.existsByName(request.getProductName())) {
@@ -47,7 +47,7 @@ public class ProductService {
         return ProductCreateDto.Response.toResponse(saveProductEntity);
     }
 
-    public Page<ProductListDto.Response> findProducts(String sellerId, Category category, Pageable pageable) {
+    public Page<ProductListDto.Response> searchProducts(String sellerId, Category category, Pageable pageable) {
         return productRepository.findAll(ProductSpecification.withSellerAndCategory(sellerId, category), pageable)
                 .map(ProductListDto.Response::toResponse);
     }

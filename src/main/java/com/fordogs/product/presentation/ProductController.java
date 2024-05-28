@@ -35,31 +35,31 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @Operation(summary = "상품 등록", operationId = "/products")
+    @Operation(summary = "상품 등록", operationId = "/products/register")
     @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
-    @PostMapping
-    public ResponseEntity<SuccessResponse<ProductCreateDto.Response>> handleCreateProductRequest(
+    @PostMapping("/register")
+    public ResponseEntity<SuccessResponse<ProductCreateDto.Response>> handleAddProductRequest(
             @Valid @RequestBody ProductCreateDto.Request request) {
-        ProductCreateDto.Response response = productService.createProduct(request);
+        ProductCreateDto.Response response = productService.addProduct(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "상품 전체 검색 및 필터링", operationId = "/products")
+    @Operation(summary = "상품 전체 검색 및 필터링", operationId = "/products/search")
     @ApiErrorCode(ProductErrorCode.class)
-    @GetMapping
-    public ResponseEntity<SuccessResponse<Page<ProductListDto.Response>>> handleFindProductsRequest(
+    @GetMapping("/search")
+    public ResponseEntity<SuccessResponse<Page<ProductListDto.Response>>> handleSearchProductsRequest(
             @Parameter(name = "seller", example = "hong1234", in = ParameterIn.QUERY) @RequestParam(required = false, value = "seller") String sellerId,
             @Parameter(name = "category", example = "FOOD",  in = ParameterIn.QUERY) @RequestParam(required = false, value = "category") String category,
             @ParameterObject @PageableDefault Pageable pageable) {
-        Page<ProductListDto.Response> response = productService.findProducts(sellerId, Category.validateCategoryName(category), pageable);
+        Page<ProductListDto.Response> response = productService.searchProducts(sellerId, Category.validateCategoryName(category), pageable);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 
-    @Operation(summary = "상품 상세 검색", operationId = "/products/{productId}")
+    @Operation(summary = "상품 상세 검색", operationId = "/products/{productId}/details")
     @ApiErrorCode(ProductErrorCode.class)
-    @GetMapping("/{productId}")
+    @GetMapping("/{productId}/details")
     public ResponseEntity<SuccessResponse<ProductDetailDto.Response>> handleFindProductDetailsRequest(
             @Parameter(name = "상품 ID", required = true, example = "11ef1a87-caa6-2dd1-b72d-9713d59057a1", in = ParameterIn.PATH) @PathVariable(name = "productId") String productId) {
         ProductDetailDto.Response response = productService.findProductDetails(productId);

@@ -31,12 +31,12 @@ public class UserController {
     private final UserManagementService userManagementService;
     private final UserRefreshTokenService userRefreshTokenService;
 
-    @Operation(summary = "회원 가입", operationId = "/users/join")
+    @Operation(summary = "회원 가입", operationId = "/users/signup")
     @ApiErrorCode(UserManagementErrorCode.class)
-    @PostMapping("/join")
-    public ResponseEntity<SuccessResponse<UserJoinDto.Response>> handleJoinUserRequest(
+    @PostMapping("/signup")
+    public ResponseEntity<SuccessResponse<UserJoinDto.Response>> handleSignupUserRequest(
             @Valid @RequestBody UserJoinDto.Request request) {
-        UserJoinDto.Response response = userManagementService.joinUser(request);
+        UserJoinDto.Response response = userManagementService.signupUser(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
@@ -51,9 +51,9 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "액세스 토큰 재발급", description = "요청 시 HTTP Cookie에 RefreshToken이 존재해야 합니다. [EX] REFRESH_TOKEN={VALUE}", operationId = "/users/refresh-token")
+    @Operation(summary = "액세스 토큰 재발급", description = "요청 시 HTTP Cookie에 RefreshToken이 존재해야 합니다. [EX] REFRESH_TOKEN={VALUE}", operationId = "/users/refresh")
     @ApiErrorCode(UserRefreshTokenErrorCode.class)
-    @PostMapping("/refresh-token")
+    @PostMapping("/refresh")
     public ResponseEntity<SuccessResponse<UserRefreshTokenDto.Response>> handleRefreshAccessTokenRequest(
             @Parameter(name = "AccessToken", required = true, in = ParameterIn.HEADER) @RequestHeader(name = "Authorization") String authorizationHeader) {
         UserRefreshTokenDto.Response response = userRefreshTokenService.refreshAccessToken(HeaderUtil.extractAccessToken(authorizationHeader));
@@ -61,18 +61,18 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "회원 탈퇴", operationId = "/users/deactivation")
+    @Operation(summary = "회원 탈퇴", operationId = "/users/deactivate")
     @ApiErrorCode({UserManagementErrorCode.class, SecurityErrorCode.class})
-    @DeleteMapping("/deactivation")
+    @DeleteMapping("/deactivate")
     public ResponseEntity<SuccessResponse<Object>> handleDeactivateUserRequest() {
         userManagementService.deactivateUser();
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Operation(summary = "회원 정보 조회", operationId = "/users/profile")
+    @Operation(summary = "회원 정보 조회", operationId = "/users/details")
     @ApiErrorCode({UserManagementErrorCode.class, SecurityErrorCode.class})
-    @GetMapping("/profile")
+    @GetMapping("/details")
     public ResponseEntity<SuccessResponse<UserDetailDto.Response>> handleFindUserDetailsRequest() {
         UserDetailDto.Response response = userManagementService.findUserDetails();
 

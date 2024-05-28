@@ -29,7 +29,7 @@ public class UserManagementService {
     private final UserRefreshTokenService userRefreshTokenService;
 
     @Transactional
-    public UserJoinDto.Response joinUser(UserJoinDto.Request request) {
+    public UserJoinDto.Response signupUser(UserJoinDto.Request request) {
         UserManagementEntity requestedUserManagementEntity = request.toEntity();
         if (userManagementRepository.existsByAccount(requestedUserManagementEntity.getAccount())) {
             throw UserManagementErrorCode.DUPLICATE_USER_ID.toException();
