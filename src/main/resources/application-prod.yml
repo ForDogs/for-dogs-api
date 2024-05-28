@@ -5,5 +5,16 @@ spring:
     password: ${MYSQL_DATABASE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+# JWT
 token:
   secret-key: ${TOKEN_SECRET_KEY}
+
+# Image Upload S3
+cloud:
+  aws:
+    region: ${AWS_REGION}
+    credentials:
+      accessKey: ${AWS_CREDENTIALS_ACCESS_KEY}
+      secretKey: ${AWS_CREDENTIALS_SECRET_KEY}
+    s3:
+      bucketName: ${AWS_S3_BUCKET_NAME}

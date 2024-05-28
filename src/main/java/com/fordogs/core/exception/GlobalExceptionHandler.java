@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.util.stream.Collectors;
 
@@ -67,6 +68,15 @@ public class GlobalExceptionHandler {
         logErrorWithException(e);
 
         return ResponseEntity.status(BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(S3Exception.class)
+    public ResponseEntity<ErrorResponse> handleS3Exception(S3Exception e) {
+        ErrorResponse response = ErrorResponse.of(e);
+        logErrorWithException(e);
+
+        return ResponseEntity.status(e.statusCode())
                 .body(response);
     }
 

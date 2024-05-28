@@ -2,12 +2,14 @@ package com.fordogs.product.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.exception.error.ProductServiceErrorCode;
+import com.fordogs.core.exception.error.S3ErrorCode;
+import com.fordogs.core.exception.error.SecurityServiceErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.product.application.ProductService;
 import com.fordogs.product.presentation.dto.ProductCreateDto;
 import com.fordogs.product.presentation.dto.ProductDetailDto;
+import com.fordogs.product.presentation.dto.ProductImageFileUploadDto;
 import com.fordogs.product.presentation.dto.ProductListDto;
-import com.fordogs.core.exception.error.SecurityServiceErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -19,8 +21,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Product", description = "Product APIs")
 @RestController
@@ -57,6 +61,16 @@ public class ProductController {
     public ResponseEntity<SuccessResponse<ProductDetailDto.Response>> handleFindProductDetailsRequest(
             @Parameter(name = "상품 ID", required = true, example = "11ef1a87-caa6-2dd1-b72d-9713d59057a1", in = ParameterIn.PATH) @PathVariable(name = "productId") String productId) {
         ProductDetailDto.Response response = productService.findProductDetails(productId);
+
+        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "상품 이미지 파일 업로드", operationId = "/products/upload", description = "업로드 가능 이미지 확장자: jpg, jpeg, png, gif")
+    @ApiErrorCode({S3ErrorCode.class, SecurityServiceErrorCode.class})
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<SuccessResponse<ProductImageFileUploadDto.Response>> handleUploadProductImagesRequest(
+            @RequestPart(value = "imageFiles") MultipartFile[] imageFiles) {
+        ProductImageFileUploadDto.Response response = productService.uploadProductImages(imageFiles);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
