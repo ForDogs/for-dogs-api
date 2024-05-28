@@ -20,6 +20,9 @@ public class ProductListDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Response {
 
+        @Schema(description = "상품 판매자 ID")
+        private String productSeller;
+
         @Schema(description = "상품 ID")
         private String productId;
 
@@ -40,6 +43,7 @@ public class ProductListDto {
 
         public static Response toResponse(ProductEntity productEntity) {
             return Response.builder()
+                    .productSeller(productEntity.getSeller().getAccount().getValue())
                     .productId(productEntity.getId().toString())
                     .productName(productEntity.getName())
                     .productPrice(productEntity.getPrice().getValue())

@@ -15,6 +15,7 @@ public enum ProductServiceErrorCode implements BaseErrorCode<DomainException> {
     INVALID_DESCRIPTION_LENGTH(HttpStatus.BAD_REQUEST, "설명은 0자에서 100자 사이어야 합니다."),
     PROFANITY_IN_DESCRIPTION(HttpStatus.BAD_REQUEST, "설명에 욕설이 포함되어 있습니다."),
     INVALID_PRICE(HttpStatus.BAD_REQUEST, "가격은 음수가 될 수 없습니다."),
+    INVALID_CATEGORY_NAME(HttpStatus.BAD_REQUEST, "유효하지 않은 카테고리 이름입니다."),
 
     USER_NOT_FOUND(UserManagementServiceErrorCode.USER_NOT_FOUND.getHttpStatus(), UserManagementServiceErrorCode.USER_NOT_FOUND.getMessage());
 

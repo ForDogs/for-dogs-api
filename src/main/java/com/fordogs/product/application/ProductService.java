@@ -2,7 +2,8 @@ package com.fordogs.product.application;
 
 import com.fordogs.core.domian.entity.ProductEntity;
 import com.fordogs.core.domian.entity.UserManagementEntity;
-import com.fordogs.core.domian.vo.Id;
+import com.fordogs.core.domian.enums.Category;
+import com.fordogs.core.domian.specification.ProductSpecification;
 import com.fordogs.core.exception.error.ProductServiceErrorCode;
 import com.fordogs.core.infrastructure.ProductRepository;
 import com.fordogs.core.infrastructure.aws.s3.S3ImageUploader;
@@ -46,12 +47,9 @@ public class ProductService {
         return ProductCreateDto.Response.toResponse(saveProductEntity);
     }
 
-    public Page<ProductListDto.Response> findProducts(String sellerId, Pageable pageable) {
-        Page<ProductEntity> productEntities = (sellerId != null)
-                ? productRepository.findBySellerAccountAndSellerEnabledTrueAndEnabledTrue(Id.builder().value(sellerId).build(), pageable)
-                : productRepository.findAllBySellerEnabledTrueAndEnabledTrue(pageable);
-
-        return productEntities.map(ProductListDto.Response::toResponse);
+    public Page<ProductListDto.Response> findProducts(String sellerId, Category category, Pageable pageable) {
+        return productRepository.findAll(ProductSpecification.withSellerAndCategory(sellerId, category), pageable)
+                .map(ProductListDto.Response::toResponse);
     }
 
     public ProductDetailDto.Response findProductDetails(String productId) {

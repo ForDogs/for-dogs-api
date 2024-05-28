@@ -1,5 +1,6 @@
 package com.fordogs.core.domian.enums;
 
+import com.fordogs.core.exception.error.ProductServiceErrorCode;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -13,4 +14,15 @@ public enum Category {
     NONE("카테고리 없음");
 
     private final String description;
+
+    public static Category validateCategoryName(String name) {
+        if (name == null) {
+            return null;
+        }
+        try {
+            return Category.valueOf(name);
+        } catch (IllegalArgumentException e) {
+            throw ProductServiceErrorCode.INVALID_CATEGORY_NAME.toException();
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.fordogs.product.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
+import com.fordogs.core.domian.enums.Category;
 import com.fordogs.core.exception.error.ProductServiceErrorCode;
 import com.fordogs.core.exception.error.S3ErrorCode;
 import com.fordogs.core.exception.error.SecurityServiceErrorCode;
@@ -44,13 +45,14 @@ public class ProductController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "상품 검색 및 필터링", operationId = "/products")
+    @Operation(summary = "상품 전체 검색 및 필터링", operationId = "/products")
     @ApiErrorCode(ProductServiceErrorCode.class)
     @GetMapping
     public ResponseEntity<SuccessResponse<Page<ProductListDto.Response>>> handleFindProductsRequest(
             @Parameter(name = "seller", example = "hong1234", in = ParameterIn.QUERY) @RequestParam(required = false, value = "seller") String sellerId,
+            @Parameter(name = "category", example = "FOOD",  in = ParameterIn.QUERY) @RequestParam(required = false, value = "category") String category,
             @ParameterObject @PageableDefault Pageable pageable) {
-        Page<ProductListDto.Response> response = productService.findProducts(sellerId, pageable);
+        Page<ProductListDto.Response> response = productService.findProducts(sellerId, Category.validateCategoryName(category), pageable);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
