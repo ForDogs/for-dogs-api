@@ -1,9 +1,9 @@
 package com.fordogs.user.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
-import com.fordogs.core.exception.error.UserRefreshTokenErrorCode;
 import com.fordogs.core.exception.error.SecurityErrorCode;
 import com.fordogs.core.exception.error.UserManagementErrorCode;
+import com.fordogs.core.exception.error.UserRefreshTokenErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.HeaderUtil;
 import com.fordogs.user.application.UserManagementService;
@@ -14,7 +14,6 @@ import com.fordogs.user.presentation.dto.UserLoginDto;
 import com.fordogs.user.presentation.dto.UserRefreshTokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +54,7 @@ public class UserController {
     @ApiErrorCode(UserRefreshTokenErrorCode.class)
     @PostMapping("/refresh")
     public ResponseEntity<SuccessResponse<UserRefreshTokenDto.Response>> handleRefreshAccessTokenRequest(
-            @Parameter(name = "AccessToken", required = true, in = ParameterIn.HEADER) @RequestHeader(name = "Authorization") String authorizationHeader) {
+            @Parameter(name = "Authorization", description = "액세스 토큰", required = true) @RequestHeader(name = "Authorization") String authorizationHeader) {
         UserRefreshTokenDto.Response response = userRefreshTokenService.refreshAccessToken(HeaderUtil.extractAccessToken(authorizationHeader));
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);

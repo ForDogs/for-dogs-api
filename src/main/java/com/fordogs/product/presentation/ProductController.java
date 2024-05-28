@@ -13,7 +13,7 @@ import com.fordogs.product.presentation.dto.ProductImageFileUploadDto;
 import com.fordogs.product.presentation.dto.ProductListDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +49,8 @@ public class ProductController {
     @ApiErrorCode(ProductErrorCode.class)
     @GetMapping("/search")
     public ResponseEntity<SuccessResponse<Page<ProductListDto.Response>>> handleSearchProductsRequest(
-            @Parameter(name = "seller", example = "hong1234", in = ParameterIn.QUERY) @RequestParam(required = false, value = "seller") String sellerId,
-            @Parameter(name = "category", example = "FOOD",  in = ParameterIn.QUERY) @RequestParam(required = false, value = "category") String category,
+            @Parameter(name = "seller", description = "판매자 ID", example = "hong1234") @RequestParam(required = false, value = "seller") String sellerId,
+            @Parameter(name = "category", description = "상품 카테고리", example = "FOOD") @RequestParam(required = false, value = "category") String category,
             @ParameterObject @PageableDefault Pageable pageable) {
         Page<ProductListDto.Response> response = productService.searchProducts(sellerId, Category.validateCategoryName(category), pageable);
 
@@ -61,7 +61,7 @@ public class ProductController {
     @ApiErrorCode(ProductErrorCode.class)
     @GetMapping("/{productId}/details")
     public ResponseEntity<SuccessResponse<ProductDetailDto.Response>> handleFindProductDetailsRequest(
-            @Parameter(name = "상품 ID", required = true, example = "11ef1a87-caa6-2dd1-b72d-9713d59057a1", in = ParameterIn.PATH) @PathVariable(name = "productId") String productId) {
+            @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") String productId) {
         ProductDetailDto.Response response = productService.findProductDetails(productId);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
@@ -81,7 +81,7 @@ public class ProductController {
     @ApiErrorCode({S3ErrorCode.class, SecurityErrorCode.class})
     @DeleteMapping(value = "/images")
     public ResponseEntity<SuccessResponse<Object>> handleDeleteProductImagesRequest(
-            @Parameter(name = "상품 이미지 URL", required = true, example = "https://bucket/product.jpg", in = ParameterIn.QUERY) @RequestParam("imageUrls") String[] imageUrls) {
+            @Parameter(name = "imageUrls", description = "상품 이미지 URL", required = true) @RequestParam("imageUrls") String[] imageUrls) {
         productService.deleteProductImages(imageUrls);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
