@@ -1,4 +1,4 @@
-package com.fordogs.core.domian.specification;
+package com.fordogs.product.domain.specification;
 
 import com.fordogs.core.domian.entity.ProductEntity;
 import com.fordogs.core.domian.entity.UserManagementEntity;

@@ -1,4 +1,4 @@
-package com.fordogs.core.infrastructure;
+package com.fordogs.product.infrastructure;
 
 import com.fordogs.core.domian.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

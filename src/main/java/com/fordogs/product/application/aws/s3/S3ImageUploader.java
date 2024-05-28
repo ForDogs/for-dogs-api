@@ -1,8 +1,8 @@
-package com.fordogs.core.infrastructure.aws.s3;
+package com.fordogs.product.application.aws.s3;
 
 import com.fordogs.configuraion.properties.S3Properties;
 import com.fordogs.core.exception.error.S3ErrorCode;
-import com.fordogs.core.infrastructure.aws.s3.dto.ImageUploadResponse;
+import com.fordogs.product.application.aws.s3.dto.ImageUploadResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;

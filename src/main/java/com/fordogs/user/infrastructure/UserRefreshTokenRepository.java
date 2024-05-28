@@ -1,4 +1,4 @@
-package com.fordogs.core.infrastructure;
+package com.fordogs.user.infrastructure;
 
 import com.fordogs.core.domian.entity.UserRefreshTokenEntity;
 import com.fordogs.core.domian.vo.RefreshToken;

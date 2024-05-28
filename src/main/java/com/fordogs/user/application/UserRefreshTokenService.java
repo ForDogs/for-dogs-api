@@ -1,13 +1,13 @@
 package com.fordogs.user.application;
 
-import com.fordogs.core.domian.entity.UserRefreshTokenEntity;
 import com.fordogs.core.domian.entity.UserManagementEntity;
+import com.fordogs.core.domian.entity.UserRefreshTokenEntity;
 import com.fordogs.core.domian.vo.AccessToken;
 import com.fordogs.core.domian.vo.RefreshToken;
 import com.fordogs.core.exception.error.UserRefreshTokenErrorCode;
-import com.fordogs.core.infrastructure.UserRefreshTokenRepository;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.security.provider.JwtTokenProvider;
+import com.fordogs.user.infrastructure.UserRefreshTokenRepository;
 import com.fordogs.user.presentation.dto.UserRefreshTokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

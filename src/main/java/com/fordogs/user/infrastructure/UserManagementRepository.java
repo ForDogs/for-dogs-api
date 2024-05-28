@@ -1,4 +1,4 @@
-package com.fordogs.core.infrastructure;
+package com.fordogs.user.infrastructure;
 
 import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.vo.Id;

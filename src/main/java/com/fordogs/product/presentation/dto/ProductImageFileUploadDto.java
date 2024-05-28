@@ -1,7 +1,7 @@
 package com.fordogs.product.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fordogs.core.infrastructure.aws.s3.dto.ImageUploadResponse;
+import com.fordogs.product.application.aws.s3.dto.ImageUploadResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;

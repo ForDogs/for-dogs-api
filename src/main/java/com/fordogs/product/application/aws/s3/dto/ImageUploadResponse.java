@@ -1,4 +1,4 @@
-package com.fordogs.core.infrastructure.aws.s3.dto;
+package com.fordogs.product.application.aws.s3.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
