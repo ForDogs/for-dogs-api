@@ -1,4 +1,4 @@
-package com.fordogs.core.domian.vo;
+package com.fordogs.core.domian.vo.wapper;
 
 import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.util.validator.StringValidator;
@@ -16,7 +16,7 @@ import java.util.Date;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RefreshToken extends WrapperObject<String> {
+public class RefreshToken extends ValueWrapperObject<String> {
 
     @Builder
     public RefreshToken(String value) {

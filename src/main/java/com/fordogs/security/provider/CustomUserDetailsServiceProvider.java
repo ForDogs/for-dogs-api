@@ -1,7 +1,7 @@
 package com.fordogs.security.provider;
 
 import com.fordogs.core.domian.entity.UserManagementEntity;
-import com.fordogs.core.domian.vo.Id;
+import com.fordogs.core.domian.vo.wapper.Id;
 import com.fordogs.core.exception.error.SecurityErrorCode;
 import com.fordogs.user.infrastructure.UserManagementRepository;
 import lombok.RequiredArgsConstructor;

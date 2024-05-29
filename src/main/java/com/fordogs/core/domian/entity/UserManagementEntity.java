@@ -1,8 +1,11 @@
 package com.fordogs.core.domian.entity;
 
 import com.fordogs.core.domian.enums.Role;
-import com.fordogs.core.domian.vo.Id;
+import com.fordogs.core.domian.vo.wapper.EncryptedPassword;
+import com.fordogs.core.domian.vo.wapper.Id;
 import com.fordogs.core.domian.vo.*;
+import com.fordogs.core.domian.vo.wapper.Name;
+import com.fordogs.core.domian.vo.wapper.Password;
 import com.fordogs.core.util.PasswordUtil;
 import jakarta.persistence.*;
 import lombok.*;

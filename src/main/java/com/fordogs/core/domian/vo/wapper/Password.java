@@ -1,4 +1,4 @@
-package com.fordogs.core.domian.vo;
+package com.fordogs.core.domian.vo.wapper;
 
 import com.fordogs.core.util.validator.StringValidator;
 import com.fordogs.core.exception.error.UserManagementErrorCode;
@@ -9,7 +9,7 @@ import lombok.*;
 @Embeddable
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Password extends WrapperObject<String> {
+public class Password extends ValueWrapperObject<String> {
 
     private static final int MIN_LENGTH = 10;
     private static final int MAX_LENGTH = 16;

@@ -1,8 +1,8 @@
 package com.fordogs.core.domian.entity;
 
 import com.fordogs.core.domian.enums.Category;
-import com.fordogs.core.domian.vo.Description;
-import com.fordogs.core.domian.vo.Price;
+import com.fordogs.core.domian.vo.wapper.Description;
+import com.fordogs.core.domian.vo.wapper.Price;
 import com.fordogs.core.util.ConverterUtil;
 import jakarta.persistence.*;
 import lombok.*;

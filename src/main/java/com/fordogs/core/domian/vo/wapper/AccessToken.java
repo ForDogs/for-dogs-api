@@ -1,4 +1,4 @@
-package com.fordogs.core.domian.vo;
+package com.fordogs.core.domian.vo.wapper;
 
 import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.util.validator.StringValidator;
@@ -16,7 +16,7 @@ import java.util.Date;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AccessToken extends WrapperObject<String> {
+public class AccessToken extends ValueWrapperObject<String> {
 
     private static final String CLAIMS_USER_ID = "id";
     private static final String CLAIMS_ROLE = "role";

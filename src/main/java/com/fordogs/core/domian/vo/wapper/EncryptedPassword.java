@@ -1,4 +1,4 @@
-package com.fordogs.core.domian.vo;
+package com.fordogs.core.domian.vo.wapper;
 
 import com.fordogs.core.util.validator.StringValidator;
 import jakarta.persistence.Embeddable;
@@ -8,7 +8,7 @@ import lombok.*;
 @Embeddable
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class EncryptedPassword extends WrapperObject<String> {
+public class EncryptedPassword extends ValueWrapperObject<String> {
 
     @Builder
     public EncryptedPassword(String value) {

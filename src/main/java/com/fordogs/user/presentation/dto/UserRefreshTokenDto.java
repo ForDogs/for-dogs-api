@@ -2,7 +2,7 @@ package com.fordogs.user.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fordogs.core.domian.entity.UserManagementEntity;
-import com.fordogs.core.domian.vo.AccessToken;
+import com.fordogs.core.domian.vo.wapper.AccessToken;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;

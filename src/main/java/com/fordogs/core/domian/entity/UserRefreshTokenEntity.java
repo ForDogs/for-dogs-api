@@ -1,6 +1,6 @@
 package com.fordogs.core.domian.entity;
 
-import com.fordogs.core.domian.vo.RefreshToken;
+import com.fordogs.core.domian.vo.wapper.RefreshToken;
 import jakarta.persistence.*;
 import lombok.*;
 

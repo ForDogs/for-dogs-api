@@ -1,4 +1,4 @@
-package com.fordogs.core.domian.vo;
+package com.fordogs.core.domian.vo.wapper;
 
 import com.fordogs.core.exception.error.ProductErrorCode;
 import jakarta.persistence.Embeddable;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Embeddable
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Price extends WrapperObject<BigDecimal> {
+public class Price extends ValueWrapperObject<BigDecimal> {
 
     private static final BigDecimal NEGATIVE_PRICE = BigDecimal.ZERO;
 

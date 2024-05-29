@@ -1,4 +1,4 @@
-package com.fordogs.core.domian.vo;
+package com.fordogs.core.domian.vo.wapper;
 
 import com.fordogs.core.util.validator.StringValidator;
 import com.fordogs.core.exception.error.UserManagementErrorCode;
@@ -9,18 +9,18 @@ import lombok.*;
 @Embeddable
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Id extends WrapperObject<String> {
+public class Name extends ValueWrapperObject<String> {
 
     @Builder
-    public Id(String value) {
+    public Name(String value) {
         super(value);
         validate(value);
     }
 
     @Override
     protected void validate(String value) {
-        if (!StringValidator.validateEnglishNumber(value)) {
-            throw UserManagementErrorCode.INVALID_ID_FORMAT.toException();
+        if (!StringValidator.validateKoreanEnglish(value)) {
+            throw UserManagementErrorCode.INVALID_NAME_FORMAT.toException();
         }
     }
 }

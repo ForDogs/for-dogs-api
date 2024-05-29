@@ -10,7 +10,7 @@ import lombok.*;
 @Embeddable
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Email {
+public class Email extends ValueObject {
 
     @Column(name = "email_id")
     private String id;
@@ -30,10 +30,10 @@ public class Email {
     }
 
     private void validate(String id, String domain) {
-        if (id == null) {
+        if (id == null || id.isEmpty()) {
             throw new IllegalArgumentException("이메일 ID가 존재하지 않습니다.");
         }
-        if (domain == null) {
+        if (domain == null || domain.isEmpty()) {
             throw new IllegalArgumentException("이메일 도메인이 존재하지 않습니다.");
         }
         if (!StringValidator.validateEnglishNumber(id)) {

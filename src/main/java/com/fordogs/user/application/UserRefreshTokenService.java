@@ -2,8 +2,8 @@ package com.fordogs.user.application;
 
 import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.entity.UserRefreshTokenEntity;
-import com.fordogs.core.domian.vo.AccessToken;
-import com.fordogs.core.domian.vo.RefreshToken;
+import com.fordogs.core.domian.vo.wapper.AccessToken;
+import com.fordogs.core.domian.vo.wapper.RefreshToken;
 import com.fordogs.core.exception.error.UserRefreshTokenErrorCode;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.security.provider.JwtTokenProvider;
