@@ -1,6 +1,6 @@
 package com.fordogs.core.domian.vo.wapper;
 
-import com.fordogs.core.exception.error.ProductErrorCode;
+import com.fordogs.core.exception.error.ValueErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -27,10 +27,10 @@ public class Description extends ValueWrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!validateLength(value, MIN_LENGTH, MAX_LENGTH)) {
-            throw ProductErrorCode.INVALID_DESCRIPTION_LENGTH.toException();
+            throw ValueErrorCode.INVALID_DESCRIPTION_LENGTH.toException();
         }
         if (validateContainsProfanity(value, PROFANITY_REGEX)) {
-            throw ProductErrorCode.PROFANITY_IN_DESCRIPTION.toException();
+            throw ValueErrorCode.INVALID_DESCRIPTION_PROFANITY.toException();
         }
     }
 }

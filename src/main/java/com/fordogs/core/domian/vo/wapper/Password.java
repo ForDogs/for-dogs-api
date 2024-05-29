@@ -1,7 +1,7 @@
 package com.fordogs.core.domian.vo.wapper;
 
+import com.fordogs.core.exception.error.ValueErrorCode;
 import com.fordogs.core.util.validator.StringValidator;
-import com.fordogs.core.exception.error.UserManagementErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -23,13 +23,13 @@ public class Password extends ValueWrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!StringValidator.validateLength(value, MIN_LENGTH, MAX_LENGTH)) {
-            throw UserManagementErrorCode.INVALID_PASSWORD_LENGTH.toException();
+            throw ValueErrorCode.INVALID_PASSWORD_LENGTH.toException();
         }
         if (!StringValidator.validatePasswordPattern(value)) {
-            throw UserManagementErrorCode.INVALID_PASSWORD_PATTERN.toException();
+            throw ValueErrorCode.INVALID_PASSWORD_PATTERN.toException();
         }
         if (!StringValidator.validateNoConsecutiveChars(value)) {
-            throw UserManagementErrorCode.INVALID_PASSWORD_CONSECUTIVE_CHARS.toException();
+            throw ValueErrorCode.INVALID_PASSWORD_CONSECUTIVE_CHARS.toException();
         }
     }
 }

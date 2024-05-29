@@ -1,9 +1,9 @@
 package com.fordogs.user.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
-import com.fordogs.core.exception.error.SecurityErrorCode;
-import com.fordogs.core.exception.error.UserManagementErrorCode;
-import com.fordogs.core.exception.error.UserRefreshTokenErrorCode;
+import com.fordogs.security.exception.error.SecurityErrorCode;
+import com.fordogs.user.error.UserManagementErrorCode;
+import com.fordogs.user.error.UserRefreshTokenErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.HeaderUtil;
 import com.fordogs.user.application.UserManagementService;
@@ -11,7 +11,7 @@ import com.fordogs.user.application.UserRefreshTokenService;
 import com.fordogs.user.presentation.dto.UserDetailDto;
 import com.fordogs.user.presentation.dto.UserJoinDto;
 import com.fordogs.user.presentation.dto.UserLoginDto;
-import com.fordogs.user.presentation.dto.UserRefreshTokenDto;
+import com.fordogs.user.presentation.dto.UserRefreshDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -53,9 +53,9 @@ public class UserController {
     @Operation(summary = "액세스 토큰 재발급", description = "요청 시 HTTP Cookie에 RefreshToken이 존재해야 합니다. [EX] REFRESH_TOKEN={VALUE}", operationId = "/users/refresh")
     @ApiErrorCode(UserRefreshTokenErrorCode.class)
     @PostMapping("/refresh")
-    public ResponseEntity<SuccessResponse<UserRefreshTokenDto.Response>> handleRefreshAccessTokenRequest(
+    public ResponseEntity<SuccessResponse<UserRefreshDto.Response>> handleRefreshAccessTokenRequest(
             @Parameter(name = "Authorization", description = "액세스 토큰", required = true) @RequestHeader(name = "Authorization") String authorizationHeader) {
-        UserRefreshTokenDto.Response response = userRefreshTokenService.refreshAccessToken(HeaderUtil.extractAccessToken(authorizationHeader));
+        UserRefreshDto.Response response = userRefreshTokenService.refreshAccessToken(HeaderUtil.extractAccessToken(authorizationHeader));
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }

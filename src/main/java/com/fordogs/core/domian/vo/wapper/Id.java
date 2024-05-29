@@ -1,7 +1,7 @@
 package com.fordogs.core.domian.vo.wapper;
 
+import com.fordogs.core.exception.error.ValueErrorCode;
 import com.fordogs.core.util.validator.StringValidator;
-import com.fordogs.core.exception.error.UserManagementErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -20,7 +20,7 @@ public class Id extends ValueWrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!StringValidator.validateEnglishNumber(value)) {
-            throw UserManagementErrorCode.INVALID_ID_FORMAT.toException();
+            throw ValueErrorCode.INVALID_ID_FORMAT.toException();
         }
     }
 }

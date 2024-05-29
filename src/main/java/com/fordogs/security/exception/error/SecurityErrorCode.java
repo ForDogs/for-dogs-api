@@ -1,5 +1,7 @@
-package com.fordogs.core.exception.error;
+package com.fordogs.security.exception.error;
 
+import com.fordogs.core.exception.error.BaseErrorCode;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.security.exception.SecurityAuthenticationException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +17,8 @@ public enum SecurityErrorCode implements BaseErrorCode<SecurityAuthenticationExc
     UNSUPPORTED_TOKEN(HttpStatus.UNAUTHORIZED, "지원되지 않는 토큰 형식입니다."),
     INVALID_CLAIMS(HttpStatus.UNAUTHORIZED, "토큰 클레임이 비어있거나 유효하지 않습니다."),
 
-    USER_NOT_FOUND(UserManagementErrorCode.USER_NOT_FOUND.getHttpStatus(), UserManagementErrorCode.USER_NOT_FOUND.getMessage()),
-    USER_DISABLED(UserManagementErrorCode.USER_DISABLED.getHttpStatus(), UserManagementErrorCode.USER_DISABLED.getMessage());
+    USER_NOT_FOUND(GlobalErrorCode.USER_NOT_FOUND.getHttpStatus(), GlobalErrorCode.USER_NOT_FOUND.getMessage()),
+    USER_DISABLED(GlobalErrorCode.USER_DISABLED.getHttpStatus(), GlobalErrorCode.USER_DISABLED.getMessage());
 
     private final HttpStatus httpStatus;
 

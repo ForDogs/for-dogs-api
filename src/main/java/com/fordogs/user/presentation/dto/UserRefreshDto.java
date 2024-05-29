@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-public class UserRefreshTokenDto {
+public class UserRefreshDto {
 
     @Schema(description = "액세스 토큰 재발급 응답")
     @Getter
@@ -23,8 +23,8 @@ public class UserRefreshTokenDto {
         @Schema(description = "Access Token")
         private String accessToken;
 
-        public static UserRefreshTokenDto.Response toResponse(UserManagementEntity userManagementEntity, AccessToken accessToken) {
-            return UserRefreshTokenDto.Response.builder()
+        public static UserRefreshDto.Response toResponse(UserManagementEntity userManagementEntity, AccessToken accessToken) {
+            return UserRefreshDto.Response.builder()
                     .userId(userManagementEntity.getAccount().getValue())
                     .accessToken(accessToken.getValue())
                     .build();

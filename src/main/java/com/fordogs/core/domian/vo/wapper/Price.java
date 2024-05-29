@@ -1,6 +1,6 @@
 package com.fordogs.core.domian.vo.wapper;
 
-import com.fordogs.core.exception.error.ProductErrorCode;
+import com.fordogs.core.exception.error.ValueErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -23,7 +23,7 @@ public class Price extends ValueWrapperObject<BigDecimal> {
     @Override
     protected void validate(BigDecimal value) {
         if (value.compareTo(NEGATIVE_PRICE) < 0) {
-            throw ProductErrorCode.INVALID_PRICE.toException();
+            throw ValueErrorCode.INVALID_PRICE.toException();
         }
     }
 }

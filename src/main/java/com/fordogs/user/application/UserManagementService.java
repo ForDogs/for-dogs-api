@@ -4,7 +4,7 @@ import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.vo.wapper.AccessToken;
 import com.fordogs.core.domian.vo.wapper.Id;
 import com.fordogs.core.domian.vo.wapper.RefreshToken;
-import com.fordogs.core.exception.error.UserManagementErrorCode;
+import com.fordogs.user.error.UserManagementErrorCode;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.PasswordUtil;
 import com.fordogs.core.util.constants.RequestAttributesConstants;

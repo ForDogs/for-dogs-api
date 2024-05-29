@@ -4,11 +4,11 @@ import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.entity.UserRefreshTokenEntity;
 import com.fordogs.core.domian.vo.wapper.AccessToken;
 import com.fordogs.core.domian.vo.wapper.RefreshToken;
-import com.fordogs.core.exception.error.UserRefreshTokenErrorCode;
+import com.fordogs.user.error.UserRefreshTokenErrorCode;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.security.provider.JwtTokenProvider;
 import com.fordogs.user.infrastructure.UserRefreshTokenRepository;
-import com.fordogs.user.presentation.dto.UserRefreshTokenDto;
+import com.fordogs.user.presentation.dto.UserRefreshDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +32,7 @@ public class UserRefreshTokenService {
     }
 
     @Transactional
-    public UserRefreshTokenDto.Response refreshAccessToken(String accessToken) {
+    public UserRefreshDto.Response refreshAccessToken(String accessToken) {
         if (!jwtTokenProvider.isTokenExpired(accessToken)) {
             throw UserRefreshTokenErrorCode.TOKEN_VALIDITY_REMAINING.toException();
         }
@@ -51,6 +51,6 @@ public class UserRefreshTokenService {
         }
         String refreshedAccessToken = jwtTokenProvider.generateAccessToken(userRefreshTokenEntity.getUser()).getValue();
 
-        return UserRefreshTokenDto.Response.toResponse(userRefreshTokenEntity.getUser(), AccessToken.builder().value(refreshedAccessToken).build());
+        return UserRefreshDto.Response.toResponse(userRefreshTokenEntity.getUser(), AccessToken.builder().value(refreshedAccessToken).build());
     }
 }

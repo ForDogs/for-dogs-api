@@ -2,9 +2,9 @@ package com.fordogs.product.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.domian.enums.Category;
-import com.fordogs.core.exception.error.ProductErrorCode;
-import com.fordogs.core.exception.error.S3ErrorCode;
-import com.fordogs.core.exception.error.SecurityErrorCode;
+import com.fordogs.product.error.ProductErrorCode;
+import com.fordogs.product.error.S3ErrorCode;
+import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.product.application.ProductService;
 import com.fordogs.product.presentation.dto.ProductCreateDto;

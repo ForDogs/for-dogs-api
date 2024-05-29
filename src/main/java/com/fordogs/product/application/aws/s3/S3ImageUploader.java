@@ -1,7 +1,7 @@
 package com.fordogs.product.application.aws.s3;
 
 import com.fordogs.configuraion.properties.S3Properties;
-import com.fordogs.core.exception.error.S3ErrorCode;
+import com.fordogs.product.error.S3ErrorCode;
 import com.fordogs.product.application.aws.s3.dto.ImageUploadResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

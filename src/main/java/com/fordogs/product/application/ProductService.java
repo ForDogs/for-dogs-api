@@ -4,7 +4,7 @@ import com.fordogs.core.domian.entity.ProductEntity;
 import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.enums.Category;
 import com.fordogs.product.domain.specification.ProductSpecification;
-import com.fordogs.core.exception.error.ProductErrorCode;
+import com.fordogs.product.error.ProductErrorCode;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.constants.RequestAttributesConstants;
 import com.fordogs.product.infrastructure.ProductRepository;
