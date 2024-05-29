@@ -53,7 +53,7 @@ public class ProductService {
     }
 
     public ProductDetailDto.Response findProductDetails(String productId) {
-        ProductEntity productEntity = productRepository.findByIdAndSellerEnabledTrueAndEnabledTrue(UUID.fromString(productId))
+        ProductEntity productEntity = productRepository.findProductWithEnabledSellerAndProduct(UUID.fromString(productId))
                 .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
 
         return ProductDetailDto.Response.toResponse(productEntity);
