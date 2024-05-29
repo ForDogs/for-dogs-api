@@ -50,9 +50,9 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<SuccessResponse<Page<ProductListDto.Response>>> handleSearchProductsRequest(
             @Parameter(name = "seller", description = "판매자 ID", example = "hong1234") @RequestParam(required = false, value = "seller") String sellerId,
-            @Parameter(name = "category", description = "상품 카테고리", example = "FOOD") @RequestParam(required = false, value = "category") String category,
+            @Parameter(name = "category", description = "상품 카테고리") @RequestParam(required = false, value = "category") Category category,
             @ParameterObject @PageableDefault Pageable pageable) {
-        Page<ProductListDto.Response> response = productService.searchProducts(sellerId, Category.validateCategoryName(category), pageable);
+        Page<ProductListDto.Response> response = productService.searchProducts(sellerId, category, pageable);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
