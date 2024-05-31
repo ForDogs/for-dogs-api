@@ -78,6 +78,20 @@ public class HttpServletUtil {
         }
     }
 
+    public static Optional<String> getHeader(String headerName) {
+        try {
+            HttpServletRequest request = getHttpServletRequest();
+            if (headerName == null) {
+                return Optional.empty();
+            }
+
+            String headerValue = request.getHeader(headerName);
+            return Optional.ofNullable(headerValue);
+        } catch (Exception e) {
+            throw new IllegalStateException("요청 헤더를 가져오는 중 예외가 발생했습니다.", e);
+        }
+    }
+
     public static Object getRequestAttribute(String attributeName) {
         HttpServletRequest request = getHttpServletRequest();
 

@@ -1,22 +1,23 @@
 package com.fordogs.user.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
-import com.fordogs.security.exception.error.SecurityErrorCode;
-import com.fordogs.user.error.UserManagementErrorCode;
-import com.fordogs.user.error.UserRefreshTokenErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.HeaderUtil;
+import com.fordogs.core.util.constants.HttpRequestConstants;
+import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.user.application.UserManagementService;
 import com.fordogs.user.application.UserRefreshTokenService;
+import com.fordogs.user.error.UserManagementErrorCode;
+import com.fordogs.user.error.UserRefreshTokenErrorCode;
 import com.fordogs.user.presentation.dto.UserDetailDto;
 import com.fordogs.user.presentation.dto.UserJoinDto;
 import com.fordogs.user.presentation.dto.UserLoginDto;
 import com.fordogs.user.presentation.dto.UserRefreshDto;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,12 +51,13 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "액세스 토큰 재발급", description = "요청 시 HTTP Cookie에 RefreshToken이 존재해야 합니다. [EX] REFRESH_TOKEN={VALUE}", operationId = "/users/refresh")
+    @Operation(summary = "액세스 토큰 재발급", description = "요청 쿠키 명은 ", operationId = "/users/refresh")
     @ApiErrorCode(UserRefreshTokenErrorCode.class)
     @PostMapping("/refresh")
     public ResponseEntity<SuccessResponse<UserRefreshDto.Response>> handleRefreshAccessTokenRequest(
-            @Parameter(name = "Authorization", description = "액세스 토큰", required = true) @RequestHeader(name = "Authorization") String authorizationHeader) {
-        UserRefreshDto.Response response = userRefreshTokenService.refreshAccessToken(HeaderUtil.extractAccessToken(authorizationHeader));
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerTokenHeader,
+            @CookieValue(value = HttpRequestConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken) {
+        UserRefreshDto.Response response = userRefreshTokenService.refreshAccessToken(HeaderUtil.extractAccessToken(bearerTokenHeader), refreshToken);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }

@@ -6,7 +6,7 @@ import com.fordogs.core.domian.enums.Category;
 import com.fordogs.product.domain.specification.ProductSpecification;
 import com.fordogs.product.error.ProductErrorCode;
 import com.fordogs.core.util.HttpServletUtil;
-import com.fordogs.core.util.constants.RequestAttributesConstants;
+import com.fordogs.core.util.constants.HttpRequestConstants;
 import com.fordogs.product.infrastructure.ProductRepository;
 import com.fordogs.product.application.aws.s3.S3ImageUploader;
 import com.fordogs.product.application.aws.s3.dto.ImageUploadResponse;
@@ -37,7 +37,7 @@ public class ProductService {
 
     @Transactional
     public ProductCreateDto.Response addProduct(ProductCreateDto.Request request) {
-        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
+        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID);
         UserManagementEntity userManagementEntity = userManagementService.findById(userId);
         if (productRepository.existsByName(request.getProductName())) {
             throw ProductErrorCode.PRODUCT_ALREADY_EXISTS.toException();

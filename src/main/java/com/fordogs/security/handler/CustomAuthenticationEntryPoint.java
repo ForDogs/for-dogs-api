@@ -1,6 +1,6 @@
 package com.fordogs.security.handler;
 
-import com.fordogs.core.util.constants.RequestAttributesConstants;
+import com.fordogs.core.util.constants.HttpRequestConstants;
 import com.fordogs.security.exception.SecurityAuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,7 +23,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
-        Object exception = request.getAttribute(RequestAttributesConstants.SECURITY_AUTHENTICATION_EXCEPTION);
+        Object exception = request.getAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_SECURITY_AUTH_EXCEPTION);
         if (exception instanceof SecurityAuthenticationException securityAuthenticationException) {
             resolver.resolveException(request, response, null, securityAuthenticationException);
         } else {

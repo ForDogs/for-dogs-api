@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -58,6 +59,16 @@ public class GlobalExceptionHandler {
         logErrorWithException(e);
 
         return ResponseEntity.status(e.getStatusCode())
+                .body(response);
+    }
+
+    @ExceptionHandler(MissingRequestCookieException.class)
+    public ResponseEntity<ErrorResponse> handleMissingRequestCookieException(MissingRequestCookieException e) {
+        String errorMessage = e.getCookieName() + " 쿠키는 필수 요청 쿠키입니다.";
+        ErrorResponse response = ErrorResponse.of(e, errorMessage);
+        logErrorWithException(e);
+
+        return ResponseEntity.status(BAD_REQUEST)
                 .body(response);
     }
 

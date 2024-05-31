@@ -7,7 +7,7 @@ import com.fordogs.core.domian.vo.wapper.RefreshToken;
 import com.fordogs.user.error.UserManagementErrorCode;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.PasswordUtil;
-import com.fordogs.core.util.constants.RequestAttributesConstants;
+import com.fordogs.core.util.constants.HttpRequestConstants;
 import com.fordogs.security.provider.JwtTokenProvider;
 import com.fordogs.user.infrastructure.UserManagementRepository;
 import com.fordogs.user.presentation.dto.UserDetailDto;
@@ -60,13 +60,13 @@ public class UserManagementService {
 
     @Transactional
     public void deactivateUser() {
-        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
+        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID);
         UserManagementEntity userManagementEntity = findById(userId);
         userManagementEntity.disable();
     }
 
     public UserDetailDto.Response findUserDetails() {
-        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(RequestAttributesConstants.USER_ID);
+        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID);
         UserManagementEntity userManagementEntity = findById(userId);
 
         return UserDetailDto.Response.toResponse(userManagementEntity);

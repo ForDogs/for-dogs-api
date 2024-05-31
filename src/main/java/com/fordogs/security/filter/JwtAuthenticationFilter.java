@@ -1,7 +1,7 @@
 package com.fordogs.security.filter;
 
 import com.fordogs.core.util.HeaderUtil;
-import com.fordogs.core.util.constants.RequestAttributesConstants;
+import com.fordogs.core.util.constants.HttpRequestConstants;
 import com.fordogs.security.exception.SecurityAuthenticationException;
 import com.fordogs.security.provider.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
@@ -28,11 +28,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (jwtTokenProvider.validateToken(accessToken)) {
                     Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    request.setAttribute(RequestAttributesConstants.USER_ID, jwtTokenProvider.extractId(accessToken));
+                    request.setAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID, jwtTokenProvider.extractId(accessToken));
                 }
             } catch (SecurityAuthenticationException e) {
                 SecurityContextHolder.clearContext();
-                request.setAttribute(RequestAttributesConstants.SECURITY_AUTHENTICATION_EXCEPTION, e);
+                request.setAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_SECURITY_AUTH_EXCEPTION, e);
                 // response.sendError(e.getHttpStatus().value(), e.getMessage()); // permitAll()로 설정된 경로에서도 토큰으로 인해 발생한 예외 처리 진행
             }
         }

@@ -25,6 +25,7 @@ import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,17 +37,20 @@ import static java.util.stream.Collectors.groupingBy;
 @Configuration
 public class SwaggerConfiguration {
 
+    private static final String AUTHORIZATION_HEADER_SCHEME = "AUTHORIZATION_HEADER";
+    private static final String AUTHORIZATION_HEADER_BEARER = "BEARER";
+
     @Bean
     public OpenAPI customOpenAPI(@Value("${springdoc.version}") String appVersion, @Value("${spring.application.name}") String serverName) {
-        String jwtSchemeName = "JwtAuth";
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
+        SecurityRequirement securityRequirement = new SecurityRequirement()
+                .addList(AUTHORIZATION_HEADER_SCHEME);
         Components components = new Components()
-                .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
-                        .name(jwtSchemeName)
+                .addSecuritySchemes(AUTHORIZATION_HEADER_SCHEME, new SecurityScheme()
+                        .name(AUTHORIZATION_HEADER_SCHEME)
                         .type(SecurityScheme.Type.HTTP)
-                        .scheme("bearer")
+                        .scheme(AUTHORIZATION_HEADER_BEARER)
                         .in(SecurityScheme.In.HEADER)
-                        .bearerFormat("Authorization"));
+                        .bearerFormat(HttpHeaders.AUTHORIZATION));
 
         return new OpenAPI()
                 .info(new Info().title(serverName + " API for Rio").version(appVersion))
