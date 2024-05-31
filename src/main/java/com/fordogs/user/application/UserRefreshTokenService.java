@@ -46,8 +46,8 @@ public class UserRefreshTokenService {
         if (!userRefreshTokenEntity.getUser().isEnabled()) {
             throw UserRefreshTokenErrorCode.USER_DISABLED.toException();
         }
-        String refreshedAccessToken = jwtTokenProvider.generateAccessToken(userRefreshTokenEntity.getUser()).getValue();
+        AccessToken refreshedAccessToken = jwtTokenProvider.generateAccessToken(userRefreshTokenEntity.getUser());
 
-        return UserRefreshDto.Response.toResponse(userRefreshTokenEntity.getUser(), AccessToken.builder().value(refreshedAccessToken).build());
+        return UserRefreshDto.Response.toResponse(userRefreshTokenEntity.getUser(), refreshedAccessToken);
     }
 }

@@ -21,12 +21,15 @@ public class UserRefreshDto {
         private String userId;
 
         @Schema(description = "Access Token")
-        private String accessToken;
+        private TokenDto accessToken;
 
         public static UserRefreshDto.Response toResponse(UserManagementEntity userManagementEntity, AccessToken accessToken) {
             return UserRefreshDto.Response.builder()
                     .userId(userManagementEntity.getAccount().getValue())
-                    .accessToken(accessToken.getValue())
+                    .accessToken(TokenDto.builder()
+                            .value(accessToken.getValue())
+                            .expiration(accessToken.getExpiration())
+                            .build())
                     .build();
         }
     }

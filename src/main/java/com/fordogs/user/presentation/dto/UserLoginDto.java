@@ -10,8 +10,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 public class UserLoginDto {
 
     @Schema(description = "로그인 요청")
@@ -44,37 +42,23 @@ public class UserLoginDto {
         private String userId;
 
         @Schema(description = "Refresh Token")
-        private Token refreshToken;
+        private TokenDto refreshToken;
 
         @Schema(description = "Access Token")
-        private Token accessToken;
+        private TokenDto accessToken;
 
         public static UserLoginDto.Response toResponse(UserManagementEntity userManagementEntity, RefreshToken refreshToken, AccessToken accessToken) {
             return Response.builder()
                     .userId(userManagementEntity.getAccount().getValue())
-                    .refreshToken(Token.builder()
+                    .refreshToken(TokenDto.builder()
                             .value(refreshToken.getValue())
                             .expiration(refreshToken.getExpiration())
                             .build())
-                    .accessToken(Token.builder()
+                    .accessToken(TokenDto.builder()
                             .value(accessToken.getValue())
                             .expiration(accessToken.getExpiration())
                             .build())
                     .build();
         }
-    }
-
-    @Schema(description = "로그인 토큰 응답")
-    @Getter
-    @Setter
-    @Builder
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Token {
-
-        @Schema(description = "토큰 값")
-        private String value;
-
-        @Schema(description = "토큰 만료 시간")
-        private LocalDateTime expiration;
     }
 }
