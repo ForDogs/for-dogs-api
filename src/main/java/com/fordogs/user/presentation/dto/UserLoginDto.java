@@ -44,25 +44,37 @@ public class UserLoginDto {
         private String userId;
 
         @Schema(description = "Refresh Token")
-        private String refreshToken;
-
-        @Schema(description = "Refresh Token 만료 시간")
-        private LocalDateTime refreshTokenExpiration;
+        private Token refreshToken;
 
         @Schema(description = "Access Token")
-        private String accessToken;
-
-        @Schema(description = "Access Token 만료 시간")
-        private LocalDateTime accessTokenExpiration;
+        private Token accessToken;
 
         public static UserLoginDto.Response toResponse(UserManagementEntity userManagementEntity, RefreshToken refreshToken, AccessToken accessToken) {
-            return UserLoginDto.Response.builder()
+            return Response.builder()
                     .userId(userManagementEntity.getAccount().getValue())
-                    .refreshToken(refreshToken.getValue())
-                    .refreshTokenExpiration(refreshToken.getExpiration())
-                    .accessToken(accessToken.getValue())
-                    .accessTokenExpiration(accessToken.getExpiration())
+                    .refreshToken(Token.builder()
+                            .value(refreshToken.getValue())
+                            .expiration(refreshToken.getExpiration())
+                            .build())
+                    .accessToken(Token.builder()
+                            .value(accessToken.getValue())
+                            .expiration(accessToken.getExpiration())
+                            .build())
                     .build();
         }
+    }
+
+    @Schema(description = "로그인 토큰 응답")
+    @Getter
+    @Setter
+    @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class Token {
+
+        @Schema(description = "토큰 값")
+        private String value;
+
+        @Schema(description = "토큰 만료 시간")
+        private LocalDateTime expiration;
     }
 }
