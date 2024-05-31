@@ -51,7 +51,7 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "액세스 토큰 재발급", description = "요청 쿠키 명은 ", operationId = "/users/refresh")
+    @Operation(summary = "액세스 토큰 재발급", description = "해당 API는 Swagger UI에서 테스트 불가합니다.", operationId = "/users/refresh")
     @ApiErrorCode(UserRefreshTokenErrorCode.class)
     @PostMapping("/refresh")
     public ResponseEntity<SuccessResponse<UserRefreshDto.Response>> handleRefreshAccessTokenRequest(
