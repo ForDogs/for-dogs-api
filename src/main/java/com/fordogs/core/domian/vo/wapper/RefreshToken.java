@@ -4,6 +4,7 @@ import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.util.validator.StringValidator;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,8 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Getter
@@ -18,9 +21,13 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RefreshToken extends ValueWrapperObject<String> {
 
+    @Transient
+    private LocalDateTime expiration = null;
+
     @Builder
-    public RefreshToken(String value) {
+    public RefreshToken(String value, LocalDateTime expiration) {
         super(value);
+        this.expiration = expiration;
         validate(value);
     }
 
@@ -39,13 +46,17 @@ public class RefreshToken extends ValueWrapperObject<String> {
         }
 
         Date now = new Date();
+        Date expirationDate = DateUtils.addMinutes(now, expirationDays);
         String jwt = Jwts.builder()
                 .setSubject(account)
                 .setIssuedAt(now)
-                .setExpiration(DateUtils.addMinutes(now, expirationDays))
+                .setExpiration(expirationDate)
                 .signWith(secretKey)
                 .compact();
 
-        return RefreshToken.builder().value(jwt).build();
+        return RefreshToken.builder()
+                .value(jwt)
+                .expiration(expirationDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                .build();
     }
 }

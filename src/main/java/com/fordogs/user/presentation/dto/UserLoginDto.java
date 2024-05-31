@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 public class UserLoginDto {
 
     @Schema(description = "로그인 요청")
@@ -44,14 +46,22 @@ public class UserLoginDto {
         @Schema(description = "Refresh Token")
         private String refreshToken;
 
+        @Schema(description = "Refresh Token 만료 시간")
+        private LocalDateTime refreshTokenExpiration;
+
         @Schema(description = "Access Token")
         private String accessToken;
+
+        @Schema(description = "Access Token 만료 시간")
+        private LocalDateTime accessTokenExpiration;
 
         public static UserLoginDto.Response toResponse(UserManagementEntity userManagementEntity, RefreshToken refreshToken, AccessToken accessToken) {
             return UserLoginDto.Response.builder()
                     .userId(userManagementEntity.getAccount().getValue())
                     .refreshToken(refreshToken.getValue())
+                    .refreshTokenExpiration(refreshToken.getExpiration())
                     .accessToken(accessToken.getValue())
+                    .accessTokenExpiration(accessToken.getExpiration())
                     .build();
         }
     }

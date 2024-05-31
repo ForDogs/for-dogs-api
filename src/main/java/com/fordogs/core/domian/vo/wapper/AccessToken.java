@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Getter
@@ -21,9 +23,12 @@ public class AccessToken extends ValueWrapperObject<String> {
     private static final String CLAIMS_USER_ID = "id";
     private static final String CLAIMS_ROLE = "role";
 
+    private LocalDateTime expiration = null;
+
     @Builder
-    public AccessToken(String value) {
+    public AccessToken(String value, LocalDateTime expiration) {
         super(value);
+        this.expiration = expiration;
         validate(value);
     }
 
@@ -44,15 +49,19 @@ public class AccessToken extends ValueWrapperObject<String> {
         }
 
         Date now = new Date();
+        Date expirationDate = DateUtils.addMinutes(now, expirationHours);
         String jwt = Jwts.builder()
                 .setSubject(account)
                 .claim(CLAIMS_USER_ID, userId)
                 .claim(CLAIMS_ROLE, role)
                 .setIssuedAt(now)
-                .setExpiration(DateUtils.addMinutes(now, expirationHours))
+                .setExpiration(expirationDate)
                 .signWith(secretKey)
                 .compact();
 
-        return AccessToken.builder().value(jwt).build();
+        return AccessToken.builder()
+                .value(jwt)
+                .expiration(expirationDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                .build();
     }
 }
