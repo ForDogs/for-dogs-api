@@ -2,15 +2,16 @@ package com.fordogs.product.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.domian.enums.Category;
-import com.fordogs.product.error.ProductErrorCode;
-import com.fordogs.product.error.S3ErrorCode;
-import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.product.application.ProductService;
-import com.fordogs.product.presentation.dto.ProductCreateDto;
-import com.fordogs.product.presentation.dto.ProductDetailDto;
-import com.fordogs.product.presentation.dto.ProductImageFileUploadDto;
-import com.fordogs.product.presentation.dto.ProductListDto;
+import com.fordogs.product.error.ProductErrorCode;
+import com.fordogs.product.error.S3ErrorCode;
+import com.fordogs.product.presentation.request.ProductRegisterRequest;
+import com.fordogs.product.presentation.response.ProductDetailsResponse;
+import com.fordogs.product.presentation.response.ProductImageUploadResponse;
+import com.fordogs.product.presentation.response.ProductRegisterResponse;
+import com.fordogs.product.presentation.response.ProductSearchResponse;
+import com.fordogs.security.exception.error.SecurityErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -38,9 +39,9 @@ public class ProductController {
     @Operation(summary = "상품 등록", operationId = "/products/register")
     @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
     @PostMapping("/register")
-    public ResponseEntity<SuccessResponse<ProductCreateDto.Response>> handleAddProductRequest(
-            @Valid @RequestBody ProductCreateDto.Request request) {
-        ProductCreateDto.Response response = productService.addProduct(request);
+    public ResponseEntity<SuccessResponse<ProductRegisterResponse>> handleAddProductRequest(
+            @Valid @RequestBody ProductRegisterRequest request) {
+        ProductRegisterResponse response = productService.addProduct(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
@@ -48,11 +49,11 @@ public class ProductController {
     @Operation(summary = "상품 전체 검색 및 필터링", operationId = "/products/search")
     @ApiErrorCode(ProductErrorCode.class)
     @GetMapping("/search")
-    public ResponseEntity<SuccessResponse<Page<ProductListDto.Response>>> handleSearchProductsRequest(
+    public ResponseEntity<SuccessResponse<Page<ProductSearchResponse>>> handleSearchProductsRequest(
             @Parameter(name = "seller", description = "판매자 ID", example = "hong1234") @RequestParam(required = false, value = "seller") String sellerId,
             @Parameter(name = "category", description = "상품 카테고리") @RequestParam(required = false, value = "category") Category category,
             @ParameterObject @PageableDefault Pageable pageable) {
-        Page<ProductListDto.Response> response = productService.searchProducts(sellerId, category, pageable);
+        Page<ProductSearchResponse> response = productService.searchProducts(sellerId, category, pageable);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
@@ -60,9 +61,9 @@ public class ProductController {
     @Operation(summary = "상품 상세 검색", operationId = "/products/{productId}/details")
     @ApiErrorCode(ProductErrorCode.class)
     @GetMapping("/{productId}/details")
-    public ResponseEntity<SuccessResponse<ProductDetailDto.Response>> handleFindProductDetailsRequest(
+    public ResponseEntity<SuccessResponse<ProductDetailsResponse>> handleFindProductDetailsRequest(
             @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") String productId) {
-        ProductDetailDto.Response response = productService.findProductDetails(productId);
+        ProductDetailsResponse response = productService.findProductDetails(productId);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
@@ -70,9 +71,9 @@ public class ProductController {
     @Operation(summary = "상품 이미지 파일 업로드", operationId = "/products/images/upload", description = "업로드 가능 이미지 확장자: jpg, jpeg, png, gif")
     @ApiErrorCode({S3ErrorCode.class, SecurityErrorCode.class})
     @PostMapping(value = "/images/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<SuccessResponse<ProductImageFileUploadDto.Response>> handleUploadProductImagesRequest(
+    public ResponseEntity<SuccessResponse<ProductImageUploadResponse>> handleUploadProductImagesRequest(
             @RequestPart(value = "imageFiles") MultipartFile[] imageFiles) {
-        ProductImageFileUploadDto.Response response = productService.uploadProductImages(imageFiles);
+        ProductImageUploadResponse response = productService.uploadProductImages(imageFiles);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }

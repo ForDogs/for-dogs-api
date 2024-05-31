@@ -10,9 +10,11 @@ import com.fordogs.core.util.PasswordUtil;
 import com.fordogs.core.util.constants.HttpRequestConstants;
 import com.fordogs.security.provider.JwtTokenProvider;
 import com.fordogs.user.infrastructure.UserManagementRepository;
-import com.fordogs.user.presentation.dto.UserDetailDto;
-import com.fordogs.user.presentation.dto.UserJoinDto;
-import com.fordogs.user.presentation.dto.UserLoginDto;
+import com.fordogs.user.presentation.request.UserLoginRequest;
+import com.fordogs.user.presentation.request.UserSignupRequest;
+import com.fordogs.user.presentation.response.UserDetailsResponse;
+import com.fordogs.user.presentation.response.UserLoginResponse;
+import com.fordogs.user.presentation.response.UserSignupResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,18 +31,18 @@ public class UserManagementService {
     private final UserRefreshTokenService userRefreshTokenService;
 
     @Transactional
-    public UserJoinDto.Response signupUser(UserJoinDto.Request request) {
+    public UserSignupResponse signupUser(UserSignupRequest request) {
         UserManagementEntity requestedUserManagementEntity = request.toEntity();
         if (userManagementRepository.existsByAccount(requestedUserManagementEntity.getAccount())) {
             throw UserManagementErrorCode.DUPLICATE_USER_ID.toException();
         }
         UserManagementEntity savedUserManagementEntity = userManagementRepository.save(requestedUserManagementEntity);
 
-        return UserJoinDto.Response.toResponse(savedUserManagementEntity);
+        return UserSignupResponse.toResponse(savedUserManagementEntity);
     }
 
     @Transactional
-    public UserLoginDto.Response login(UserLoginDto.Request request) {
+    public UserLoginResponse login(UserLoginRequest request) {
         UserManagementEntity userManagementEntity = userManagementRepository.findByAccount(Id.builder().value(request.getUserId()).build())
                 .orElseThrow(UserManagementErrorCode.USER_NOT_FOUND::toException);
         if (!(request.getUserRole().equals(userManagementEntity.getRole()))) {
@@ -55,7 +57,7 @@ public class UserManagementService {
         RefreshToken refreshToken = userRefreshTokenService.generateAndSaveRefreshToken(userManagementEntity);
         AccessToken accessToken = jwtTokenProvider.generateAccessToken(userManagementEntity);
 
-        return UserLoginDto.Response.toResponse(userManagementEntity, refreshToken, accessToken);
+        return UserLoginResponse.toResponse(userManagementEntity, refreshToken, accessToken);
     }
 
     @Transactional
@@ -65,11 +67,11 @@ public class UserManagementService {
         userManagementEntity.disable();
     }
 
-    public UserDetailDto.Response findUserDetails() {
+    public UserDetailsResponse findUserDetails() {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID);
         UserManagementEntity userManagementEntity = findById(userId);
 
-        return UserDetailDto.Response.toResponse(userManagementEntity);
+        return UserDetailsResponse.toResponse(userManagementEntity);
     }
 
     public UserManagementEntity findById(UUID userId) {

@@ -3,17 +3,18 @@ package com.fordogs.product.application;
 import com.fordogs.core.domian.entity.ProductEntity;
 import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.enums.Category;
-import com.fordogs.product.domain.specification.ProductSpecification;
-import com.fordogs.product.error.ProductErrorCode;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.constants.HttpRequestConstants;
-import com.fordogs.product.infrastructure.ProductRepository;
 import com.fordogs.product.application.aws.s3.S3ImageUploader;
-import com.fordogs.product.application.aws.s3.dto.ImageUploadResponse;
-import com.fordogs.product.presentation.dto.ProductCreateDto;
-import com.fordogs.product.presentation.dto.ProductDetailDto;
-import com.fordogs.product.presentation.dto.ProductImageFileUploadDto;
-import com.fordogs.product.presentation.dto.ProductListDto;
+import com.fordogs.product.application.aws.s3.response.ImageUploadInfo;
+import com.fordogs.product.domain.specification.ProductSpecification;
+import com.fordogs.product.error.ProductErrorCode;
+import com.fordogs.product.infrastructure.ProductRepository;
+import com.fordogs.product.presentation.request.ProductRegisterRequest;
+import com.fordogs.product.presentation.response.ProductDetailsResponse;
+import com.fordogs.product.presentation.response.ProductImageUploadResponse;
+import com.fordogs.product.presentation.response.ProductRegisterResponse;
+import com.fordogs.product.presentation.response.ProductSearchResponse;
 import com.fordogs.user.application.UserManagementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,7 +37,7 @@ public class ProductService {
     private final S3ImageUploader s3ImageUploader;
 
     @Transactional
-    public ProductCreateDto.Response addProduct(ProductCreateDto.Request request) {
+    public ProductRegisterResponse addProduct(ProductRegisterRequest request) {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID);
         UserManagementEntity userManagementEntity = userManagementService.findById(userId);
         if (productRepository.existsByName(request.getProductName())) {
@@ -44,29 +45,29 @@ public class ProductService {
         }
         ProductEntity saveProductEntity = productRepository.save(request.toEntity(userManagementEntity));
 
-        return ProductCreateDto.Response.toResponse(saveProductEntity);
+        return ProductRegisterResponse.toResponse(saveProductEntity);
     }
 
-    public Page<ProductListDto.Response> searchProducts(String sellerId, Category category, Pageable pageable) {
+    public Page<ProductSearchResponse> searchProducts(String sellerId, Category category, Pageable pageable) {
         return productRepository.findAll(ProductSpecification.withSellerAndCategory(sellerId, category), pageable)
-                .map(ProductListDto.Response::toResponse);
+                .map(ProductSearchResponse::toResponse);
     }
 
-    public ProductDetailDto.Response findProductDetails(String productId) {
+    public ProductDetailsResponse findProductDetails(String productId) {
         ProductEntity productEntity = productRepository.findProductWithEnabledSellerAndProduct(UUID.fromString(productId))
                 .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
 
-        return ProductDetailDto.Response.toResponse(productEntity);
+        return ProductDetailsResponse.toResponse(productEntity);
     }
 
-    public ProductImageFileUploadDto.Response uploadProductImages(MultipartFile[] imageFiles) {
-        List<ImageUploadResponse> imageUploadResponseList = new ArrayList<>();
+    public ProductImageUploadResponse uploadProductImages(MultipartFile[] imageFiles) {
+        List<ImageUploadInfo> imageUploadInfoList = new ArrayList<>();
         for (MultipartFile imageFile : imageFiles) {
-            ImageUploadResponse imageUploadResponse = s3ImageUploader.uploadImage(imageFile);
-            imageUploadResponseList.add(imageUploadResponse);
+            ImageUploadInfo imageUploadInfo = s3ImageUploader.uploadImage(imageFile);
+            imageUploadInfoList.add(imageUploadInfo);
         }
 
-        return ProductImageFileUploadDto.Response.toResponse(imageUploadResponseList);
+        return ProductImageUploadResponse.toResponse(imageUploadInfoList);
     }
 
     public void deleteProductImages(String[] imageUrls) {

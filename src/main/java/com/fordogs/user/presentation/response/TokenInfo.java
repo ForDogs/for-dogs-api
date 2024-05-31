@@ -1,6 +1,5 @@
-package com.fordogs.user.presentation.dto;
+package com.fordogs.user.presentation.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,12 +7,11 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "토큰 응답")
+@Schema(description = "토큰 정보")
 @Getter
 @Setter
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class TokenDto {
+public class TokenInfo {
 
     @Schema(description = "토큰 값")
     private String value;

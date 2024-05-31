@@ -2,7 +2,7 @@ package com.fordogs.product.application.aws.s3;
 
 import com.fordogs.configuraion.properties.S3Properties;
 import com.fordogs.product.error.S3ErrorCode;
-import com.fordogs.product.application.aws.s3.dto.ImageUploadResponse;
+import com.fordogs.product.application.aws.s3.response.ImageUploadInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +29,7 @@ public class S3ImageUploader {
     private final S3Properties s3Properties;
     private final S3Client s3Client;
 
-    public ImageUploadResponse uploadImage(MultipartFile imageFile) {
+    public ImageUploadInfo uploadImage(MultipartFile imageFile) {
         if (imageFile.isEmpty() || Objects.isNull(imageFile.getOriginalFilename())) {
             throw S3ErrorCode.IMAGE_FILE_EMPTY.toException();
         }
@@ -55,7 +55,7 @@ public class S3ImageUploader {
                         .key(storedFilename)
                         .build()).toString();
 
-        return ImageUploadResponse.toResponse(originalFilename, fileUrl);
+        return ImageUploadInfo.toResponse(originalFilename, fileUrl);
     }
 
     private String validateImageFilename(String filename) {
