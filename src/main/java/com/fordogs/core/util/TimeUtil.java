@@ -3,30 +3,22 @@ package com.fordogs.core.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-import java.time.DateTimeException;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimeUtil {
 
-    private static final DateTimeFormatter STANDARD_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    private static final String STANDARD_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
-    private static final DateTimeFormatter UTC_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    public static String formatLocalDateTime(LocalDateTime localDateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(STANDARD_FORMAT);
+        return localDateTime.format(formatter);
+    }
 
-    public static String toString(ZonedDateTime zonedDateTime) {
-        try {
-            if (zonedDateTime == null) {
-                return null;
-            }
-            if (zonedDateTime.getZone().equals(ZoneOffset.UTC)) {
-                return zonedDateTime.format(UTC_FORMATTER);
-            } else {
-                return zonedDateTime.format(STANDARD_FORMATTER);
-            }
-        } catch (DateTimeException e) {
-            throw new IllegalArgumentException("ZonedDateTime을 문자열로 변환하는 중 예외가 발생했습니다.", e);
-        }
+    public static LocalDateTime toLocalDateTime(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 }

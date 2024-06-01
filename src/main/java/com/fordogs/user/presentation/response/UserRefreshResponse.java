@@ -2,6 +2,7 @@ package com.fordogs.user.presentation.response;
 
 import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.vo.wapper.AccessToken;
+import com.fordogs.core.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class UserRefreshResponse {
                 .userId(userManagementEntity.getAccount().getValue())
                 .accessToken(TokenInfo.builder()
                         .value(accessToken.getValue())
-                        .expiration(accessToken.getExpiration())
+                        .expiration(TimeUtil.formatLocalDateTime(accessToken.getExpiration()))
                         .build())
                 .build();
     }

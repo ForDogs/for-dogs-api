@@ -1,6 +1,7 @@
 package com.fordogs.core.domian.vo.wapper;
 
 import com.fordogs.core.domian.entity.UserManagementEntity;
+import com.fordogs.core.util.TimeUtil;
 import com.fordogs.core.util.validator.StringValidator;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
@@ -13,7 +14,6 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import java.security.Key;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 
 @Getter
@@ -56,7 +56,7 @@ public class RefreshToken extends ValueWrapperObject<String> {
 
         return RefreshToken.builder()
                 .value(jwt)
-                .expiration(expirationDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                .expiration(TimeUtil.toLocalDateTime(expirationDate))
                 .build();
     }
 }

@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Schema(description = "토큰 정보")
 @Getter
 @Setter
@@ -17,5 +15,5 @@ public class TokenInfo {
     private String value;
 
     @Schema(description = "토큰 만료 시간")
-    private LocalDateTime expiration;
+    private String expiration;
 }

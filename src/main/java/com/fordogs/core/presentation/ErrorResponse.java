@@ -8,8 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -32,7 +31,7 @@ public class ErrorResponse {
         return ErrorResponse.builder()
                 .ok(false)
                 .path(HttpServletUtil.getUrlAndQueryString())
-                .timeStamp(TimeUtil.toString(ZonedDateTime.now(ZoneOffset.UTC)))
+                .timeStamp(TimeUtil.formatLocalDateTime(LocalDateTime.now()))
                 .error(Error.builder()
                         .message(exception.getMessage())
                         .stack(convertStackTraceToStringArray(exception, 10))
@@ -44,7 +43,7 @@ public class ErrorResponse {
         return ErrorResponse.builder()
                 .ok(false)
                 .path(HttpServletUtil.getUrlAndQueryString())
-                .timeStamp(TimeUtil.toString(ZonedDateTime.now(ZoneOffset.UTC)))
+                .timeStamp(TimeUtil.formatLocalDateTime(LocalDateTime.now()))
                 .error(Error.builder()
                         .message(message)
                         .stack(convertStackTraceToStringArray(exception, 10))
@@ -56,7 +55,7 @@ public class ErrorResponse {
         return ErrorResponse.builder()
                 .ok(false)
                 .path(path)
-                .timeStamp(TimeUtil.toString(ZonedDateTime.now(ZoneOffset.UTC)))
+                .timeStamp(TimeUtil.formatLocalDateTime(LocalDateTime.now()))
                 .error(Error.builder()
                         .message(baseErrorCode.getMessage())
                         .stack(convertStackTraceToStringArray(baseErrorCode.toException(), 10))

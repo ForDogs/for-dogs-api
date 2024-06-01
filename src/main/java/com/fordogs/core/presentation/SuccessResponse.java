@@ -7,8 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -31,7 +30,7 @@ public class SuccessResponse<T> {
         return SuccessResponse.<T>builder()
                 .ok(true)
                 .path(HttpServletUtil.getUrlAndQueryString())
-                .timeStamp(TimeUtil.toString(ZonedDateTime.now(ZoneOffset.UTC)))
+                .timeStamp(TimeUtil.formatLocalDateTime(LocalDateTime.now()))
                 .result(result)
                 .build();
     }
