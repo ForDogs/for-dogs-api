@@ -19,7 +19,7 @@ public class SuccessResponse<T> {
     @Schema(example = "/{url}")
     private String path;
 
-    @Schema(example = "2024-05-02T00:11:24Z")
+    @Schema(example = "2024-05-02T00:11:24")
     private String timeStamp;
 
     @Schema

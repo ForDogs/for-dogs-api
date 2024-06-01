@@ -20,7 +20,7 @@ public class ErrorResponse {
     @Schema(example = "/{url}")
     private String path;
 
-    @Schema(example = "2024-05-30T00:11:24Z")
+    @Schema(example = "2024-05-30T00:11:24")
     private String timeStamp;
 
     @Schema
