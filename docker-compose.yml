@@ -5,7 +5,7 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./
-    container_name: for_dogs_server
+    container_name: for_dog_server
     restart: always
     depends_on:
       - mysql
@@ -19,7 +19,7 @@ services:
       TZ: Asia/Seoul
 
   mysql:
-    container_name: for_dogs_server_mysql_db
+    container_name: for_dog_mysql_db
     image: mysql:8.0.23
     platform: linux/amd64
     restart: always
@@ -33,7 +33,7 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
     environment:
-      MYSQL_DATABASE: mysql_db
+      MYSQL_DATABASE: for_dog_db
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_USER: user
       MYSQL_PASSWORD: 1234

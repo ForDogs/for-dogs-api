@@ -1,4 +1,4 @@
-CREATE TABLE `mysql_db`.`user`
+CREATE TABLE `for_dog_db`.`user`
 (
     `id`           BINARY(16)               NOT NULL COMMENT '회원 ID',
     `account`      VARCHAR(50)              NOT NULL UNIQUE COMMENT '회원 계정 ID',
@@ -14,7 +14,7 @@ CREATE TABLE `mysql_db`.`user`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='회원 정보';
 
-CREATE TABLE `mysql_db`.`refresh_token`
+CREATE TABLE `for_dog_db`.`refresh_token`
 (
     `id`         BINARY(16)   NOT NULL COMMENT 'RefreshToken ID',
     `token`      VARCHAR(255) NOT NULL COMMENT 'RefreshToken 값',
@@ -22,11 +22,11 @@ CREATE TABLE `mysql_db`.`refresh_token`
     `created_at` DATETIME     NULL DEFAULT NOW() COMMENT '최초 생성 일시',
     `updated_at` DATETIME     NULL DEFAULT NOW() COMMENT '최종 수정 일시',
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_refresh_token_user_id` FOREIGN KEY (`user_id`) REFERENCES `mysql_db`.`user` (`id`) ON DELETE CASCADE
+    CONSTRAINT `fk_refresh_token_user_id` FOREIGN KEY (`user_id`) REFERENCES `for_dog_db`.`user` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='RefreshToken 정보';
 
-CREATE TABLE `mysql_db`.`product`
+CREATE TABLE `for_dog_db`.`product`
 (
     `id`          BINARY(16)                                                                   NOT NULL COMMENT '상품 ID',
     `seller_id`   BINARY(16)                                                                   NOT NULL COMMENT '판매자 ID',
@@ -40,6 +40,6 @@ CREATE TABLE `mysql_db`.`product`
     `created_at`  DATETIME                                                                     NULL     DEFAULT NOW() COMMENT '최초 생성 일시',
     `updated_at`  DATETIME                                                                     NULL     DEFAULT NOW() COMMENT '최종 수정 일시',
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_product_seller_id` FOREIGN KEY (`seller_id`) REFERENCES `mysql_db`.`user` (`id`) ON DELETE CASCADE
+    CONSTRAINT `fk_product_seller_id` FOREIGN KEY (`seller_id`) REFERENCES `for_dog_db`.`user` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='상품 정보';
