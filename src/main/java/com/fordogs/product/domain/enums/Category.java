@@ -1,5 +1,6 @@
 package com.fordogs.product.domain.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fordogs.product.error.ProductErrorCode;
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +15,16 @@ public enum Category {
     NONE("카테고리 없음");
 
     private final String description;
+
+    @JsonCreator
+    public static Category fromValue(String value) {
+        for (Category category : Category.values()) {
+            if (category.name().equalsIgnoreCase(value)) {
+                return category;
+            }
+        }
+        throw ProductErrorCode.INVALID_CATEGORY_NAME.toException();
+    }
 
     public static Category validateCategoryName(String name) {
         if (name == null) {

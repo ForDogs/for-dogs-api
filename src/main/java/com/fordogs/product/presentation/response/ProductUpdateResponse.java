@@ -7,20 +7,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Schema(description = "상품 등록 응답")
+@Schema(description = "상품 수정 응답")
 @Getter
 @Setter
 @Builder
-public class ProductRegisterResponse {
+public class ProductUpdateResponse {
 
-    @Schema(description = "등록된 상품명")
+    @Schema(description = "수정된 상품명")
     private String productName;
 
-    @Schema(description = "등록된 상품 카테고리")
+    @Schema(description = "수정된 상품 카테고리")
     private Category productCategory;
 
-    public static ProductRegisterResponse toResponse(ProductEntity productEntity) {
-        return ProductRegisterResponse.builder()
+    public static ProductUpdateResponse toResponse(ProductEntity productEntity) {
+        return ProductUpdateResponse.builder()
                 .productName(productEntity.getName())
                 .productCategory(productEntity.getCategory())
                 .build();

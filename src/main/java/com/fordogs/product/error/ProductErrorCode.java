@@ -12,6 +12,7 @@ public enum ProductErrorCode implements BaseErrorCode<DomainException> {
 
     PRODUCT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "같은 이름의 상품이 이미 존재합니다."),
     PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST, "아이디와 일치하는 상품을 찾을 수 없습니다."),
+    PRODUCT_DISABLED(HttpStatus.BAD_REQUEST, "해당 상품은 비활성화된 상품입니다."),
 
     INVALID_DESCRIPTION_LENGTH(HttpStatus.BAD_REQUEST, "설명은 0자에서 100자 사이어야 합니다."),
     INVALID_DESCRIPTION_PROFANITY(HttpStatus.BAD_REQUEST, "설명에 부적절한 내용이 포함되어 있습니다."),

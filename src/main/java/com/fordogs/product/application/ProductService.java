@@ -1,21 +1,19 @@
 package com.fordogs.product.application;
 
-import com.fordogs.product.domain.entity.ProductEntity;
-import com.fordogs.user.domain.entity.UserManagementEntity;
-import com.fordogs.product.domain.enums.Category;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.constants.HttpRequestConstants;
 import com.fordogs.product.application.aws.s3.S3ImageUploader;
 import com.fordogs.product.application.aws.s3.response.ImageUploadInfo;
+import com.fordogs.product.domain.entity.ProductEntity;
+import com.fordogs.product.domain.enums.Category;
 import com.fordogs.product.domain.specification.ProductSpecification;
 import com.fordogs.product.error.ProductErrorCode;
 import com.fordogs.product.infrastructure.ProductRepository;
 import com.fordogs.product.presentation.request.ProductRegisterRequest;
-import com.fordogs.product.presentation.response.ProductDetailsResponse;
-import com.fordogs.product.presentation.response.ProductImageUploadResponse;
-import com.fordogs.product.presentation.response.ProductRegisterResponse;
-import com.fordogs.product.presentation.response.ProductSearchResponse;
+import com.fordogs.product.presentation.request.ProductUpdateRequest;
+import com.fordogs.product.presentation.response.*;
 import com.fordogs.user.application.UserManagementService;
+import com.fordogs.user.domain.entity.UserManagementEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +58,23 @@ public class ProductService {
                 .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
 
         return ProductDetailsResponse.toResponse(productEntity);
+    }
+
+    @Transactional
+    public ProductUpdateResponse updateProduct(String productId, ProductUpdateRequest request) {
+        ProductEntity productEntity = productRepository.findProductWithEnabledSellerAndProduct(UUID.fromString(productId))
+                .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
+
+        boolean productExists = productRepository.existsByName(request.getProductName());
+        productEntity.checkIfProductExists(productExists);
+
+        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID);
+        productEntity.getSeller().checkUserId(userId);
+
+        productEntity.update(request.getProductName(), request.getProductPrice(), request.getProductQuantity(),
+                request.getProductDescription(), request.getProductImages(), request.getProductCategory());
+
+        return ProductUpdateResponse.toResponse(productEntity);
     }
 
     public ProductImageUploadResponse uploadProductImages(MultipartFile[] imageFiles) {

@@ -7,10 +7,8 @@ import com.fordogs.product.application.ProductService;
 import com.fordogs.product.error.ProductErrorCode;
 import com.fordogs.product.error.S3ErrorCode;
 import com.fordogs.product.presentation.request.ProductRegisterRequest;
-import com.fordogs.product.presentation.response.ProductDetailsResponse;
-import com.fordogs.product.presentation.response.ProductImageUploadResponse;
-import com.fordogs.product.presentation.response.ProductRegisterResponse;
-import com.fordogs.product.presentation.response.ProductSearchResponse;
+import com.fordogs.product.presentation.request.ProductUpdateRequest;
+import com.fordogs.product.presentation.response.*;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -64,6 +62,17 @@ public class ProductController {
     public ResponseEntity<SuccessResponse<ProductDetailsResponse>> handleFindProductDetailsRequest(
             @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") String productId) {
         ProductDetailsResponse response = productService.findProductDetails(productId);
+
+        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "상품 수정", operationId = "/products/{productId}/update")
+    @ApiErrorCode(ProductErrorCode.class)
+    @PatchMapping("/{productId}/update")
+    public ResponseEntity<SuccessResponse<ProductUpdateResponse>> handleUpdateProductRequest(
+            @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") String productId,
+            @RequestBody @Valid ProductUpdateRequest request) {
+        ProductUpdateResponse response = productService.updateProduct(productId, request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }

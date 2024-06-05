@@ -10,6 +10,8 @@ import com.fordogs.user.domain.entity.UserManagementEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,7 +30,7 @@ public class ProductEntity extends BaseEntity {
     })
     private Price price;
 
-    private int quantity;
+    private Integer quantity;
 
     @Embedded
     @AttributeOverrides({
@@ -45,7 +47,7 @@ public class ProductEntity extends BaseEntity {
     private boolean enabled = true;
 
     @Builder
-    public ProductEntity(UserManagementEntity seller, String name, Price price, int quantity, Description description, Category category, String[] images) {
+    public ProductEntity(UserManagementEntity seller, String name, Price price, Integer quantity, Description description, Category category, String[] images) {
         this.seller = seller;
         this.name = name;
         this.price = price;
@@ -54,6 +56,33 @@ public class ProductEntity extends BaseEntity {
         this.category = category != null ? category : Category.NONE;
         this.images = ConverterUtil.convertArrayToJson(images);
         this.enabled = true;
+    }
+
+    public void update(String name, BigDecimal price, Integer quantity, String description, String[] images, Category category) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (price != null) {
+            this.price = new Price(price);
+        }
+        if (quantity != null) {
+            this.quantity = quantity;
+        }
+        if (description != null) {
+            this.description = new Description(description);
+        }
+        if (images != null) {
+            this.images = ConverterUtil.convertArrayToJson(images);
+        }
+        if (category != null) {
+            this.category = category;
+        }
+    }
+
+    private void validateProductIsEnabled() {
+        if (!this.enabled) {
+            throw ProductErrorCode.PRODUCT_DISABLED.toException();
+        }
     }
 
     public void checkIfProductExists(boolean exists) {
