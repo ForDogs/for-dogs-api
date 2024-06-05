@@ -4,11 +4,12 @@ import com.fordogs.core.domian.entity.UserManagementEntity;
 import com.fordogs.core.domian.vo.wapper.AccessToken;
 import com.fordogs.core.domian.vo.wapper.Id;
 import com.fordogs.core.domian.vo.wapper.RefreshToken;
-import com.fordogs.user.error.UserManagementErrorCode;
+import com.fordogs.core.util.CookieUtil;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.PasswordUtil;
 import com.fordogs.core.util.constants.HttpRequestConstants;
 import com.fordogs.security.provider.JwtTokenProvider;
+import com.fordogs.user.error.UserManagementErrorCode;
 import com.fordogs.user.infrastructure.UserManagementRepository;
 import com.fordogs.user.presentation.request.UserLoginRequest;
 import com.fordogs.user.presentation.request.UserSignupRequest;
@@ -57,7 +58,9 @@ public class UserManagementService {
         RefreshToken refreshToken = userRefreshTokenService.generateAndSaveRefreshToken(userManagementEntity);
         AccessToken accessToken = jwtTokenProvider.generateAccessToken(userManagementEntity);
 
-        return UserLoginResponse.toResponse(userManagementEntity, refreshToken, accessToken);
+        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createRefreshTokenCookie(refreshToken));
+
+        return UserLoginResponse.toResponse(userManagementEntity, accessToken);
     }
 
     @Transactional

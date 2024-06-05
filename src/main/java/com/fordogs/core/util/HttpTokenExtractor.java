@@ -5,16 +5,16 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class HeaderUtil {
+public class HttpTokenExtractor {
 
-    public static final String TOKEN_HEADER = "Authorization";
-    public static final String TOKEN_PREFIX = "Bearer ";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String BEARER_TOKEN_PREFIX = "Bearer ";
 
     public static String extractAccessToken(HttpServletRequest request) {
         try {
-            String bearerToken = request.getHeader(TOKEN_HEADER);
-            if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
-                return bearerToken.substring(TOKEN_PREFIX.length());
+            String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+            if (bearerToken != null && bearerToken.startsWith(BEARER_TOKEN_PREFIX)) {
+                return bearerToken.substring(BEARER_TOKEN_PREFIX.length());
             }
             return null;
         } catch (Exception e) {
@@ -24,8 +24,8 @@ public class HeaderUtil {
 
     public static String extractAccessToken(String bearerToken) {
         try {
-            if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
-                return bearerToken.substring(TOKEN_PREFIX.length());
+            if (bearerToken != null && bearerToken.startsWith(BEARER_TOKEN_PREFIX)) {
+                return bearerToken.substring(BEARER_TOKEN_PREFIX.length());
             }
             return null;
         } catch (Exception e) {

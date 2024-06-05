@@ -1,6 +1,6 @@
 package com.fordogs.security.filter;
 
-import com.fordogs.core.util.HeaderUtil;
+import com.fordogs.core.util.HttpTokenExtractor;
 import com.fordogs.core.util.constants.HttpRequestConstants;
 import com.fordogs.security.exception.SecurityAuthenticationException;
 import com.fordogs.security.provider.JwtTokenProvider;
@@ -22,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = HeaderUtil.extractAccessToken(request);
+        String accessToken = HttpTokenExtractor.extractAccessToken(request);
         if (accessToken != null) {
             try {
                 if (jwtTokenProvider.validateToken(accessToken)) {

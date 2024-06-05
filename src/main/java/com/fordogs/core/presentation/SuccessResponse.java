@@ -29,7 +29,7 @@ public class SuccessResponse<T> {
     public static <T> SuccessResponse<T> of(T result) {
         return SuccessResponse.<T>builder()
                 .ok(true)
-                .path(HttpServletUtil.getUrlAndQueryString())
+                .path(HttpServletUtil.getRequestUrlAndQuery())
                 .timeStamp(TimeUtil.formatLocalDateTime(LocalDateTime.now()))
                 .result(result)
                 .build();

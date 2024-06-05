@@ -2,6 +2,7 @@ package com.fordogs.core.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -16,93 +17,84 @@ import java.util.Optional;
 public class HttpServletUtil {
 
     public static String getHttpMethod() {
-        try {
-            return Optional
-                    .of(getHttpServletRequest())
-                    .map(HttpServletRequest::getMethod)
-                    .orElse(null);
-        } catch (Exception e) {
-            throw new IllegalStateException("HTTP 메소드를 가져오는 중 예외가 발생했습니다.", e);
-        }
+        return getCurrentHttpServletRequest()
+                .map(HttpServletRequest::getMethod)
+                .orElseThrow(() -> new IllegalStateException("HTTP 메소드를 가져오는 중 예외가 발생했습니다."));
     }
 
-    public static String getUrlAndQueryString() {
-        try {
-            return Optional
-                    .of(getHttpServletRequest())
-                    .map(request -> request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : ""))
-                    .orElse(null);
-        } catch (Exception e) {
-            throw new IllegalStateException("URL 및 쿼리 문자열을 가져오는 중 예외가 발생했습니다.", e);
-        }
+    public static String getRequestUrlAndQuery() {
+        return getCurrentHttpServletRequest()
+                .map(request -> request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : ""))
+                .orElseThrow(() -> new IllegalStateException("URL 및 쿼리 문자열을 가져오는 중 예외가 발생했습니다."));
     }
 
-    public static Map<String, String> requestToHeaderMap() {
-        try {
-            HttpServletRequest request = getHttpServletRequest();
-            Map<String, String> headerMap = new HashMap<>();
-            Enumeration<String> headerNames = request.getHeaderNames();
-            if (headerNames == null) {
-                return new HashMap<>();
-            }
-            while (headerNames.hasMoreElements()) {
-                String headerName = headerNames.nextElement();
-                String headerValue = request.getHeader(headerName);
-                headerMap.put(headerName, headerValue);
-            }
-            return headerMap;
-        } catch (Exception e) {
-            throw new IllegalStateException("요청 헤더를 맵으로 변환하는 중 예외가 발생했습니다.", e);
+    public static Map<String, String> getRequestHeaders() {
+        HttpServletRequest request = getCurrentHttpServletRequest()
+                .orElseThrow(() -> new IllegalStateException("요청 헤더를 가져오는 중 예외가 발생했습니다."));
+
+        Map<String, String> headerMap = new HashMap<>();
+        Enumeration<String> headerNames = request.getHeaderNames();
+
+        while (headerNames != null && headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            headerMap.put(headerName, request.getHeader(headerName));
         }
+
+        return headerMap;
     }
 
-    public static Optional<String> getCookie(String cookieName) {
-        try {
-            HttpServletRequest request = getHttpServletRequest();
-            if (cookieName == null) {
-                return Optional.empty();
-            }
-
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals(cookieName)) {
-                        return Optional.ofNullable(cookie.getValue());
-                    }
-                }
-            }
-
+    public static Optional<String> getCookieValue(String cookieName) {
+        if (cookieName == null) {
             return Optional.empty();
-        } catch (Exception e) {
-            throw new IllegalStateException("쿠키를 가져오는 중 예외가 발생했습니다.", e);
         }
+
+        return getCurrentHttpServletRequest()
+                .map(request -> {
+                    Cookie[] cookies = request.getCookies();
+                    if (cookies != null) {
+                        for (Cookie cookie : cookies) {
+                            if (cookie.getName().equals(cookieName)) {
+                                return cookie.getValue();
+                            }
+                        }
+                    }
+                    return null;
+                });
     }
 
-    public static Optional<String> getHeader(String headerName) {
-        try {
-            HttpServletRequest request = getHttpServletRequest();
-            if (headerName == null) {
-                return Optional.empty();
-            }
-
-            String headerValue = request.getHeader(headerName);
-            return Optional.ofNullable(headerValue);
-        } catch (Exception e) {
-            throw new IllegalStateException("요청 헤더를 가져오는 중 예외가 발생했습니다.", e);
+    public static Optional<String> getHeaderValue(String headerName) {
+        if (headerName == null) {
+            return Optional.empty();
         }
+
+        return getCurrentHttpServletRequest()
+                .map(request -> request.getHeader(headerName));
     }
 
     public static Object getRequestAttribute(String attributeName) {
-        HttpServletRequest request = getHttpServletRequest();
-
-        return request.getAttribute(attributeName);
+        return getCurrentHttpServletRequest()
+                .map(request -> request.getAttribute(attributeName))
+                .orElseThrow(() -> new IllegalStateException("요청 속성을 가져오는 중 예외가 발생했습니다."));
     }
 
-    private static HttpServletRequest getHttpServletRequest() {
+    public static void addHeaderToResponse(String headerName, String headerValue) {
+        getCurrentHttpServletResponse()
+                .ifPresent(response -> response.addHeader(headerName, headerValue));
+    }
+
+    private static Optional<HttpServletRequest> getCurrentHttpServletRequest() {
         try {
-            return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        } catch (IllegalStateException ignored) {
-            throw new IllegalStateException("HTTPServletRequest를 가져오는 도중 예외가 발생했습니다.");
+            return Optional.of(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest());
+        } catch (IllegalStateException e) {
+            return Optional.empty();
+        }
+    }
+
+    private static Optional<HttpServletResponse> getCurrentHttpServletResponse() {
+        try {
+            return Optional.ofNullable(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse());
+        } catch (IllegalStateException e) {
+            return Optional.empty();
         }
     }
 }

@@ -30,7 +30,7 @@ public class ErrorResponse {
     public static ErrorResponse of(Exception exception) {
         return ErrorResponse.builder()
                 .ok(false)
-                .path(HttpServletUtil.getUrlAndQueryString())
+                .path(HttpServletUtil.getRequestUrlAndQuery())
                 .timeStamp(TimeUtil.formatLocalDateTime(LocalDateTime.now()))
                 .error(Error.builder()
                         .message(exception.getMessage())
@@ -42,7 +42,7 @@ public class ErrorResponse {
     public static ErrorResponse of(Exception exception, String message) {
         return ErrorResponse.builder()
                 .ok(false)
-                .path(HttpServletUtil.getUrlAndQueryString())
+                .path(HttpServletUtil.getRequestUrlAndQuery())
                 .timeStamp(TimeUtil.formatLocalDateTime(LocalDateTime.now()))
                 .error(Error.builder()
                         .message(message)

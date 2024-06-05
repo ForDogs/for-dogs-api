@@ -2,8 +2,8 @@ package com.fordogs.user.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
-import com.fordogs.core.util.HeaderUtil;
-import com.fordogs.core.util.constants.HttpRequestConstants;
+import com.fordogs.core.util.HttpTokenExtractor;
+import com.fordogs.core.util.constants.HttpResponseConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.user.application.UserManagementService;
 import com.fordogs.user.application.UserRefreshTokenService;
@@ -58,8 +58,8 @@ public class UserController {
     @PostMapping("/refresh")
     public ResponseEntity<SuccessResponse<UserRefreshResponse>> handleRefreshAccessTokenRequest(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerTokenHeader,
-            @CookieValue(value = HttpRequestConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken) {
-        UserRefreshResponse response = userRefreshTokenService.refreshAccessToken(HeaderUtil.extractAccessToken(bearerTokenHeader), refreshToken);
+            @CookieValue(value = HttpResponseConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken) {
+        UserRefreshResponse response = userRefreshTokenService.refreshAccessToken(HttpTokenExtractor.extractAccessToken(bearerTokenHeader), refreshToken);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
