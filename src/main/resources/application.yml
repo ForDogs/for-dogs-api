@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: for-dogs
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+      resolve-lazily: true
   jpa:
     hibernate:
       ddl-auto: none

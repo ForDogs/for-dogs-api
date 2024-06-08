@@ -2,7 +2,9 @@ package com.fordogs.core.exception;
 
 import com.fordogs.core.presentation.ErrorResponse;
 import com.fordogs.security.exception.SecurityAuthenticationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,13 +14,17 @@ import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.util.stream.Collectors;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final MultipartProperties multipartProperties;
 
     private static final HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
     private static final HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
@@ -59,6 +65,18 @@ public class GlobalExceptionHandler {
         logErrorWithException(e);
 
         return ResponseEntity.status(e.getStatusCode())
+                .body(response);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e) {
+        String maxFileSize = multipartProperties.getMaxFileSize().toMegabytes() + "MB";
+        String maxRequestSize = multipartProperties.getMaxRequestSize().toMegabytes() + "MB";
+        String errorMessage = String.format("최대 허용 파일 크기는 %s이며, 요청 전체 크기는 %s로 제한되어 있습니다.", maxFileSize, maxRequestSize);
+        ErrorResponse response = ErrorResponse.of(e, errorMessage);
+        logErrorWithException(e);
+
+        return ResponseEntity.status(BAD_REQUEST)
                 .body(response);
     }
 
