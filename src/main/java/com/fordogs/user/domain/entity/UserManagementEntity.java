@@ -1,12 +1,14 @@
-package com.fordogs.core.domian.entity;
+package com.fordogs.user.domain.entity;
 
-import com.fordogs.core.domian.enums.Role;
-import com.fordogs.core.domian.vo.wapper.EncryptedPassword;
-import com.fordogs.core.domian.vo.wapper.Id;
-import com.fordogs.core.domian.vo.*;
-import com.fordogs.core.domian.vo.wapper.Name;
-import com.fordogs.core.domian.vo.wapper.Password;
+import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.util.PasswordUtil;
+import com.fordogs.user.domain.enums.Role;
+import com.fordogs.user.domain.vo.Email;
+import com.fordogs.user.domain.vo.wrapper.EncryptedPassword;
+import com.fordogs.user.domain.vo.wrapper.Id;
+import com.fordogs.user.domain.vo.wrapper.Name;
+import com.fordogs.user.domain.vo.wrapper.Password;
+import com.fordogs.user.error.UserManagementErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -53,6 +55,30 @@ public class UserManagementEntity extends BaseEntity {
                 .build();
         this.role = role != null ? role : Role.BUYER;
         this.enabled = true;
+    }
+
+    public void checkRole(Role role) {
+        if (!this.role.equals(role)) {
+            throw UserManagementErrorCode.USER_ROLE_MISMATCH.toException();
+        }
+    }
+
+    public void validatePassword(String requestPassword) {
+        if (!PasswordUtil.matches(requestPassword, this.password.getValue())) {
+            throw UserManagementErrorCode.LOGIN_PASSWORD_FAILED.toException();
+        }
+    }
+
+    public void checkIfEnabled() {
+        if (!this.enabled) {
+            throw UserManagementErrorCode.USER_DISABLED.toException();
+        }
+    }
+
+    public void checkDuplicateAccount(boolean exists) {
+        if (exists) {
+            throw UserManagementErrorCode.DUPLICATE_USER_ID.toException();
+        }
     }
 
     public void disable() {

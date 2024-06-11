@@ -1,7 +1,7 @@
 package com.fordogs.user.infrastructure;
 
-import com.fordogs.core.domian.entity.UserRefreshTokenEntity;
-import com.fordogs.core.domian.vo.wapper.RefreshToken;
+import com.fordogs.user.domain.entity.UserRefreshTokenEntity;
+import com.fordogs.user.domain.vo.wrapper.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

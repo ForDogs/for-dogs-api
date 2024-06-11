@@ -1,7 +1,7 @@
 package com.fordogs.user.presentation.response;
 
-import com.fordogs.core.domian.entity.UserManagementEntity;
-import com.fordogs.core.domian.vo.wapper.AccessToken;
+import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.vo.wrapper.AccessToken;
 import com.fordogs.core.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

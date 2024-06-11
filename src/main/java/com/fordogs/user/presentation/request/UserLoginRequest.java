@@ -1,6 +1,6 @@
 package com.fordogs.user.presentation.request;
 
-import com.fordogs.core.domian.enums.Role;
+import com.fordogs.user.domain.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

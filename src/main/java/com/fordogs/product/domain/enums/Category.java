@@ -1,6 +1,6 @@
-package com.fordogs.core.domian.enums;
+package com.fordogs.product.domain.enums;
 
-import com.fordogs.core.exception.error.ValueErrorCode;
+import com.fordogs.product.error.ProductErrorCode;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public enum Category {
         try {
             return Category.valueOf(name);
         } catch (IllegalArgumentException e) {
-            throw ValueErrorCode.INVALID_CATEGORY_NAME.toException();
+            throw ProductErrorCode.INVALID_CATEGORY_NAME.toException();
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.fordogs.security.provider;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fordogs.core.domian.entity.UserManagementEntity;
+import com.fordogs.user.domain.entity.UserManagementEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

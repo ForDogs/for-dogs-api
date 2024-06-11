@@ -1,6 +1,6 @@
 package com.fordogs.core.util;
 
-import com.fordogs.core.domian.vo.wapper.RefreshToken;
+import com.fordogs.user.domain.vo.wrapper.RefreshToken;
 import com.fordogs.core.util.constants.HttpResponseConstants;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

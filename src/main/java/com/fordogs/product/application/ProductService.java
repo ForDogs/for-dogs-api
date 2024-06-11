@@ -1,8 +1,8 @@
 package com.fordogs.product.application;
 
-import com.fordogs.core.domian.entity.ProductEntity;
-import com.fordogs.core.domian.entity.UserManagementEntity;
-import com.fordogs.core.domian.enums.Category;
+import com.fordogs.product.domain.entity.ProductEntity;
+import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.product.domain.enums.Category;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.constants.HttpRequestConstants;
 import com.fordogs.product.application.aws.s3.S3ImageUploader;
@@ -40,12 +40,14 @@ public class ProductService {
     public ProductRegisterResponse addProduct(ProductRegisterRequest request) {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID);
         UserManagementEntity userManagementEntity = userManagementService.findById(userId);
-        if (productRepository.existsByName(request.getProductName())) {
-            throw ProductErrorCode.PRODUCT_ALREADY_EXISTS.toException();
-        }
-        ProductEntity saveProductEntity = productRepository.save(request.toEntity(userManagementEntity));
+        ProductEntity productEntity = request.toEntity(userManagementEntity);
 
-        return ProductRegisterResponse.toResponse(saveProductEntity);
+        boolean productExists = productRepository.existsByName(request.getProductName());
+        productEntity.checkIfProductExists(productExists);
+
+        ProductEntity savedProductEntity = productRepository.save(productEntity);
+
+        return ProductRegisterResponse.toResponse(savedProductEntity);
     }
 
     public Page<ProductSearchResponse> searchProducts(String sellerId, Category category, Pageable pageable) {

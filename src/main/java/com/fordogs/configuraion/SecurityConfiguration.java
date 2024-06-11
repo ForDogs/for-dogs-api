@@ -1,6 +1,6 @@
 package com.fordogs.configuraion;
 
-import com.fordogs.core.domian.enums.Role;
+import com.fordogs.user.domain.enums.Role;
 import com.fordogs.core.util.PasswordUtil;
 import com.fordogs.security.filter.JwtAuthenticationFilter;
 import com.fordogs.security.handler.CustomAccessDeniedHandler;

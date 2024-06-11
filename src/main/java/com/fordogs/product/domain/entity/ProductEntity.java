@@ -1,9 +1,12 @@
-package com.fordogs.core.domian.entity;
+package com.fordogs.product.domain.entity;
 
-import com.fordogs.core.domian.enums.Category;
-import com.fordogs.core.domian.vo.wapper.Description;
-import com.fordogs.core.domian.vo.wapper.Price;
+import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.util.ConverterUtil;
+import com.fordogs.product.domain.enums.Category;
+import com.fordogs.product.domain.vo.wrapper.Description;
+import com.fordogs.product.domain.vo.wrapper.Price;
+import com.fordogs.product.error.ProductErrorCode;
+import com.fordogs.user.domain.entity.UserManagementEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -51,5 +54,11 @@ public class ProductEntity extends BaseEntity {
         this.category = category != null ? category : Category.NONE;
         this.images = ConverterUtil.convertArrayToJson(images);
         this.enabled = true;
+    }
+
+    public void checkIfProductExists(boolean exists) {
+        if (exists) {
+            throw ProductErrorCode.PRODUCT_ALREADY_EXISTS.toException();
+        }
     }
 }

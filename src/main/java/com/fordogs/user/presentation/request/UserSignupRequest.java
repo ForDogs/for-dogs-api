@@ -1,11 +1,11 @@
 package com.fordogs.user.presentation.request;
 
-import com.fordogs.core.domian.entity.UserManagementEntity;
-import com.fordogs.core.domian.enums.Role;
-import com.fordogs.core.domian.vo.Email;
-import com.fordogs.core.domian.vo.wapper.Id;
-import com.fordogs.core.domian.vo.wapper.Name;
-import com.fordogs.core.domian.vo.wapper.Password;
+import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.enums.Role;
+import com.fordogs.user.domain.vo.Email;
+import com.fordogs.user.domain.vo.wrapper.Id;
+import com.fordogs.user.domain.vo.wrapper.Name;
+import com.fordogs.user.domain.vo.wrapper.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;

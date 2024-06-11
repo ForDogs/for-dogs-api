@@ -1,4 +1,4 @@
-package com.fordogs.core.domian.entity;
+package com.fordogs.core.domain.entity;
 
 import com.fasterxml.uuid.Generators;
 import jakarta.persistence.*;

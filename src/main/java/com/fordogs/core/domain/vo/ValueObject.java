@@ -1,4 +1,4 @@
-package com.fordogs.core.domian.vo;
+package com.fordogs.core.domain.vo;
 
 public abstract class ValueObject {
 

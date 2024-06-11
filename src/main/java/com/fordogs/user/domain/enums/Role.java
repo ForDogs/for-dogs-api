@@ -1,4 +1,4 @@
-package com.fordogs.core.domian.enums;
+package com.fordogs.user.domain.enums;
 
 import lombok.RequiredArgsConstructor;
 

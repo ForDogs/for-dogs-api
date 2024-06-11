@@ -1,7 +1,8 @@
-package com.fordogs.core.domian.vo;
+package com.fordogs.user.domain.vo;
 
-import com.fordogs.core.exception.error.ValueErrorCode;
+import com.fordogs.core.domain.vo.ValueObject;
 import com.fordogs.core.util.validator.StringValidator;
+import com.fordogs.user.error.UserManagementErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
@@ -37,10 +38,10 @@ public class Email extends ValueObject {
             throw new IllegalArgumentException("이메일 도메인이 존재하지 않습니다.");
         }
         if (!StringValidator.validateEnglishNumber(id)) {
-            throw ValueErrorCode.INVALID_EMAIL_ID.toException();
+            throw UserManagementErrorCode.INVALID_EMAIL_ID.toException();
         }
         if (!StringValidator.validateEmailDomainPattern(domain)) {
-            throw ValueErrorCode.INVALID_EMAIL_DOMAIN.toException();
+            throw UserManagementErrorCode.INVALID_EMAIL_DOMAIN.toException();
         }
     }
 }

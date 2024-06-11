@@ -1,7 +1,7 @@
 package com.fordogs.product.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
-import com.fordogs.core.domian.enums.Category;
+import com.fordogs.product.domain.enums.Category;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.product.application.ProductService;
 import com.fordogs.product.error.ProductErrorCode;

@@ -5,6 +5,7 @@ import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.HttpTokenExtractor;
 import com.fordogs.core.util.constants.HttpResponseConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
+import com.fordogs.user.application.UserAuthService;
 import com.fordogs.user.application.UserManagementService;
 import com.fordogs.user.application.UserRefreshTokenService;
 import com.fordogs.user.error.UserManagementErrorCode;
@@ -32,6 +33,7 @@ public class UserController {
 
     private final UserManagementService userManagementService;
     private final UserRefreshTokenService userRefreshTokenService;
+    private final UserAuthService userAuthService;
 
     @Operation(summary = "회원 가입", operationId = "/users/signup")
     @ApiErrorCode(UserManagementErrorCode.class)
@@ -48,7 +50,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<SuccessResponse<UserLoginResponse>> handleLoginRequest(
             @Valid @RequestBody UserLoginRequest request) {
-        UserLoginResponse response = userManagementService.login(request);
+        UserLoginResponse response = userAuthService.login(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }

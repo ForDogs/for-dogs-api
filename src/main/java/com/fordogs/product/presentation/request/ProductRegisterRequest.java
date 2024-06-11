@@ -1,10 +1,10 @@
 package com.fordogs.product.presentation.request;
 
-import com.fordogs.core.domian.entity.ProductEntity;
-import com.fordogs.core.domian.entity.UserManagementEntity;
-import com.fordogs.core.domian.enums.Category;
-import com.fordogs.core.domian.vo.wapper.Description;
-import com.fordogs.core.domian.vo.wapper.Price;
+import com.fordogs.product.domain.entity.ProductEntity;
+import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.product.domain.enums.Category;
+import com.fordogs.product.domain.vo.wrapper.Description;
+import com.fordogs.product.domain.vo.wrapper.Price;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

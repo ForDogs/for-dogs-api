@@ -1,7 +1,7 @@
 package com.fordogs.user.infrastructure;
 
-import com.fordogs.core.domian.entity.UserManagementEntity;
-import com.fordogs.core.domian.vo.wapper.Id;
+import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.vo.wrapper.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

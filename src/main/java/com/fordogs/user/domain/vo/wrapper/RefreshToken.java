@@ -1,6 +1,7 @@
-package com.fordogs.core.domian.vo.wapper;
+package com.fordogs.user.domain.vo.wrapper;
 
-import com.fordogs.core.domian.entity.UserManagementEntity;
+import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
+import com.fordogs.user.domain.entity.UserManagementEntity;
 import com.fordogs.core.util.TimeUtil;
 import com.fordogs.core.util.validator.StringValidator;
 import io.jsonwebtoken.Jwts;

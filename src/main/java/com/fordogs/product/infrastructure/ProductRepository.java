@@ -1,6 +1,6 @@
 package com.fordogs.product.infrastructure;
 
-import com.fordogs.core.domian.entity.ProductEntity;
+import com.fordogs.product.domain.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

@@ -1,7 +1,7 @@
 package com.fordogs.product.presentation.response;
 
-import com.fordogs.core.domian.entity.ProductEntity;
-import com.fordogs.core.domian.enums.Category;
+import com.fordogs.product.domain.entity.ProductEntity;
+import com.fordogs.product.domain.enums.Category;
 import com.fordogs.core.util.ConverterUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

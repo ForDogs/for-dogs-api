@@ -1,9 +1,9 @@
 package com.fordogs.security.provider;
 
 import com.fordogs.configuraion.properties.TokenProperties;
-import com.fordogs.core.domian.entity.UserManagementEntity;
-import com.fordogs.core.domian.vo.wapper.AccessToken;
-import com.fordogs.core.domian.vo.wapper.RefreshToken;
+import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.vo.wrapper.AccessToken;
+import com.fordogs.user.domain.vo.wrapper.RefreshToken;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

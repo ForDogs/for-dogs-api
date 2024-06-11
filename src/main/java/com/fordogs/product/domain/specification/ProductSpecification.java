@@ -1,8 +1,8 @@
 package com.fordogs.product.domain.specification;
 
-import com.fordogs.core.domian.entity.ProductEntity;
-import com.fordogs.core.domian.entity.UserManagementEntity;
-import com.fordogs.core.domian.enums.Category;
+import com.fordogs.product.domain.entity.ProductEntity;
+import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.product.domain.enums.Category;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import lombok.AccessLevel;

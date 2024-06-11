@@ -1,6 +1,6 @@
-package com.fordogs.core.domian.vo.wapper;
+package com.fordogs.core.domain.vo.wapper;
 
-import com.fordogs.core.domian.vo.ValueObject;
+import com.fordogs.core.domain.vo.ValueObject;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Getter;

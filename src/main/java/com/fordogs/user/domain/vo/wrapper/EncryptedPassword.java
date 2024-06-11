@@ -1,5 +1,6 @@
-package com.fordogs.core.domian.vo.wapper;
+package com.fordogs.user.domain.vo.wrapper;
 
+import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
 import com.fordogs.core.util.validator.StringValidator;
 import jakarta.persistence.Embeddable;
 import lombok.*;
