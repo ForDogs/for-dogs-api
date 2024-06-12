@@ -45,7 +45,11 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "로그인", operationId = "/users/login")
+    @Operation(
+            summary = "로그인",
+            operationId = "/users/login",
+            description = "로그인 시 Refresh Token은 Set-Cookie 헤더를 통해 응답으로 전달됩니다."
+    )
     @ApiErrorCode(UserManagementErrorCode.class)
     @PostMapping("/login")
     public ResponseEntity<SuccessResponse<UserLoginResponse>> handleLoginRequest(
@@ -55,7 +59,12 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "액세스 토큰 재발급", description = "해당 API는 Swagger UI에서 테스트 불가합니다.", operationId = "/users/refresh")
+    @Operation(
+            summary = "액세스 토큰 재발급",
+            operationId = "/users/refresh",
+            description = "해당 API는 Swagger UI에서 테스트할 수 없습니다. " +
+                          "요청 헤더에서 Bearer 토큰과 쿠키에서 Refresh 토큰을 사용합니다."
+    )
     @ApiErrorCode(UserRefreshTokenErrorCode.class)
     @PostMapping("/refresh")
     public ResponseEntity<SuccessResponse<UserRefreshResponse>> handleRefreshAccessTokenRequest(
