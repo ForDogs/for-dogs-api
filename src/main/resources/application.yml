@@ -1,4 +1,5 @@
 server:
+  domain: api.fordogs.store
   port: 80
 
 spring:

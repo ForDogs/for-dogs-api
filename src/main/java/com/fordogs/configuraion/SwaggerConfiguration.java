@@ -21,6 +21,7 @@ import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -41,21 +42,50 @@ public class SwaggerConfiguration {
     private static final String AUTHORIZATION_HEADER_BEARER = "BEARER";
 
     @Bean
-    public OpenAPI customOpenAPI(@Value("${springdoc.version}") String appVersion, @Value("${spring.application.name}") String serverName) {
-        SecurityRequirement securityRequirement = new SecurityRequirement()
+    public OpenAPI customOpenAPI(@Value("${springdoc.version}") String appVersion,
+                                 @Value("${spring.application.name}") String appName,
+                                 @Value("${server.domain}") String serverDomain) {
+
+        Info info = createApiInfo(appVersion, appName);
+        List<Server> servers = createServers(serverDomain);
+        SecurityRequirement securityRequirement = createSecurityRequirement();
+        Components components = createComponents();
+
+        return new OpenAPI()
+                .info(info)
+                .servers(servers)
+                .addSecurityItem(securityRequirement)
+                .components(components);
+    }
+
+    private Info createApiInfo(String appVersion, String appName) {
+        return new Info()
+                .title(appName + " API for Rio")
+                .version(appVersion);
+    }
+
+    private List<Server> createServers(String serverDomain) {
+        Server prodHttpsServer = new Server()
+                .url("https://" + serverDomain);
+        Server localServer = new Server()
+                .url("http://localhost:80");
+
+        return List.of(localServer, prodHttpsServer);
+    }
+
+    private SecurityRequirement createSecurityRequirement() {
+        return new SecurityRequirement()
                 .addList(AUTHORIZATION_HEADER_SCHEME);
-        Components components = new Components()
+    }
+
+    private Components createComponents() {
+        return new Components()
                 .addSecuritySchemes(AUTHORIZATION_HEADER_SCHEME, new SecurityScheme()
                         .name(AUTHORIZATION_HEADER_SCHEME)
                         .type(SecurityScheme.Type.HTTP)
                         .scheme(AUTHORIZATION_HEADER_BEARER)
                         .in(SecurityScheme.In.HEADER)
                         .bearerFormat(HttpHeaders.AUTHORIZATION));
-
-        return new OpenAPI()
-                .info(new Info().title(serverName + " API for Rio").version(appVersion))
-                .components(components)
-                .addSecurityItem(securityRequirement);
     }
 
     @Bean
