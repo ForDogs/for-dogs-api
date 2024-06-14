@@ -62,16 +62,19 @@ public class ProductService {
     @Transactional
     public ProductUpdateResponse updateProduct(String productId, ProductUpdateRequest request) {
         ProductEntity productEntity = findEnabledProductById(productId);
-
         checkProductNameDuplicate(request.getProductName());
-
-        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID);
-        productEntity.getSeller().checkUserId(userId);
-
         productEntity.update(request.getProductName(), request.getProductPrice(), request.getProductQuantity(),
                 request.getProductDescription(), request.getProductImages(), request.getProductCategory());
 
         return ProductUpdateResponse.toResponse(productEntity);
+    }
+
+    @Transactional
+    public void deactivateProduct(String productId) {
+        ProductEntity productEntity = productRepository.findById(UUID.fromString(productId))
+                .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
+        productEntity.validateProductIsEnabled();
+        productEntity.disable();
     }
 
     public ProductImageUploadResponse uploadProductImages(MultipartFile[] imageFiles) {

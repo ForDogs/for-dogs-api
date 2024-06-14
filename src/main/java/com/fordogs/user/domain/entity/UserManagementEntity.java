@@ -12,8 +12,6 @@ import com.fordogs.user.error.UserManagementErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
-
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -74,12 +72,6 @@ public class UserManagementEntity extends BaseEntity {
     public void checkIfEnabled() {
         if (!this.enabled) {
             throw UserManagementErrorCode.USER_DISABLED.toException();
-        }
-    }
-
-    public void checkUserId(UUID userId) {
-        if (!this.id.equals(userId)) {
-            throw UserManagementErrorCode.USER_ID_MISMATCH.toException();
         }
     }
 

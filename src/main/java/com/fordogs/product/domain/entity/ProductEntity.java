@@ -79,9 +79,13 @@ public class ProductEntity extends BaseEntity {
         }
     }
 
-    private void validateProductIsEnabled() {
+    public void validateProductIsEnabled() {
         if (!this.enabled) {
             throw ProductErrorCode.PRODUCT_DISABLED.toException();
         }
+    }
+
+    public void disable() {
+        this.enabled = false;
     }
 }

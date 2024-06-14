@@ -54,6 +54,7 @@ public class SecurityConfiguration {
 
                 .requestMatchers(HttpMethod.POST, "/products").hasAuthority(ROLE_SELLER)
                 .requestMatchers(HttpMethod.PATCH, "/products/{productId}/update").hasAuthority(ROLE_SELLER)
+                .requestMatchers(HttpMethod.DELETE, "/products/{productId}/deactivate").hasAuthority(ROLE_SELLER)
                 .requestMatchers(HttpMethod.POST, "/products/images/upload").hasAuthority(ROLE_SELLER)
                 .requestMatchers(HttpMethod.DELETE, "/products/images").hasAuthority(ROLE_SELLER)
 

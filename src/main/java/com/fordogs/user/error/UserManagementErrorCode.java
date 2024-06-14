@@ -15,7 +15,6 @@ public enum UserManagementErrorCode implements BaseErrorCode<DomainException> {
     USER_ROLE_MISMATCH(HttpStatus.BAD_REQUEST, "회원 역할이 일치하지 않습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "아이디와 일치하는 회원을 찾을 수 없습니다."),
     USER_DISABLED(HttpStatus.UNAUTHORIZED, "탈퇴한 회원은 이용할 수 없습니다."),
-    USER_ID_MISMATCH(HttpStatus.NOT_FOUND, "요청 받은 회원 ID가 일치하지 않습니다."),
 
     INVALID_EMAIL_ID(HttpStatus.BAD_REQUEST, "이메일 ID는 영문과 숫자만 사용할 수 있습니다."),
     INVALID_EMAIL_DOMAIN(HttpStatus.BAD_REQUEST, "유효한 이메일 도메인 형식만 사용할 수 있습니다."),

@@ -77,6 +77,16 @@ public class ProductController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 
+    @Operation(summary = "상품 비활성화", operationId = "/products/{productId}/deactivate")
+    @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
+    @DeleteMapping("/{productId}/deactivate")
+    public ResponseEntity<SuccessResponse<Object>> handleDeactivateProductRequest(
+            @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") String productId) {
+        productService.deactivateProduct(productId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @Operation(summary = "상품 이미지 파일 업로드", operationId = "/products/images/upload", description = "업로드 가능 이미지 확장자: jpg, jpeg, png, gif")
     @ApiErrorCode({S3ErrorCode.class, SecurityErrorCode.class})
     @PostMapping(value = "/images/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
