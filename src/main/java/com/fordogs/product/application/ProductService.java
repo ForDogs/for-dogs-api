@@ -21,9 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -40,8 +41,7 @@ public class ProductService {
         UserManagementEntity userManagementEntity = userManagementService.findById(userId);
         ProductEntity productEntity = request.toEntity(userManagementEntity);
 
-        boolean productExists = productRepository.existsByName(request.getProductName());
-        productEntity.checkIfProductExists(productExists);
+        checkProductNameDuplicate(request.getProductName());
 
         ProductEntity savedProductEntity = productRepository.save(productEntity);
 
@@ -54,19 +54,16 @@ public class ProductService {
     }
 
     public ProductDetailsResponse findProductDetails(String productId) {
-        ProductEntity productEntity = productRepository.findProductWithEnabledSellerAndProduct(UUID.fromString(productId))
-                .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
+        ProductEntity productEntity = findEnabledProductById(productId);
 
         return ProductDetailsResponse.toResponse(productEntity);
     }
 
     @Transactional
     public ProductUpdateResponse updateProduct(String productId, ProductUpdateRequest request) {
-        ProductEntity productEntity = productRepository.findProductWithEnabledSellerAndProduct(UUID.fromString(productId))
-                .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
+        ProductEntity productEntity = findEnabledProductById(productId);
 
-        boolean productExists = productRepository.existsByName(request.getProductName());
-        productEntity.checkIfProductExists(productExists);
+        checkProductNameDuplicate(request.getProductName());
 
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID);
         productEntity.getSeller().checkUserId(userId);
@@ -78,18 +75,25 @@ public class ProductService {
     }
 
     public ProductImageUploadResponse uploadProductImages(MultipartFile[] imageFiles) {
-        List<ImageUploadInfo> imageUploadInfoList = new ArrayList<>();
-        for (MultipartFile imageFile : imageFiles) {
-            ImageUploadInfo imageUploadInfo = s3ImageUploader.uploadImage(imageFile);
-            imageUploadInfoList.add(imageUploadInfo);
-        }
+        List<ImageUploadInfo> imageUploadInfoList = Arrays.stream(imageFiles)
+                .map(s3ImageUploader::uploadImage)
+                .collect(Collectors.toList());
 
         return ProductImageUploadResponse.toResponse(imageUploadInfoList);
     }
 
     public void deleteProductImages(String[] imageUrls) {
-        for (String imageUrl : imageUrls) {
-            s3ImageUploader.deleteImage(imageUrl);
+        Arrays.stream(imageUrls).forEach(s3ImageUploader::deleteImage);
+    }
+
+    private ProductEntity findEnabledProductById(String productId) {
+        return productRepository.findProductWithEnabledSellerAndProduct(UUID.fromString(productId))
+                .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
+    }
+
+    private void checkProductNameDuplicate(String productName) {
+        if (productRepository.existsByName(productName)) {
+            throw ProductErrorCode.PRODUCT_ALREADY_EXISTS.toException();
         }
     }
 }

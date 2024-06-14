@@ -26,8 +26,9 @@ public class UserManagementService {
     public UserSignupResponse signupUser(UserSignupRequest request) {
         UserManagementEntity userManagementEntity = request.toEntity();
 
-        boolean accountExists = userManagementRepository.existsByAccount(userManagementEntity.getAccount());
-        userManagementEntity.checkDuplicateAccount(accountExists);
+        if (userManagementRepository.existsByAccount(userManagementEntity.getAccount())) {
+            throw UserManagementErrorCode.DUPLICATE_USER_ID.toException();
+        }
 
         UserManagementEntity savedUserManagementEntity = userManagementRepository.save(userManagementEntity);
 

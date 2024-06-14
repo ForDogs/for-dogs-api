@@ -13,23 +13,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ProductSpecification { // TODO: 추후 QueryDSL로 변경 예정, Entity 스펙 변경 시 자동으로 수정 불가
+public class ProductSpecification {
+
+    private static final String SELLER = "seller";
+    private static final String ACCOUNT = "account";
+    private static final String VALUE = "value";
+    private static final String CATEGORY = "category";
+    private static final String ENABLED = "enabled";
 
     public static Specification<ProductEntity> withSellerAndCategory(String sellerId, Category category) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
             if (sellerId != null) {
-                Join<ProductEntity, UserManagementEntity> sellerJoin = root.join("seller");
-                predicates.add(criteriaBuilder.equal(sellerJoin.get("account").get("value"), sellerId));
+                Join<ProductEntity, UserManagementEntity> sellerJoin = root.join(SELLER);
+                predicates.add(criteriaBuilder.equal(sellerJoin.get(ACCOUNT).get(VALUE), sellerId));
             }
 
             if (category != null) {
-                predicates.add(criteriaBuilder.equal(root.get("category"), category));
+                predicates.add(criteriaBuilder.equal(root.get(CATEGORY), category));
             }
 
-            predicates.add(criteriaBuilder.isTrue(root.get("enabled")));
-            predicates.add(criteriaBuilder.isTrue(root.get("seller").get("enabled")));
+            predicates.add(criteriaBuilder.isTrue(root.get(ENABLED)));
+            predicates.add(criteriaBuilder.isTrue(root.get(SELLER).get(ENABLED)));
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };

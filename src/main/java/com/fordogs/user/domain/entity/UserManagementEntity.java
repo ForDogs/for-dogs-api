@@ -77,12 +77,6 @@ public class UserManagementEntity extends BaseEntity {
         }
     }
 
-    public void checkDuplicateAccount(boolean exists) {
-        if (exists) {
-            throw UserManagementErrorCode.DUPLICATE_USER_ID.toException();
-        }
-    }
-
     public void checkUserId(UUID userId) {
         if (!this.id.equals(userId)) {
             throw UserManagementErrorCode.USER_ID_MISMATCH.toException();

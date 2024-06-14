@@ -30,7 +30,8 @@ public class ProductRegisterRequest {
     private BigDecimal productPrice;
 
     @Schema(description = "상품 수량", requiredMode = Schema.RequiredMode.REQUIRED, example = "50")
-    private int productQuantity;
+    @NotNull(message = "상품 수량을 입력해주세요.")
+    private Integer productQuantity;
 
     @Schema(description = "상품 설명", example = "강아지 집 회색 계열입니다(재질 : 극세사)")
     private String productDescription;
@@ -44,9 +45,13 @@ public class ProductRegisterRequest {
     public ProductEntity toEntity(UserManagementEntity userManagementEntity) {
         return ProductEntity.builder()
                 .name(this.productName)
-                .price(Price.builder().value(this.productPrice).build())
+                .price(Price.builder()
+                        .value(this.productPrice)
+                        .build())
                 .quantity(this.productQuantity)
-                .description(Description.builder().value(this.productDescription).build())
+                .description(Description.builder()
+                        .value(this.productDescription)
+                        .build())
                 .images(this.productImages)
                 .category(this.productCategory)
                 .seller(userManagementEntity)

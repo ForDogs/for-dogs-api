@@ -84,10 +84,4 @@ public class ProductEntity extends BaseEntity {
             throw ProductErrorCode.PRODUCT_DISABLED.toException();
         }
     }
-
-    public void checkIfProductExists(boolean exists) {
-        if (exists) {
-            throw ProductErrorCode.PRODUCT_ALREADY_EXISTS.toException();
-        }
-    }
 }
