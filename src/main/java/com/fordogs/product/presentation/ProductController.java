@@ -67,7 +67,7 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 수정", operationId = "/products/{productId}/update")
-    @ApiErrorCode(ProductErrorCode.class)
+    @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
     @PatchMapping("/{productId}/update")
     public ResponseEntity<SuccessResponse<ProductUpdateResponse>> handleUpdateProductRequest(
             @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") String productId,
