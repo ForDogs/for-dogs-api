@@ -1,6 +1,6 @@
 server:
+  port: 443
   domain: api.fordogs.store
-  port: 80
 
 spring:
   application:

@@ -44,3 +44,6 @@ src/main/resources/application-local.yml
 /docker/server/dumps
 /docker/server/logs
 /docker/mysql/db
+
+### KEYSTORE ###
+src/main/resources/ssl

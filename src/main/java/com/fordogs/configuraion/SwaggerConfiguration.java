@@ -68,7 +68,7 @@ public class SwaggerConfiguration {
         Server prodHttpsServer = new Server()
                 .url("https://" + serverDomain);
         Server localServer = new Server()
-                .url("http://localhost:80");
+                .url("https://localhost");
 
         return List.of(localServer, prodHttpsServer);
     }

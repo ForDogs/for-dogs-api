@@ -1,3 +1,11 @@
+# HTTPS
+server:
+  ssl:
+    key-store: ${SSL_KEY_STORE}
+    key-store-password: ${SSL_KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
+
+# MySQL
 spring:
   datasource:
     url: ${MYSQL_DATABASE_URL}

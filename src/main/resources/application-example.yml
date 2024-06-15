@@ -1,0 +1,28 @@
+# HTTPS
+server:
+  ssl:
+    key-store: classpath:ssl/keystore.p12
+    key-store-password:
+    key-store-type: PKCS12
+
+# MySQL
+spring:
+  datasource:
+    url: # jdbc:mysql://{HOST}:{PORT}/{DATABASE}?allowPublicKeyRetrieval=true&useSSL=false
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# JWT
+token:
+  secret-key:
+
+# Image Upload S3
+cloud:
+  aws:
+    region:
+    credentials:
+      accessKey:
+      secretKey:
+    s3:
+      bucketName:
