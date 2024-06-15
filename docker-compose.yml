@@ -11,9 +11,10 @@ services:
       - mysql
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./docker/server/dumps:/dumps
-      - ./docker/server/logs:/logs
+      - ./src/main/resources/ssl:/app/ssl
     environment:
       GRADLE_OPTS: "-Xmx1g"
       TZ: Asia/Seoul
