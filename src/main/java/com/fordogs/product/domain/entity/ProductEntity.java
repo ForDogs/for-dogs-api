@@ -4,7 +4,7 @@ import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.util.ConverterUtil;
 import com.fordogs.product.domain.enums.Category;
 import com.fordogs.product.domain.vo.wrapper.Description;
-import com.fordogs.product.domain.vo.wrapper.Price;
+import com.fordogs.core.domain.vo.wapper.Price;
 import com.fordogs.product.error.ProductErrorCode;
 import com.fordogs.user.domain.entity.UserManagementEntity;
 import jakarta.persistence.*;
@@ -79,13 +79,20 @@ public class ProductEntity extends BaseEntity {
         }
     }
 
-    public void validateProductIsEnabled() {
+    public void disable() {
         if (!this.enabled) {
             throw ProductErrorCode.PRODUCT_DISABLED.toException();
         }
+        this.enabled = false;
     }
 
-    public void disable() {
-        this.enabled = false;
+    public void decreaseQuantity(int quantityToDecrease) {
+        if (quantityToDecrease <= 0) {
+            throw ProductErrorCode.INVALID_QUANTITY_DECREASE.toException();
+        }
+        if (this.quantity < quantityToDecrease) {
+            throw ProductErrorCode.INSUFFICIENT_STOCK.toException();
+        }
+        this.quantity -= quantityToDecrease;
     }
 }

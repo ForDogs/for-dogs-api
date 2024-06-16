@@ -52,6 +52,8 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.DELETE, "/users/deactivation").authenticated()
                 .requestMatchers(HttpMethod.GET, "/users/profile").authenticated()
 
+                .requestMatchers(HttpMethod.POST, "/orders").authenticated()
+
                 .requestMatchers(HttpMethod.POST, "/products").hasAuthority(ROLE_SELLER)
                 .requestMatchers(HttpMethod.PATCH, "/products/{productId}/update").hasAuthority(ROLE_SELLER)
                 .requestMatchers(HttpMethod.DELETE, "/products/{productId}/deactivate").hasAuthority(ROLE_SELLER)
