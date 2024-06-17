@@ -26,6 +26,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 @Tag(name = "Product", description = "Product APIs")
 @RestController
 @RequestMapping("/products")
@@ -37,9 +39,9 @@ public class ProductController {
     @Operation(summary = "상품 등록", operationId = "/products/register")
     @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
     @PostMapping("/register")
-    public ResponseEntity<SuccessResponse<ProductRegisterResponse>> handleAddProductRequest(
+    public ResponseEntity<SuccessResponse<ProductRegisterResponse>> handleCreateProductRequest(
             @Valid @RequestBody ProductRegisterRequest request) {
-        ProductRegisterResponse response = productService.addProduct(request);
+        ProductRegisterResponse response = productService.createProduct(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
@@ -60,7 +62,7 @@ public class ProductController {
     @ApiErrorCode(ProductErrorCode.class)
     @GetMapping("/{productId}/details")
     public ResponseEntity<SuccessResponse<ProductDetailsResponse>> handleFindProductDetailsRequest(
-            @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") String productId) {
+            @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") UUID productId) {
         ProductDetailsResponse response = productService.findProductDetails(productId);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
@@ -70,7 +72,7 @@ public class ProductController {
     @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
     @PatchMapping("/{productId}/update")
     public ResponseEntity<SuccessResponse<ProductUpdateResponse>> handleUpdateProductRequest(
-            @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") String productId,
+            @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") UUID productId,
             @RequestBody @Valid ProductUpdateRequest request) {
         ProductUpdateResponse response = productService.updateProduct(productId, request);
 
@@ -81,7 +83,7 @@ public class ProductController {
     @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
     @DeleteMapping("/{productId}/deactivate")
     public ResponseEntity<SuccessResponse<Object>> handleDeactivateProductRequest(
-            @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") String productId) {
+            @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") UUID productId) {
         productService.deactivateProduct(productId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

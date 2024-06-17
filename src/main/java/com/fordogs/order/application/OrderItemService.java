@@ -20,7 +20,7 @@ public class OrderItemService {
     @Transactional
     public void createOrderItem(OrderItemInfo[] orderItems, OrderEntity orderEntity) {
         for (OrderItemInfo orderItem : orderItems) {
-            ProductEntity productEntity = productService.findEnabledProductById(orderItem.getOrderProductId());
+            ProductEntity productEntity = productService.findActiveProductWithActiveUserById(orderItem.getOrderProductId());
             productEntity.decreaseQuantity(orderItem.getOrderQuantity());
             orderItemRepository.save(orderItem.toEntity(orderEntity, productEntity));
         }

@@ -14,5 +14,5 @@ public interface ProductRepository extends JpaRepository<ProductEntity, UUID>, J
     boolean existsByName(String name);
 
     @Query("SELECT p FROM product p LEFT JOIN FETCH p.seller s WHERE p.id = :productId AND s.enabled = true AND p.enabled = true")
-    Optional<ProductEntity> findProductWithEnabledSellerAndProduct(@Param("productId") UUID id);
+    Optional<ProductEntity> findByIdAndEnabledTrueAndUserEnabledTrue(@Param("productId") UUID id);
 }

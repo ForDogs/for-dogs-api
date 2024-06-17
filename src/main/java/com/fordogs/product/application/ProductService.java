@@ -36,11 +36,11 @@ public class ProductService {
     private final S3ImageUploader s3ImageUploader;
 
     @Transactional
-    public ProductRegisterResponse addProduct(ProductRegisterRequest request) {
+    public ProductRegisterResponse createProduct(ProductRegisterRequest request) {
         UUID userId = (UUID) HttpServletUtil.getRequestAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID);
         UserManagementEntity userManagementEntity = userManagementService.findById(userId);
-        ProductEntity productEntity = request.toEntity(userManagementEntity);
 
+        ProductEntity productEntity = request.toEntity(userManagementEntity);
         checkProductNameDuplicate(request.getProductName());
 
         ProductEntity savedProductEntity = productRepository.save(productEntity);
@@ -53,15 +53,15 @@ public class ProductService {
                 .map(ProductSearchResponse::toResponse);
     }
 
-    public ProductDetailsResponse findProductDetails(String productId) {
-        ProductEntity productEntity = findEnabledProductById(productId);
+    public ProductDetailsResponse findProductDetails(UUID productId) {
+        ProductEntity productEntity = findActiveProductWithActiveUserById(productId);
 
         return ProductDetailsResponse.toResponse(productEntity);
     }
 
     @Transactional
-    public ProductUpdateResponse updateProduct(String productId, ProductUpdateRequest request) {
-        ProductEntity productEntity = findEnabledProductById(productId);
+    public ProductUpdateResponse updateProduct(UUID productId, ProductUpdateRequest request) {
+        ProductEntity productEntity = findActiveProductWithActiveUserById(productId);
         checkProductNameDuplicate(request.getProductName());
         productEntity.update(request.getProductName(), request.getProductPrice(), request.getProductQuantity(),
                 request.getProductDescription(), request.getProductImages(), request.getProductCategory());
@@ -70,10 +70,9 @@ public class ProductService {
     }
 
     @Transactional
-    public void deactivateProduct(String productId) {
-        ProductEntity productEntity = productRepository.findById(UUID.fromString(productId))
+    public void deactivateProduct(UUID productId) {
+        ProductEntity productEntity = productRepository.findById(productId)
                 .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
-        productEntity.validateProductIsEnabled();
         productEntity.disable();
     }
 
@@ -89,8 +88,8 @@ public class ProductService {
         Arrays.stream(imageUrls).forEach(s3ImageUploader::deleteImage);
     }
 
-    private ProductEntity findEnabledProductById(String productId) {
-        return productRepository.findProductWithEnabledSellerAndProduct(UUID.fromString(productId))
+    public ProductEntity findActiveProductWithActiveUserById(UUID productId) {
+        return productRepository.findByIdAndEnabledTrueAndUserEnabledTrue(productId)
                 .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
     }
 
