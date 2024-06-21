@@ -1,18 +1,12 @@
-package com.fordogs.configuraion;
+package com.fordogs.security.configuration;
 
-import com.fordogs.user.domain.enums.Role;
-import com.fordogs.core.util.PasswordUtil;
 import com.fordogs.security.filter.JwtAuthenticationFilter;
 import com.fordogs.security.handler.CustomAccessDeniedHandler;
 import com.fordogs.security.handler.CustomAuthenticationEntryPoint;
-import com.fordogs.security.provider.CustomUserDetailsServiceProvider;
-import com.fordogs.security.provider.JwtTokenProvider;
+import com.fordogs.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -28,13 +22,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private static final String ROLE_SELLER = Role.SELLER.name();
-    private static final String ROLE_BUYER = Role.BUYER.name();
-
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    private final CustomUserDetailsServiceProvider userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,42 +38,35 @@ public class SecurityConfiguration {
                 .configurationSource(corsConfigurationSource())
         );
 
-        http.authorizeHttpRequests(authorizeRequest -> authorizeRequest
-                .requestMatchers(HttpMethod.DELETE, "/users/deactivation").authenticated()
-                .requestMatchers(HttpMethod.GET, "/users/profile").authenticated()
+        http.authorizeHttpRequests(authorizeRequest -> {
+            ApiRouteConstants.PUBLIC_ENDPOINTS.forEach(path ->
+                    authorizeRequest.requestMatchers(path).permitAll()
+            );
 
-                .requestMatchers(HttpMethod.POST, "/orders").authenticated()
+            ApiRouteConstants.MEMBER_ONLY_ENDPOINTS.forEach(path ->
+                    authorizeRequest.requestMatchers(path).authenticated()
+            );
 
-                .requestMatchers(HttpMethod.POST, "/products").hasAuthority(ROLE_SELLER)
-                .requestMatchers(HttpMethod.PATCH, "/products/{productId}/update").hasAuthority(ROLE_SELLER)
-                .requestMatchers(HttpMethod.DELETE, "/products/{productId}/deactivate").hasAuthority(ROLE_SELLER)
-                .requestMatchers(HttpMethod.POST, "/products/images/upload").hasAuthority(ROLE_SELLER)
-                .requestMatchers(HttpMethod.DELETE, "/products/images").hasAuthority(ROLE_SELLER)
+            ApiRouteConstants.SELLER_ONLY_ENDPOINTS.forEach((path) ->
+                    authorizeRequest.requestMatchers(path).hasAuthority(ApiRouteConstants.ROLE_SELLER)
+            );
 
-                .requestMatchers("/swagger-ui/**", "/api-docs/**", "/docs").permitAll()
-                .requestMatchers("/users/**").permitAll()
-                .requestMatchers("/products/**").permitAll()
-                .requestMatchers("/health/status").permitAll()
-                .anyRequest().authenticated()
-        );
+            authorizeRequest.anyRequest().authenticated();
+        });
 
         http.exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(customAccessDeniedHandler)
         );
 
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(PasswordUtil.passwordEncoder());
-
-        return authenticationProvider;
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtUtil);
     }
 
     @Bean

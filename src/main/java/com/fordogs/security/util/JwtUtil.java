@@ -1,10 +1,12 @@
-package com.fordogs.security.provider;
+package com.fordogs.security.util;
 
 import com.fordogs.configuraion.properties.TokenProperties;
+import com.fordogs.core.util.constants.TokenClaims;
+import com.fordogs.security.exception.error.SecurityErrorCode;
+import com.fordogs.security.authentication.JwtAuthentication;
 import com.fordogs.user.domain.entity.UserManagementEntity;
 import com.fordogs.user.domain.vo.wrapper.AccessToken;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;
-import com.fordogs.security.exception.error.SecurityErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
@@ -12,30 +14,24 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.Objects;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class JwtTokenProvider {
+public class JwtUtil {
 
-    private static final String CLAIMS_USER_ID = "id";
     private static final int ACCESS_TOKEN_EXPIRATION_HOURS = 5;
     private static final int REFRESH_TOKEN_EXPIRATION_DAYS = 15;
 
-    private Key secretKey;
-
-    private final UserDetailsService userDetailsService;
     private final TokenProperties tokenProperties;
+
+    private Key secretKey;
 
     @PostConstruct
     protected void init() {
@@ -71,9 +67,11 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-
-        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+        return JwtAuthentication.builder()
+                .account(claims.getSubject())
+                .id(claims.get(TokenClaims.USER_ID, String.class))
+                .role(claims.get(TokenClaims.ROLE, String.class))
+                .build();
     }
 
     public boolean compareSubjects(String accessToken, String refreshToken) {
@@ -81,23 +79,6 @@ public class JwtTokenProvider {
         String refreshTokenSubject = extractSubject(refreshToken);
 
         return Objects.equals(accessTokenSubject, refreshTokenSubject);
-    }
-
-    public UUID extractId(String accessToken) {
-        if (accessToken == null) {
-            return null;
-        }
-        try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(accessToken)
-                    .getBody();
-
-            return UUID.fromString(claims.get(CLAIMS_USER_ID, String.class));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("요청된 AccessToken 클레임에서 Id를 추출하는 과정에서 예외가 발생하였습니다.", e);
-        }
     }
 
     private String extractSubject(String token) {

@@ -1,7 +1,5 @@
 package com.fordogs.product.application;
 
-import com.fordogs.core.util.HttpServletUtil;
-import com.fordogs.core.util.constants.HttpRequestConstants;
 import com.fordogs.product.application.aws.s3.S3ImageUploader;
 import com.fordogs.product.application.aws.s3.response.ImageUploadInfo;
 import com.fordogs.product.domain.entity.ProductEntity;
@@ -17,6 +15,7 @@ import com.fordogs.user.domain.entity.UserManagementEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,18 +31,16 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final UserManagementService userManagementService;
     private final S3ImageUploader s3ImageUploader;
+    private final UserManagementService userManagementService;
 
     @Transactional
     public ProductRegisterResponse createProduct(ProductRegisterRequest request) {
-        UUID userId = (UUID) HttpServletUtil.getRequestAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID);
+        UUID userId = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
         UserManagementEntity userManagementEntity = userManagementService.findById(userId);
 
-        ProductEntity productEntity = request.toEntity(userManagementEntity);
         checkProductNameDuplicate(request.getProductName());
-
-        ProductEntity savedProductEntity = productRepository.save(productEntity);
+        ProductEntity savedProductEntity = productRepository.save(request.toEntity(userManagementEntity));
 
         return ProductRegisterResponse.toResponse(savedProductEntity);
     }

@@ -1,9 +1,10 @@
 package com.fordogs.user.domain.vo.wrapper;
 
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
-import com.fordogs.user.domain.entity.UserManagementEntity;
 import com.fordogs.core.util.TimeUtil;
+import com.fordogs.core.util.constants.TokenClaims;
 import com.fordogs.core.util.validator.StringValidator;
+import com.fordogs.user.domain.entity.UserManagementEntity;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -20,9 +21,6 @@ import java.util.Date;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AccessToken extends ValueWrapperObject<String> {
-
-    private static final String CLAIMS_USER_ID = "id";
-    private static final String CLAIMS_ROLE = "role";
 
     private LocalDateTime expiration = null;
 
@@ -53,8 +51,8 @@ public class AccessToken extends ValueWrapperObject<String> {
         Date expirationDate = DateUtils.addMinutes(now, expirationHours);
         String jwt = Jwts.builder()
                 .setSubject(account)
-                .claim(CLAIMS_USER_ID, userId)
-                .claim(CLAIMS_ROLE, role)
+                .claim(TokenClaims.USER_ID, userId)
+                .claim(TokenClaims.ROLE, role)
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
                 .signWith(secretKey)

@@ -7,5 +7,6 @@ import lombok.NoArgsConstructor;
 public class HttpRequestConstants {
 
     public static final String REQUEST_ATTRIBUTE_USER_ID = "userId";
+
     public static final String REQUEST_ATTRIBUTE_SECURITY_AUTH_EXCEPTION = "SecurityAuthenticationException";
 }

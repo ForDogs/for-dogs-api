@@ -1,9 +1,8 @@
 package com.fordogs.security.filter;
 
 import com.fordogs.core.util.HttpTokenExtractor;
-import com.fordogs.core.util.constants.HttpRequestConstants;
 import com.fordogs.security.exception.SecurityAuthenticationException;
-import com.fordogs.security.provider.JwtTokenProvider;
+import com.fordogs.security.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,25 +14,25 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.fordogs.core.util.constants.HttpRequestConstants.REQUEST_ATTRIBUTE_SECURITY_AUTH_EXCEPTION;
+
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = HttpTokenExtractor.extractAccessToken(request);
-        if (accessToken != null) {
+        if (accessToken != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                if (jwtTokenProvider.validateToken(accessToken)) {
-                    Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+                if (jwtUtil.validateToken(accessToken)) {
+                    Authentication authentication = jwtUtil.getAuthentication(accessToken);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    request.setAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_USER_ID, jwtTokenProvider.extractId(accessToken));
                 }
             } catch (SecurityAuthenticationException e) {
                 SecurityContextHolder.clearContext();
-                request.setAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_SECURITY_AUTH_EXCEPTION, e);
-                // response.sendError(e.getHttpStatus().value(), e.getMessage()); // permitAll()로 설정된 경로에서도 토큰으로 인해 발생한 예외 처리 진행
+                request.setAttribute(REQUEST_ATTRIBUTE_SECURITY_AUTH_EXCEPTION, e);
             }
         }
         filterChain.doFilter(request, response);

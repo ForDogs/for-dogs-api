@@ -10,8 +10,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import java.io.IOException;
-
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
@@ -22,7 +20,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     }
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
         Object exception = request.getAttribute(HttpRequestConstants.REQUEST_ATTRIBUTE_SECURITY_AUTH_EXCEPTION);
         if (exception instanceof SecurityAuthenticationException securityAuthenticationException) {
             resolver.resolveException(request, response, null, securityAuthenticationException);
