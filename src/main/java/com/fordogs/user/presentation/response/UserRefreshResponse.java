@@ -1,6 +1,6 @@
 package com.fordogs.user.presentation.response;
 
-import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import com.fordogs.user.domain.vo.wrapper.AccessToken;
 import com.fordogs.core.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,7 +25,7 @@ public class UserRefreshResponse {
                 .userId(userManagementEntity.getAccount().getValue())
                 .accessToken(TokenInfo.builder()
                         .value(accessToken.getValue())
-                        .expiration(TimeUtil.formatLocalDateTime(accessToken.getExpiration()))
+                        .expiration(TimeUtil.formatLocalDateTime(accessToken.getExpirationTime()))
                         .build())
                 .build();
     }

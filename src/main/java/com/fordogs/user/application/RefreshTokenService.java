@@ -1,12 +1,12 @@
 package com.fordogs.user.application;
 
-import com.fordogs.user.domain.entity.UserManagementEntity;
-import com.fordogs.user.domain.entity.UserRefreshTokenEntity;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.redis.RefreshTokenCache;
 import com.fordogs.user.domain.vo.wrapper.AccessToken;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;
 import com.fordogs.security.util.JwtUtil;
 import com.fordogs.user.error.UserRefreshTokenErrorCode;
-import com.fordogs.user.infrastructure.UserRefreshTokenRepository;
+import com.fordogs.user.infrastructure.RefreshTokenRepository;
 import com.fordogs.user.presentation.response.UserRefreshResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,15 +15,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class UserRefreshTokenService {
+public class RefreshTokenService {
 
-    private final UserRefreshTokenRepository userRefreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
     @Transactional
     public RefreshToken generateAndSaveRefreshToken(UserManagementEntity userManagementEntity) {
         RefreshToken refreshToken = jwtUtil.generateRefreshToken(userManagementEntity);
-        userRefreshTokenRepository.save(UserRefreshTokenEntity.create(userManagementEntity, refreshToken));
+        RefreshTokenCache refreshTokenCache = RefreshTokenCache.builder()
+                .account(userManagementEntity.getAccount())
+                .token(refreshToken)
+                .build();
+
+        refreshTokenRepository.save(refreshTokenCache);
 
         return refreshToken;
     }
@@ -39,7 +44,7 @@ public class UserRefreshTokenService {
         if (!jwtUtil.compareSubjects(accessToken, refreshToken)) {
             throw UserRefreshTokenErrorCode.TOKEN_ISSUER_MISMATCH.toException();
         }
-        UserRefreshTokenEntity userRefreshTokenEntity = userRefreshTokenRepository.findByToken(RefreshToken.builder().value(refreshToken).build())
+        UserRefreshTokenEntity userRefreshTokenEntity = refreshTokenRepository.findByToken(RefreshToken.builder().value(refreshToken).build())
                 .orElseThrow(UserRefreshTokenErrorCode.INVALID_REFRESH_TOKEN::toException);
         userRefreshTokenEntity.getUser().checkIfEnabled();
 

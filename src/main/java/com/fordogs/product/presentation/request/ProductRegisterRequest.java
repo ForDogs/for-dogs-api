@@ -1,7 +1,7 @@
 package com.fordogs.product.presentation.request;
 
 import com.fordogs.product.domain.entity.ProductEntity;
-import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import com.fordogs.product.domain.enums.Category;
 import com.fordogs.product.domain.vo.wrapper.Description;
 import com.fordogs.core.domain.vo.wapper.Price;

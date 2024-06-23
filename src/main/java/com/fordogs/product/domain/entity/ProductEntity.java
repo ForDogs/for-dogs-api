@@ -1,12 +1,12 @@
 package com.fordogs.product.domain.entity;
 
 import com.fordogs.core.domain.entity.BaseEntity;
-import com.fordogs.core.util.ConverterUtil;
+import com.fordogs.core.util.converter.JsonConverter;
 import com.fordogs.product.domain.enums.Category;
 import com.fordogs.product.domain.vo.wrapper.Description;
 import com.fordogs.core.domain.vo.wapper.Price;
 import com.fordogs.product.error.ProductErrorCode;
-import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -54,7 +54,7 @@ public class ProductEntity extends BaseEntity {
         this.quantity = quantity;
         this.description = description;
         this.category = category != null ? category : Category.NONE;
-        this.images = ConverterUtil.convertArrayToJson(images);
+        this.images = JsonConverter.convertArrayToJson(images);
         this.enabled = true;
     }
 
@@ -72,7 +72,7 @@ public class ProductEntity extends BaseEntity {
             this.description = new Description(description);
         }
         if (images != null) {
-            this.images = ConverterUtil.convertArrayToJson(images);
+            this.images = JsonConverter.convertArrayToJson(images);
         }
         if (category != null) {
             this.category = category;

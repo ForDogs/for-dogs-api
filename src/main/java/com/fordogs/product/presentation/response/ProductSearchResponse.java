@@ -2,7 +2,7 @@ package com.fordogs.product.presentation.response;
 
 import com.fordogs.product.domain.entity.ProductEntity;
 import com.fordogs.product.domain.enums.Category;
-import com.fordogs.core.util.ConverterUtil;
+import com.fordogs.core.util.converter.JsonConverter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,7 +41,7 @@ public class ProductSearchResponse {
                 .productPrice(productEntity.getPrice().getValue())
                 .productQuantity(productEntity.getQuantity())
                 .productCategory(productEntity.getCategory())
-                .productImages(ConverterUtil.convertJsonToArray(productEntity.getImages()))
+                .productImages(JsonConverter.convertJsonToArray(productEntity.getImages()))
                 .build();
     }
 }

@@ -1,9 +1,9 @@
 package com.fordogs.user.presentation.request;
 
-import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import com.fordogs.user.domain.enums.Role;
 import com.fordogs.user.domain.vo.Email;
-import com.fordogs.user.domain.vo.wrapper.Id;
+import com.fordogs.user.domain.vo.wrapper.Account;
 import com.fordogs.user.domain.vo.wrapper.Name;
 import com.fordogs.user.domain.vo.wrapper.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -44,7 +44,7 @@ public class UserSignupRequest {
 
     public UserManagementEntity toEntity() {
         return UserManagementEntity.builder()
-                .account(Id.builder()
+                .account(Account.builder()
                         .value(this.userId)
                         .build())
                 .name(Name.builder()
