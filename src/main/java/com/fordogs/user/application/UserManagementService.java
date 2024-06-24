@@ -2,6 +2,7 @@ package com.fordogs.user.application;
 
 import com.fordogs.core.util.CookieUtil;
 import com.fordogs.core.util.HttpServletUtil;
+import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.security.util.JwtUtil;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import com.fordogs.user.domain.entity.redis.RefreshTokenCache;
@@ -46,7 +47,7 @@ public class UserManagementService {
     }
 
     @Transactional
-    public UserLoginResponse login(UserLoginRequest request) {
+    public UserLoginResponse performLogin(UserLoginRequest request) {
         UserManagementEntity userManagementEntity = findByAccount(Account.builder().value(request.getUserId()).build());
 
         userManagementEntity.validateRole(request.getUserRole());
@@ -58,10 +59,24 @@ public class UserManagementService {
         AccessToken accessToken = jwtUtil.generateAccessToken(userManagementEntity, uuidToken.toEncryptedString());
         RefreshToken refreshToken = refreshTokenService.generateAndSaveRefreshToken(userManagementEntity);
 
-        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createRefreshTokenCookie(refreshToken));
-        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createUUIDTokenCookie(uuidToken, refreshToken.getExpirationTime()));
+        addTokensToResponseHeaders(refreshToken, uuidToken);
 
         return UserLoginResponse.toResponse(userManagementEntity, accessToken);
+    }
+
+    public void performLogout(String refreshToken) {
+        refreshTokenService.deleteRefreshTokenCache(refreshToken);
+        removeTokensFromResponseHeaders();
+    }
+
+    private void addTokensToResponseHeaders(RefreshToken refreshToken, UUIDToken uuidToken) {
+        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createRefreshTokenCookie(refreshToken));
+        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createUUIDTokenCookie(uuidToken, refreshToken.getExpirationTime()));
+    }
+
+    private void removeTokensFromResponseHeaders() {
+        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createExpiredCookie(CookieConstants.COOKIE_NAME_REFRESH_TOKEN));
+        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createExpiredCookie(CookieConstants.COOKIE_NAME_UUID_TOKEN));
     }
 
     @Transactional

@@ -48,11 +48,21 @@ public class UserController {
     )
     @ApiErrorCode(UserManagementErrorCode.class)
     @PostMapping("/login")
-    public ResponseEntity<SuccessResponse<UserLoginResponse>> handleLoginRequest(
+    public ResponseEntity<SuccessResponse<UserLoginResponse>> handlePerformLoginRequest(
             @Valid @RequestBody UserLoginRequest request) {
-        UserLoginResponse response = userManagementService.login(request);
+        UserLoginResponse response = userManagementService.performLogin(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "로그아웃", operationId = "/users/logout")
+    @ApiErrorCode({RefreshTokenErrorCode.class, SecurityErrorCode.class})
+    @PostMapping("/logout")
+    public ResponseEntity<SuccessResponse<UserLoginResponse>> handlePerformLogoutRequest(
+            @CookieValue(value = CookieConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken) {
+        userManagementService.performLogout(refreshToken);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Operation(
@@ -62,7 +72,7 @@ public class UserController {
     )
     @ApiErrorCode({RefreshTokenErrorCode.class, SecurityErrorCode.class})
     @PostMapping("/refresh")
-    public ResponseEntity<SuccessResponse<UserRefreshResponse>> handleRefreshAccessTokenRequest(
+    public ResponseEntity<SuccessResponse<UserRefreshResponse>> handleRenewAccessTokenRequest(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerTokenHeader,
             @CookieValue(value = CookieConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken,
             @CookieValue(value = CookieConstants.COOKIE_NAME_UUID_TOKEN) String uuidToken) {

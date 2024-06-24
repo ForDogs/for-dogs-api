@@ -44,6 +44,18 @@ public class CookieUtil {
                 .toString();
     }
 
+    public static String createExpiredCookie(String name) {
+        return ResponseCookie.from(name, "")
+                .path("/")
+                .domain(serviceDomain)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Strict")
+                .maxAge(0)
+                .build()
+                .toString();
+    }
+
     public static String extractCookie(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {

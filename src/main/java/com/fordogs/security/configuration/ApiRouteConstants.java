@@ -30,6 +30,7 @@ public class ApiRouteConstants {
             "/users/deactivation",
             "/users/details",
             "/users/refresh",
+            "/users/logout",
 
             "/orders",
 

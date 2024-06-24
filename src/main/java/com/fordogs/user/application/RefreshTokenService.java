@@ -34,6 +34,16 @@ public class RefreshTokenService {
     @Transactional
     public RefreshTokenCache getRefreshTokenCache(String refreshToken, String accessToken) {
         validateRefreshToken(refreshToken, accessToken);
+        return findRefreshTokenCache(refreshToken);
+    }
+
+    @Transactional
+    public void deleteRefreshTokenCache(String refreshToken) {
+        RefreshTokenCache refreshTokenCache = findRefreshTokenCache(refreshToken);
+        refreshTokenRepository.delete(refreshTokenCache);
+    }
+
+    private RefreshTokenCache findRefreshTokenCache(String refreshToken) {
         return refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(RefreshTokenErrorCode.INVALID_REFRESH_TOKEN::toException);
     }
