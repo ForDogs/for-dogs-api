@@ -26,9 +26,9 @@ public class RefreshTokenCache {
     private Long expirationTime;
 
     @Builder
-    public RefreshTokenCache(Account account, RefreshToken token) {
+    public RefreshTokenCache(Account account, RefreshToken token, Long expirationTime) {
         this.account = account.getValue();
         this.token = token.getValue();
-        this.expirationTime = token.getExpirationTime();
+        this.expirationTime = expirationTime * 60L;
     }
 }

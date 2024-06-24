@@ -27,9 +27,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class JwtUtil {
 
-    private static final int ACCESS_TOKEN_EXPIRATION_HOURS = 5;
-    private static final int REFRESH_TOKEN_EXPIRATION_DAYS = 15;
-
     private final TokenProperties tokenProperties;
 
     private Key secretKey;
@@ -54,11 +51,11 @@ public class JwtUtil {
     }
 
     public AccessToken generateAccessToken(UserManagementEntity user, String encryptedUUIDToken) {
-        return AccessToken.createToken(user, encryptedUUIDToken, secretKey, ACCESS_TOKEN_EXPIRATION_HOURS);
+        return AccessToken.createToken(user, encryptedUUIDToken, secretKey, tokenProperties.getAccessTokenExpirationMinutes());
     }
 
     public RefreshToken generateRefreshToken(UserManagementEntity user) {
-        return RefreshToken.createToken(user, secretKey, REFRESH_TOKEN_EXPIRATION_DAYS);
+        return RefreshToken.createToken(user, secretKey, tokenProperties.getRefreshTokenExpirationDays());
     }
 
     public Authentication getAuthentication(String token) {

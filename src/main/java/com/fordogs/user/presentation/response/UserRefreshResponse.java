@@ -22,10 +22,7 @@ public class UserRefreshResponse {
     public static UserRefreshResponse toResponse(UserManagementEntity userManagementEntity, AccessToken accessToken) {
         return UserRefreshResponse.builder()
                 .userId(userManagementEntity.getAccount().getValue())
-                .accessToken(TokenInfo.builder()
-                        .value(accessToken.getValue())
-                        .expiration(accessToken.getExpirationTime())
-                        .build())
+                .accessToken(TokenInfo.toResponse(accessToken.getValue(), accessToken.getExpirationTime()))
                 .build();
     }
 }

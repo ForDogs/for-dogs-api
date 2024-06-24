@@ -1,5 +1,6 @@
 package com.fordogs.user.application;
 
+import com.fordogs.configuraion.properties.TokenProperties;
 import com.fordogs.security.util.JwtUtil;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import com.fordogs.user.domain.entity.redis.RefreshTokenCache;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
+    private final TokenProperties tokenProperties;
     private final JwtUtil jwtUtil;
 
     @Transactional
@@ -24,6 +26,7 @@ public class RefreshTokenService {
         RefreshTokenCache refreshTokenCache = RefreshTokenCache.builder()
                 .account(userManagementEntity.getAccount())
                 .token(refreshToken)
+                .expirationTime((long) tokenProperties.getRefreshTokenExpirationDays())
                 .build();
 
         refreshTokenRepository.save(refreshTokenCache);

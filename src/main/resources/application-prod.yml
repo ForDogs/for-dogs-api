@@ -22,6 +22,8 @@ spring:
 # JWT
 token:
   secret-key: ${TOKEN_SECRET_KEY}
+  access-token-expiration-minutes: ${TOKEN_ACCESS_TOKEN_EXPIRATION_MINUTES}
+  refresh-token-expiration-days: ${TOKEN_REFRESH_TOKEN_EXPIRATION_DAYS}
 
 # Image Upload S3
 cloud:

@@ -12,4 +12,8 @@ import org.springframework.stereotype.Component;
 public class TokenProperties {
 
     private String secretKey;
+
+    private int accessTokenExpirationMinutes;
+
+    private int refreshTokenExpirationDays;
 }
