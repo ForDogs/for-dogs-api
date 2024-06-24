@@ -2,7 +2,7 @@ package com.fordogs.order.presentation.request;
 
 import com.fordogs.core.domain.vo.wapper.Price;
 import com.fordogs.order.domain.entity.OrderEntity;
-import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;

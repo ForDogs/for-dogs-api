@@ -1,6 +1,9 @@
 server:
-  port: 443
   domain: api.fordogs.store
+  port: 443
+
+service:
+  domain: fordogs.store
 
 spring:
   application:
@@ -15,6 +18,9 @@ spring:
       ddl-auto: none
     show-sql: true
     open-in-view: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
 
 springdoc:
   use-fqn: true

@@ -15,5 +15,5 @@ public class TokenInfo {
     private String value;
 
     @Schema(description = "토큰 만료 시간")
-    private String expiration;
+    private Long expiration;
 }

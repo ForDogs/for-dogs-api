@@ -1,13 +1,11 @@
 package com.fordogs.user.application;
 
+import com.fordogs.security.util.JwtUtil;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import com.fordogs.user.domain.entity.redis.RefreshTokenCache;
-import com.fordogs.user.domain.vo.wrapper.AccessToken;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;
-import com.fordogs.security.util.JwtUtil;
-import com.fordogs.user.error.UserRefreshTokenErrorCode;
+import com.fordogs.user.error.RefreshTokenErrorCode;
 import com.fordogs.user.infrastructure.RefreshTokenRepository;
-import com.fordogs.user.presentation.response.UserRefreshResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,22 +32,18 @@ public class RefreshTokenService {
     }
 
     @Transactional
-    public UserRefreshResponse refreshAccessToken(String accessToken, String refreshToken) {
-        if (!jwtUtil.isTokenExpired(accessToken)) {
-            throw UserRefreshTokenErrorCode.TOKEN_VALIDITY_REMAINING.toException();
-        }
+    public RefreshTokenCache getRefreshTokenCache(String refreshToken, String accessToken) {
+        validateRefreshToken(refreshToken, accessToken);
+        return refreshTokenRepository.findByToken(refreshToken)
+                .orElseThrow(RefreshTokenErrorCode.INVALID_REFRESH_TOKEN::toException);
+    }
+
+    private void validateRefreshToken(String refreshToken, String accessToken) {
         if (jwtUtil.isTokenExpired(refreshToken)) {
-            throw UserRefreshTokenErrorCode.EXPIRED_REFRESH_TOKEN.toException();
+            throw RefreshTokenErrorCode.EXPIRED_REFRESH_TOKEN.toException();
         }
         if (!jwtUtil.compareSubjects(accessToken, refreshToken)) {
-            throw UserRefreshTokenErrorCode.TOKEN_ISSUER_MISMATCH.toException();
+            throw RefreshTokenErrorCode.TOKEN_ISSUER_MISMATCH.toException();
         }
-        UserRefreshTokenEntity userRefreshTokenEntity = refreshTokenRepository.findByToken(RefreshToken.builder().value(refreshToken).build())
-                .orElseThrow(UserRefreshTokenErrorCode.INVALID_REFRESH_TOKEN::toException);
-        userRefreshTokenEntity.getUser().checkIfEnabled();
-
-        AccessToken refreshedAccessToken = jwtUtil.generateAccessToken(userRefreshTokenEntity.getUser());
-
-        return UserRefreshResponse.toResponse(userRefreshTokenEntity.getUser(), refreshedAccessToken);
     }
 }

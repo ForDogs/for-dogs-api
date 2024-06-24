@@ -3,16 +3,19 @@ package com.fordogs.user.application;
 import com.fordogs.core.util.CookieUtil;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.security.util.JwtUtil;
-import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.redis.RefreshTokenCache;
 import com.fordogs.user.domain.vo.wrapper.AccessToken;
-import com.fordogs.user.domain.vo.wrapper.Id;
+import com.fordogs.user.domain.vo.wrapper.Account;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;
+import com.fordogs.user.domain.vo.wrapper.UUIDToken;
 import com.fordogs.user.error.UserManagementErrorCode;
 import com.fordogs.user.infrastructure.UserManagementRepository;
 import com.fordogs.user.presentation.request.UserLoginRequest;
 import com.fordogs.user.presentation.request.UserSignupRequest;
 import com.fordogs.user.presentation.response.UserDetailsResponse;
 import com.fordogs.user.presentation.response.UserLoginResponse;
+import com.fordogs.user.presentation.response.UserRefreshResponse;
 import com.fordogs.user.presentation.response.UserSignupResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,7 +30,7 @@ import java.util.UUID;
 public class UserManagementService {
 
     private final UserManagementRepository userManagementRepository;
-    private final UserRefreshTokenService userRefreshTokenService;
+    private final RefreshTokenService refreshTokenService;
     private final JwtUtil jwtUtil;
 
     @Transactional
@@ -44,18 +47,31 @@ public class UserManagementService {
 
     @Transactional
     public UserLoginResponse login(UserLoginRequest request) {
-        UserManagementEntity userManagementEntity = findByAccount(request.getUserId());
+        UserManagementEntity userManagementEntity = findByAccount(Account.builder().value(request.getUserId()).build());
 
-        userManagementEntity.checkRole(request.getUserRole());
+        userManagementEntity.validateRole(request.getUserRole());
         userManagementEntity.validatePassword(request.getUserPassword());
-        userManagementEntity.checkIfEnabled();
+        userManagementEntity.validateIfEnabled();
 
-        RefreshToken refreshToken = userRefreshTokenService.generateAndSaveRefreshToken(userManagementEntity);
-        AccessToken accessToken = jwtUtil.generateAccessToken(userManagementEntity);
+        UUIDToken uuidToken = UUIDToken.generate();
+
+        AccessToken accessToken = jwtUtil.generateAccessToken(userManagementEntity, uuidToken.toEncryptedString());
+        RefreshToken refreshToken = refreshTokenService.generateAndSaveRefreshToken(userManagementEntity);
 
         HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createRefreshTokenCookie(refreshToken));
+        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createUUIDTokenCookie(uuidToken, refreshToken.getExpirationTime()));
 
         return UserLoginResponse.toResponse(userManagementEntity, accessToken);
+    }
+
+    @Transactional
+    public UserRefreshResponse renewAccessToken(String accessToken, String refreshToken, String uuidToken) {
+        RefreshTokenCache tokenCache = refreshTokenService.getRefreshTokenCache(refreshToken, accessToken);
+        UserManagementEntity userManagementEntity = findByAccount(Account.builder().value(tokenCache.getAccount()).build());
+
+        AccessToken newAccessToken = jwtUtil.generateAccessToken(userManagementEntity, UUIDToken.from(uuidToken).toEncryptedString());
+
+        return UserRefreshResponse.toResponse(userManagementEntity, newAccessToken);
     }
 
     @Transactional
@@ -77,8 +93,8 @@ public class UserManagementService {
                 .orElseThrow(UserManagementErrorCode.USER_NOT_FOUND::toException);
     }
 
-    public UserManagementEntity findByAccount(String account) {
-        return userManagementRepository.findByAccount(Id.builder().value(account).build())
+    public UserManagementEntity findByAccount(Account account) {
+        return userManagementRepository.findByAccount(account)
                 .orElseThrow(UserManagementErrorCode.USER_NOT_FOUND::toException);
     }
 }

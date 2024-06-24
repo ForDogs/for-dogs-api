@@ -5,7 +5,7 @@ import com.fordogs.order.infrastructure.OrderRepository;
 import com.fordogs.order.presentation.request.OrderRegisterRequest;
 import com.fordogs.order.presentation.response.OrderRegisterResponse;
 import com.fordogs.user.application.UserManagementService;
-import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

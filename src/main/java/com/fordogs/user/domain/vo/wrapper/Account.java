@@ -10,10 +10,10 @@ import lombok.*;
 @Embeddable
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Id extends ValueWrapperObject<String> {
+public class Account extends ValueWrapperObject<String> {
 
     @Builder
-    public Id(String value) {
+    public Account(String value) {
         super(value);
         validate(value);
     }

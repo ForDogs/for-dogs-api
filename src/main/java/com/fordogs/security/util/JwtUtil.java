@@ -1,12 +1,13 @@
 package com.fordogs.security.util;
 
 import com.fordogs.configuraion.properties.TokenProperties;
-import com.fordogs.core.util.constants.TokenClaims;
+import com.fordogs.core.util.constants.TokenClaimConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.security.authentication.JwtAuthentication;
-import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import com.fordogs.user.domain.vo.wrapper.AccessToken;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;
+import com.fordogs.user.domain.vo.wrapper.UUIDToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
@@ -52,8 +53,8 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public AccessToken generateAccessToken(UserManagementEntity user) {
-        return AccessToken.createToken(user, secretKey, ACCESS_TOKEN_EXPIRATION_HOURS);
+    public AccessToken generateAccessToken(UserManagementEntity user, String encryptedUUIDToken) {
+        return AccessToken.createToken(user, encryptedUUIDToken, secretKey, ACCESS_TOKEN_EXPIRATION_HOURS);
     }
 
     public RefreshToken generateRefreshToken(UserManagementEntity user) {
@@ -61,16 +62,12 @@ public class JwtUtil {
     }
 
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims = extractAllClaims(token);
 
         return JwtAuthentication.builder()
                 .account(claims.getSubject())
-                .id(claims.get(TokenClaims.USER_ID, String.class))
-                .role(claims.get(TokenClaims.ROLE, String.class))
+                .id(claims.get(TokenClaimConstants.USER_ID, String.class))
+                .role(claims.get(TokenClaimConstants.ROLE, String.class))
                 .build();
     }
 
@@ -83,11 +80,7 @@ public class JwtUtil {
 
     private String extractSubject(String token) {
         try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            Claims claims = extractAllClaims(token);
 
             return claims.getSubject();
         } catch (ExpiredJwtException e) {
@@ -97,11 +90,7 @@ public class JwtUtil {
 
     public boolean isTokenExpired(String token) {
         try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            Claims claims = extractAllClaims(token);
             Date expiration = claims.getExpiration();
 
             return expiration != null && expiration.before(new Date());
@@ -111,6 +100,20 @@ public class JwtUtil {
             validateToken(token);
             return false;
         }
+    }
+
+    public boolean validateUUIDToken(String accessToken, String providedUUIDToken) {
+        Claims claims = extractAllClaims(accessToken);
+        String extractedUUIDToken = claims.get(TokenClaimConstants.UUID_TOKEN, String.class);
+        String decryptedUUIDToken = UUIDToken.decryptToken(extractedUUIDToken);
+        if (!decryptedUUIDToken.equals(providedUUIDToken)) {
+            throw SecurityErrorCode.UUID_TOKEN_VALIDATION_FAILED.toException();
+        }
+        return true;
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
 
     public boolean validateToken(String authToken) {

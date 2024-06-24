@@ -1,7 +1,11 @@
 package com.fordogs.security.filter;
 
+import com.fordogs.core.util.CookieUtil;
 import com.fordogs.core.util.HttpTokenExtractor;
+import com.fordogs.core.util.constants.CookieConstants;
+import com.fordogs.core.util.constants.RequestAttributeConstants;
 import com.fordogs.security.exception.SecurityAuthenticationException;
+import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.security.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,8 +18,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.fordogs.core.util.constants.HttpRequestConstants.REQUEST_ATTRIBUTE_SECURITY_AUTH_EXCEPTION;
-
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -23,18 +25,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = HttpTokenExtractor.extractAccessToken(request);
-        if (accessToken != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            try {
-                if (jwtUtil.validateToken(accessToken)) {
-                    Authentication authentication = jwtUtil.getAuthentication(accessToken);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-            } catch (SecurityAuthenticationException e) {
-                SecurityContextHolder.clearContext();
-                request.setAttribute(REQUEST_ATTRIBUTE_SECURITY_AUTH_EXCEPTION, e);
+        try {
+            String accessToken = HttpTokenExtractor.extractAccessToken(request);
+            if (accessToken == null || SecurityContextHolder.getContext().getAuthentication() != null) {
+                filterChain.doFilter(request, response);
+                return;
             }
+
+            if (!jwtUtil.validateToken(accessToken)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            String uuidToken = CookieUtil.extractCookie(request, CookieConstants.COOKIE_NAME_UUID_TOKEN);
+            if (uuidToken == null || uuidToken.isEmpty()) {
+                throw SecurityErrorCode.UUID_TOKEN_VALIDATION_FAILED.toException();
+            }
+
+            if (!jwtUtil.validateUUIDToken(accessToken, uuidToken)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            Authentication authentication = jwtUtil.getAuthentication(accessToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (SecurityAuthenticationException e) {
+            SecurityContextHolder.clearContext();
+            request.setAttribute(RequestAttributeConstants.REQUEST_ATTRIBUTE_SECURITY_AUTH_EXCEPTION, e);
         }
+
         filterChain.doFilter(request, response);
     }
 }

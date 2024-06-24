@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum UserRefreshTokenErrorCode implements BaseErrorCode<DomainException> {
+public enum RefreshTokenErrorCode implements BaseErrorCode<DomainException> {
 
     TOKEN_VALIDITY_REMAINING(HttpStatus.BAD_REQUEST, "액세스 토큰의 유효 기간이 아직 남아 있습니다."),
     TOKEN_ISSUER_MISMATCH(HttpStatus.BAD_REQUEST, "액세스 토큰과 리프레쉬 토큰의 발급자가 일치하지 않습니다."),

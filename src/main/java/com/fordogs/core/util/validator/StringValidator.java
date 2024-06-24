@@ -37,6 +37,10 @@ public class StringValidator {
         return Pattern.matches("^[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*$", value);
     }
 
+    public static boolean validateUUID(String value) {
+        return Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$").matcher(value).matches();
+    }
+
     public static boolean validateNoConsecutiveChars(String value) {
         for (int i = 0; i < value.length() - 2; i++) {
             char first = value.charAt(i);

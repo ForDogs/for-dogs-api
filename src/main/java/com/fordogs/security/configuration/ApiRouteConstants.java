@@ -29,6 +29,7 @@ public class ApiRouteConstants {
     public static final List<String> MEMBER_ONLY_ENDPOINTS = List.of(
             "/users/deactivation",
             "/users/details",
+            "/users/refresh",
 
             "/orders",
 

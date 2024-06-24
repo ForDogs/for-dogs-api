@@ -3,12 +3,11 @@ package com.fordogs.user.presentation;
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.HttpTokenExtractor;
-import com.fordogs.core.util.constants.HttpResponseConstants;
+import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.user.application.UserManagementService;
-import com.fordogs.user.application.UserRefreshTokenService;
+import com.fordogs.user.error.RefreshTokenErrorCode;
 import com.fordogs.user.error.UserManagementErrorCode;
-import com.fordogs.user.error.UserRefreshTokenErrorCode;
 import com.fordogs.user.presentation.request.UserLoginRequest;
 import com.fordogs.user.presentation.request.UserSignupRequest;
 import com.fordogs.user.presentation.response.UserDetailsResponse;
@@ -31,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserManagementService userManagementService;
-    private final UserRefreshTokenService userRefreshTokenService;
 
     @Operation(summary = "회원 가입", operationId = "/users/signup")
     @ApiErrorCode(UserManagementErrorCode.class)
@@ -46,7 +44,7 @@ public class UserController {
     @Operation(
             summary = "로그인",
             operationId = "/users/login",
-            description = "로그인 시 Refresh Token은 Set-Cookie 헤더를 통해 응답으로 전달됩니다."
+            description = "로그인 시 RefreshToken과 UUIDToken은 Set-Cookie 헤더를 통해 응답으로 전달됩니다."
     )
     @ApiErrorCode(UserManagementErrorCode.class)
     @PostMapping("/login")
@@ -60,15 +58,15 @@ public class UserController {
     @Operation(
             summary = "액세스 토큰 재발급",
             operationId = "/users/refresh",
-            description = "해당 API는 Swagger UI에서 테스트할 수 없습니다. " +
-                          "요청 헤더에서 Bearer 토큰과 쿠키에서 Refresh 토큰을 사용합니다."
+            description = "해당 API는 Swagger UI에서 테스트할 수 없습니다."
     )
-    @ApiErrorCode(UserRefreshTokenErrorCode.class)
+    @ApiErrorCode({RefreshTokenErrorCode.class, SecurityErrorCode.class})
     @PostMapping("/refresh")
     public ResponseEntity<SuccessResponse<UserRefreshResponse>> handleRefreshAccessTokenRequest(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerTokenHeader,
-            @CookieValue(value = HttpResponseConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken) {
-        UserRefreshResponse response = userRefreshTokenService.refreshAccessToken(HttpTokenExtractor.extractAccessToken(bearerTokenHeader), refreshToken);
+            @CookieValue(value = CookieConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken,
+            @CookieValue(value = CookieConstants.COOKIE_NAME_UUID_TOKEN) String uuidToken) {
+        UserRefreshResponse response = userManagementService.renewAccessToken(HttpTokenExtractor.extractAccessToken(bearerTokenHeader), refreshToken, uuidToken);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }

@@ -1,10 +1,9 @@
 package com.fordogs.user.domain.vo.wrapper;
 
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
-import com.fordogs.core.util.TimeUtil;
-import com.fordogs.core.util.constants.TokenClaims;
+import com.fordogs.core.util.constants.TokenClaimConstants;
 import com.fordogs.core.util.validator.StringValidator;
-import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -14,7 +13,6 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.security.Key;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -22,12 +20,12 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AccessToken extends ValueWrapperObject<String> {
 
-    private LocalDateTime expiration = null;
+    private Long expirationTime;
 
     @Builder
-    public AccessToken(String value, LocalDateTime expiration) {
+    public AccessToken(String value, Long expirationTime) {
         super(value);
-        this.expiration = expiration;
+        this.expirationTime = expirationTime;
         validate(value);
     }
 
@@ -38,12 +36,12 @@ public class AccessToken extends ValueWrapperObject<String> {
         }
     }
 
-    public static AccessToken createToken(UserManagementEntity user, Key secretKey, int expirationHours) {
+    public static AccessToken createToken(UserManagementEntity user, String encryptedUUIDToken, Key secretKey, int expirationHours) {
         final String userId = user.getId().toString();
         final String account = user.getAccount().getValue();
         final String role = user.getRole().name();
 
-        if (userId == null && account == null) {
+        if (userId == null && account == null && encryptedUUIDToken == null) {
             throw new IllegalArgumentException("AccessToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
         }
 
@@ -51,8 +49,9 @@ public class AccessToken extends ValueWrapperObject<String> {
         Date expirationDate = DateUtils.addMinutes(now, expirationHours);
         String jwt = Jwts.builder()
                 .setSubject(account)
-                .claim(TokenClaims.USER_ID, userId)
-                .claim(TokenClaims.ROLE, role)
+                .claim(TokenClaimConstants.USER_ID, userId)
+                .claim(TokenClaimConstants.ROLE, role)
+                .claim(TokenClaimConstants.UUID_TOKEN, encryptedUUIDToken)
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
                 .signWith(secretKey)
@@ -60,7 +59,7 @@ public class AccessToken extends ValueWrapperObject<String> {
 
         return AccessToken.builder()
                 .value(jwt)
-                .expiration(TimeUtil.toLocalDateTime(expirationDate))
+                .expirationTime(expirationDate.getTime())
                 .build();
     }
 }

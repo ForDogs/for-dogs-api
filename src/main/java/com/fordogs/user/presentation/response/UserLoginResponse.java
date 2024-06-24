@@ -2,7 +2,6 @@ package com.fordogs.user.presentation.response;
 
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import com.fordogs.user.domain.vo.wrapper.AccessToken;
-import com.fordogs.core.util.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +24,7 @@ public class UserLoginResponse {
                 .userId(userManagementEntity.getAccount().getValue())
                 .accessToken(TokenInfo.builder()
                         .value(accessToken.getValue())
-                        .expiration(TimeUtil.formatLocalDateTime(TimeUtil.toLocalDateTime(accessToken.getExpirationTime())))
+                        .expiration(accessToken.getExpirationTime())
                         .build())
                 .build();
     }

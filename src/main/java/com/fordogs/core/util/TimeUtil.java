@@ -3,10 +3,10 @@ package com.fordogs.core.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimeUtil {
@@ -18,7 +18,7 @@ public class TimeUtil {
         return localDateTime.format(formatter);
     }
 
-    public static LocalDateTime toLocalDateTime(Date date) {
-        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    public static LocalDateTime toLocalDateTime(Long epochMilli) {
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), ZoneId.systemDefault());
     }
 }

@@ -3,7 +3,7 @@ package com.fordogs.order.domain.entity;
 import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.domain.vo.wapper.Price;
 import com.fordogs.order.domain.eums.OrderStatus;
-import com.fordogs.user.domain.entity.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

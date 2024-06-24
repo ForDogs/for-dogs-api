@@ -13,6 +13,12 @@ spring:
     password: ${MYSQL_DATABASE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+# Redis
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+
 # JWT
 token:
   secret-key: ${TOKEN_SECRET_KEY}

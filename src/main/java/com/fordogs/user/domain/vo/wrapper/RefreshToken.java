@@ -1,9 +1,8 @@
 package com.fordogs.user.domain.vo.wrapper;
 
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
-import com.fordogs.user.domain.entity.UserManagementEntity;
-import com.fordogs.core.util.TimeUtil;
 import com.fordogs.core.util.validator.StringValidator;
+import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Transient;
@@ -14,7 +13,6 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.security.Key;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -23,12 +21,12 @@ import java.util.Date;
 public class RefreshToken extends ValueWrapperObject<String> {
 
     @Transient
-    private LocalDateTime expiration = null;
+    private Long expirationTime;
 
     @Builder
-    public RefreshToken(String value, LocalDateTime expiration) {
+    public RefreshToken(String value, Long expirationTime) {
         super(value);
-        this.expiration = expiration;
+        this.expirationTime = expirationTime;
         validate(value);
     }
 
@@ -57,7 +55,7 @@ public class RefreshToken extends ValueWrapperObject<String> {
 
         return RefreshToken.builder()
                 .value(jwt)
-                .expiration(TimeUtil.toLocalDateTime(expirationDate))
+                .expirationTime(expirationDate.getTime())
                 .build();
     }
 }

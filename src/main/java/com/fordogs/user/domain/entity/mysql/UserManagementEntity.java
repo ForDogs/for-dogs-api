@@ -1,11 +1,11 @@
-package com.fordogs.user.domain.entity;
+package com.fordogs.user.domain.entity.mysql;
 
 import com.fordogs.core.domain.entity.BaseEntity;
-import com.fordogs.core.util.PasswordUtil;
+import com.fordogs.core.util.crypto.PasswordHasherUtil;
 import com.fordogs.user.domain.enums.Role;
 import com.fordogs.user.domain.vo.Email;
 import com.fordogs.user.domain.vo.wrapper.EncryptedPassword;
-import com.fordogs.user.domain.vo.wrapper.Id;
+import com.fordogs.user.domain.vo.wrapper.Account;
 import com.fordogs.user.domain.vo.wrapper.Name;
 import com.fordogs.user.domain.vo.wrapper.Password;
 import com.fordogs.user.error.UserManagementErrorCode;
@@ -23,7 +23,7 @@ public class UserManagementEntity extends BaseEntity {
     @AttributeOverrides({
             @AttributeOverride(name = "value", column = @Column(name = "account"))
     })
-    private Id account;
+    private Account account;
 
     @Embedded
     @AttributeOverrides({
@@ -46,30 +46,30 @@ public class UserManagementEntity extends BaseEntity {
     private boolean enabled = true;
 
     @Builder
-    public UserManagementEntity(Id account, Name name, Email email, Password password, Role role) {
+    public UserManagementEntity(Account account, Name name, Email email, Password password, Role role) {
         this.account = account;
         this.name = name;
         this.email = email;
         this.password = EncryptedPassword.builder()
-                .value(PasswordUtil.encode(password.getValue()))
+                .value(PasswordHasherUtil.encode(password.getValue()))
                 .build();
         this.role = role != null ? role : Role.BUYER;
         this.enabled = true;
     }
 
-    public void checkRole(Role role) {
+    public void validateRole(Role role) {
         if (!this.role.equals(role)) {
             throw UserManagementErrorCode.USER_ROLE_MISMATCH.toException();
         }
     }
 
     public void validatePassword(String requestPassword) {
-        if (!PasswordUtil.matches(requestPassword, this.password.getValue())) {
+        if (!PasswordHasherUtil.matches(requestPassword, this.password.getValue())) {
             throw UserManagementErrorCode.LOGIN_PASSWORD_FAILED.toException();
         }
     }
 
-    public void checkIfEnabled() {
+    public void validateIfEnabled() {
         if (!this.enabled) {
             throw UserManagementErrorCode.USER_DISABLED.toException();
         }

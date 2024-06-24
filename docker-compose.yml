@@ -9,6 +9,7 @@ services:
     restart: always
     depends_on:
       - mysql
+      - redis
     ports:
       - "80:80"
       - "443:443"
@@ -39,3 +40,11 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: 1234
       TZ: Asia/Seoul
+
+  redis:
+    image: redis:latest
+    container_name: for_dog_redis
+    volumes:
+      - ./docker/redis/data:/data
+    ports:
+      - '6379:6379'
