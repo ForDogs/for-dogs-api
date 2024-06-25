@@ -39,6 +39,7 @@ out/
 
 ### Application Configuration ###
 src/main/resources/application-local.yml
+src/main/resources/application-prod.yml
 
 ### Docker ###
 /docker/server/dumps
