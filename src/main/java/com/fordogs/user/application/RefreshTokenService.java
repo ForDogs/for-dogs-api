@@ -21,33 +21,30 @@ public class RefreshTokenService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public RefreshToken generateAndSaveRefreshToken(UserManagementEntity userManagementEntity) {
-        RefreshToken refreshToken = jwtUtil.generateRefreshToken(userManagementEntity);
+    public void saveRefreshToken(UserManagementEntity userManagementEntity, RefreshToken refreshToken) {
         RefreshTokenCache refreshTokenCache = RefreshTokenCache.builder()
-                .account(userManagementEntity.getAccount())
                 .token(refreshToken)
+                .userAccount(userManagementEntity.getAccount())
                 .expirationTime((long) tokenProperties.getRefreshTokenExpirationDays())
                 .build();
 
         refreshTokenRepository.save(refreshTokenCache);
-
-        return refreshToken;
     }
 
     @Transactional
-    public RefreshTokenCache getRefreshTokenCache(String refreshToken, String accessToken) {
+    public RefreshTokenCache getRefreshToken(String refreshToken, String accessToken) {
         validateRefreshToken(refreshToken, accessToken);
-        return findRefreshTokenCache(refreshToken);
+        return findRefreshToken(refreshToken);
     }
 
     @Transactional
-    public void deleteRefreshTokenCache(String refreshToken) {
-        RefreshTokenCache refreshTokenCache = findRefreshTokenCache(refreshToken);
+    public void deleteRefreshToken(String refreshToken) {
+        RefreshTokenCache refreshTokenCache = findRefreshToken(refreshToken);
         refreshTokenRepository.delete(refreshTokenCache);
     }
 
-    private RefreshTokenCache findRefreshTokenCache(String refreshToken) {
-        return refreshTokenRepository.findByToken(refreshToken)
+    private RefreshTokenCache findRefreshToken(String refreshToken) {
+        return refreshTokenRepository.findById(refreshToken)
                 .orElseThrow(RefreshTokenErrorCode.INVALID_REFRESH_TOKEN::toException);
     }
 

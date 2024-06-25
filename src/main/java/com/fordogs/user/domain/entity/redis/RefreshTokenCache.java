@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
-import org.springframework.data.redis.core.index.Indexed;
+
+import java.util.concurrent.TimeUnit;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,18 +18,17 @@ import org.springframework.data.redis.core.index.Indexed;
 public class RefreshTokenCache {
 
     @Id
-    private String account;
-
-    @Indexed
     private String token;
 
-    @TimeToLive
+    private String userAccount;
+
+    @TimeToLive(unit = TimeUnit.MINUTES)
     private Long expirationTime;
 
     @Builder
-    public RefreshTokenCache(Account account, RefreshToken token, Long expirationTime) {
-        this.account = account.getValue();
+    public RefreshTokenCache(RefreshToken token, Account userAccount, Long expirationTime) {
         this.token = token.getValue();
-        this.expirationTime = expirationTime * 60L;
+        this.userAccount = userAccount.getValue();
+        this.expirationTime = expirationTime;
     }
 }

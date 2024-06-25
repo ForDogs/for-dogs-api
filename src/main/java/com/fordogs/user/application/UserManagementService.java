@@ -55,9 +55,9 @@ public class UserManagementService {
         userManagementEntity.validateIfEnabled();
 
         UUIDToken uuidToken = UUIDToken.generate();
-
         AccessToken accessToken = jwtUtil.generateAccessToken(userManagementEntity, uuidToken.toEncryptedString());
-        RefreshToken refreshToken = refreshTokenService.generateAndSaveRefreshToken(userManagementEntity);
+        RefreshToken refreshToken = jwtUtil.generateRefreshToken(userManagementEntity);
+        refreshTokenService.saveRefreshToken(userManagementEntity, refreshToken);
 
         addTokensToResponseHeaders(refreshToken, uuidToken);
 
@@ -65,7 +65,7 @@ public class UserManagementService {
     }
 
     public void performLogout(String refreshToken) {
-        refreshTokenService.deleteRefreshTokenCache(refreshToken);
+        refreshTokenService.deleteRefreshToken(refreshToken);
         removeTokensFromResponseHeaders();
     }
 
@@ -81,8 +81,8 @@ public class UserManagementService {
 
     @Transactional
     public UserRefreshResponse renewAccessToken(String accessToken, String refreshToken, String uuidToken) {
-        RefreshTokenCache tokenCache = refreshTokenService.getRefreshTokenCache(refreshToken, accessToken);
-        UserManagementEntity userManagementEntity = findByAccount(Account.builder().value(tokenCache.getAccount()).build());
+        RefreshTokenCache tokenCache = refreshTokenService.getRefreshToken(refreshToken, accessToken);
+        UserManagementEntity userManagementEntity = findByAccount(Account.builder().value(tokenCache.getUserAccount()).build());
 
         AccessToken newAccessToken = jwtUtil.generateAccessToken(userManagementEntity, UUIDToken.from(uuidToken).toEncryptedString());
 
