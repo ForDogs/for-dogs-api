@@ -1,6 +1,6 @@
 package com.fordogs.user.presentation.response;
 
-import com.fordogs.core.util.TimeUtil;
+import com.fordogs.core.util.time.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;

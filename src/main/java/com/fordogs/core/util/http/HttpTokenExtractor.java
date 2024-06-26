@@ -1,4 +1,4 @@
-package com.fordogs.core.util;
+package com.fordogs.core.util.http;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;

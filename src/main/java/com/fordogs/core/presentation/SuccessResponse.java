@@ -1,8 +1,8 @@
 package com.fordogs.core.presentation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fordogs.core.util.HttpServletUtil;
-import com.fordogs.core.util.TimeUtil;
+import com.fordogs.core.util.http.HttpServletUtil;
+import com.fordogs.core.util.time.TimeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;

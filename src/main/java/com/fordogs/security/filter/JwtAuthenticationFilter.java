@@ -1,7 +1,7 @@
 package com.fordogs.security.filter;
 
-import com.fordogs.core.util.CookieUtil;
-import com.fordogs.core.util.HttpTokenExtractor;
+import com.fordogs.core.util.cookie.CookieUtil;
+import com.fordogs.core.util.http.HttpTokenExtractor;
 import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.core.util.constants.RequestAttributeConstants;
 import com.fordogs.security.exception.SecurityAuthenticationException;

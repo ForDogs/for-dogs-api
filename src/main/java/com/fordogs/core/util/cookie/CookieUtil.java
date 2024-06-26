@@ -1,4 +1,4 @@
-package com.fordogs.core.util;
+package com.fordogs.core.util.cookie;
 
 import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;

@@ -1,4 +1,4 @@
-package com.fordogs.core.util;
+package com.fordogs.core.util.time;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

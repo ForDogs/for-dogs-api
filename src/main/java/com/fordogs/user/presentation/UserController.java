@@ -2,7 +2,7 @@ package com.fordogs.user.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
-import com.fordogs.core.util.HttpTokenExtractor;
+import com.fordogs.core.util.http.HttpTokenExtractor;
 import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.user.application.UserManagementService;
