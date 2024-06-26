@@ -15,6 +15,7 @@ import com.fordogs.user.presentation.response.UserLoginResponse;
 import com.fordogs.user.presentation.response.UserRefreshResponse;
 import com.fordogs.user.presentation.response.UserSignupResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -55,11 +56,15 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "로그아웃", operationId = "/users/logout")
+    @Operation(
+            summary = "로그아웃",
+            operationId = "/users/logout",
+            description = "해당 API는 Swagger UI에서 테스트할 수 없습니다."
+    )
     @ApiErrorCode({RefreshTokenErrorCode.class, SecurityErrorCode.class})
     @PostMapping("/logout")
     public ResponseEntity<SuccessResponse<UserLoginResponse>> handlePerformLogoutRequest(
-            @CookieValue(value = CookieConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken) {
+            @Parameter(hidden = true) @CookieValue(value = CookieConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken) {
         userManagementService.performLogout(refreshToken);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
