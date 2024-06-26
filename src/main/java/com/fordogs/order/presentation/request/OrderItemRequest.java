@@ -18,7 +18,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class OrderItemInfo {
+public class OrderItemRequest {
 
     @Schema(description = "주문 상품 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "11ef1b1c-8e19-e2d5-a95b-e122cba54608")
     @NotNull(message = "주문 상품 ID를 입력해주세요.")

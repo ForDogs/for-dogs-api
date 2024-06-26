@@ -6,17 +6,19 @@ import com.fordogs.order.application.OrderService;
 import com.fordogs.order.error.OrderErrorCode;
 import com.fordogs.order.presentation.request.OrderRegisterRequest;
 import com.fordogs.order.presentation.response.OrderRegisterResponse;
+import com.fordogs.order.presentation.response.OrderSearchBuyerResponse;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @Tag(name = "Order", description = "Order APIs")
 @RestController
@@ -34,5 +36,16 @@ public class OrderController {
         OrderRegisterResponse response = orderService.createOrder(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "주문 내역 검색", operationId = "/orders/buyer")
+    @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
+    @GetMapping("/buyer")
+    public ResponseEntity<SuccessResponse<OrderSearchBuyerResponse[]>> handleSearchBuyerOrdersRequest(
+            @Parameter(example = "2024-06-23") @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(example = "2024-06-30") @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        OrderSearchBuyerResponse[] response = orderService.searchBuyerOrders(startDate, endDate);
+
+        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 }

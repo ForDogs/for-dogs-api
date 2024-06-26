@@ -7,12 +7,15 @@ import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity(name = "orders")
 public class OrderEntity extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserManagementEntity buyer;
 
@@ -24,6 +27,9 @@ public class OrderEntity extends BaseEntity {
             @AttributeOverride(name = "value", column = @Column(name = "total_price"))
     })
     private Price totalPrice;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    private final List<OrderItemEntity> orderItems = new ArrayList<>();
 
     @Builder
     public OrderEntity(UserManagementEntity buyer, OrderStatus orderStatus, Price totalPrice) {

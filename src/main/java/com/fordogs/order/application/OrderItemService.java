@@ -2,7 +2,7 @@ package com.fordogs.order.application;
 
 import com.fordogs.order.domain.entity.OrderEntity;
 import com.fordogs.order.infrastructure.OrderItemRepository;
-import com.fordogs.order.presentation.request.OrderItemInfo;
+import com.fordogs.order.presentation.request.OrderItemRequest;
 import com.fordogs.product.application.ProductService;
 import com.fordogs.product.domain.entity.ProductEntity;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,8 @@ public class OrderItemService {
     private final ProductService productService;
 
     @Transactional
-    public void createOrderItem(OrderItemInfo[] orderItems, OrderEntity orderEntity) {
-        for (OrderItemInfo orderItem : orderItems) {
+    public void createOrderItem(OrderItemRequest[] orderItems, OrderEntity orderEntity) {
+        for (OrderItemRequest orderItem : orderItems) {
             ProductEntity productEntity = productService.findActiveProductWithActiveUserById(orderItem.getOrderProductId());
             productEntity.decreaseQuantity(orderItem.getOrderQuantity());
             orderItemRepository.save(orderItem.toEntity(orderEntity, productEntity));

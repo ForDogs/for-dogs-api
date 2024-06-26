@@ -22,8 +22,8 @@ public class OrderRegisterRequest {
     @NotNull(message = "주문 총 금액을 입력해주세요.")
     private BigDecimal orderTotalPrice;
 
-    @Schema(description = "주문 항목 정보")
-    private OrderItemInfo[] orderItems;
+    @Schema(description = "주문 아이템 정보")
+    private OrderItemRequest[] orderItems;
 
     public OrderEntity toEntity(UserManagementEntity userManagementEntity) {
         return OrderEntity.builder()
