@@ -6,6 +6,7 @@ import com.fordogs.order.infrastructure.OrderRepository;
 import com.fordogs.order.presentation.request.OrderRegisterRequest;
 import com.fordogs.order.presentation.response.OrderRegisterResponse;
 import com.fordogs.order.presentation.response.OrderSearchBuyerResponse;
+import com.fordogs.order.presentation.response.OrderSearchSellerResponse;
 import com.fordogs.user.application.UserManagementService;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +53,17 @@ public class OrderService {
         return orderEntityList.parallelStream()
                 .map(OrderSearchBuyerResponse::toResponse)
                 .toArray(OrderSearchBuyerResponse[]::new);
+    }
+
+    public OrderSearchSellerResponse[] searchSellerOrders(LocalDate startDate, LocalDate endDate) {
+        UUID userId = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        List<OrderEntity> orderEntityList = orderRepository.findOrdersBySellerAndDateRange(startDateTime, endDateTime, userId);
+
+        return orderEntityList.parallelStream()
+                .map(OrderSearchSellerResponse::toResponse)
+                .toArray(OrderSearchSellerResponse[]::new);
     }
 }

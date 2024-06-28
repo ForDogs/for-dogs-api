@@ -18,4 +18,15 @@ public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             @Param("buyerId") UUID buyerId);
+
+    @EntityGraph(attributePaths = {"buyer", "orderItems", "orderItems.product"})
+    @Query("SELECT o FROM orders o " +
+            "JOIN o.orderItems oi " +
+            "JOIN oi.product p " +
+            "WHERE p.seller.id = :sellerId " +
+            "AND o.createdAt BETWEEN :startDate AND :endDate")
+    List<OrderEntity> findOrdersBySellerAndDateRange(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            @Param("sellerId") UUID sellerId);
 }

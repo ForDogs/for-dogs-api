@@ -43,6 +43,8 @@ public class ApiRouteConstants {
             "/products/images/upload",
             "/products/*/update",
             "/products/*/deactivate",
-            "/products/images"
+            "/products/images",
+
+            "/orders/seller"
     );
 }

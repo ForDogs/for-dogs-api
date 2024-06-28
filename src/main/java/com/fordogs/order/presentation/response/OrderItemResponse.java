@@ -1,5 +1,6 @@
 package com.fordogs.order.presentation.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fordogs.order.domain.entity.OrderItemEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderItemResponse {
 
     @Schema(description = "개별 주문 상품 ID")

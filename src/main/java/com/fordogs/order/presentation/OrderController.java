@@ -7,6 +7,7 @@ import com.fordogs.order.error.OrderErrorCode;
 import com.fordogs.order.presentation.request.OrderRegisterRequest;
 import com.fordogs.order.presentation.response.OrderRegisterResponse;
 import com.fordogs.order.presentation.response.OrderSearchBuyerResponse;
+import com.fordogs.order.presentation.response.OrderSearchSellerResponse;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -45,6 +46,17 @@ public class OrderController {
             @Parameter(example = "2024-06-23") @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @Parameter(example = "2024-06-30") @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         OrderSearchBuyerResponse[] response = orderService.searchBuyerOrders(startDate, endDate);
+
+        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "판매 내역 검색", operationId = "/orders/seller")
+    @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
+    @GetMapping("/seller")
+    public ResponseEntity<SuccessResponse<OrderSearchSellerResponse[]>> handleSearchSellerOrdersRequest(
+            @Parameter(example = "2024-06-23") @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(example = "2024-06-30") @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        OrderSearchSellerResponse[] response = orderService.searchSellerOrders(startDate, endDate);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
