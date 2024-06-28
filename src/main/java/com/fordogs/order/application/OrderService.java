@@ -1,6 +1,7 @@
 package com.fordogs.order.application;
 
 import com.fordogs.order.domain.entity.OrderEntity;
+import com.fordogs.order.domain.entity.OrderItemEntity;
 import com.fordogs.order.infrastructure.OrderRepository;
 import com.fordogs.order.presentation.request.OrderRegisterRequest;
 import com.fordogs.order.presentation.response.OrderRegisterResponse;
@@ -32,10 +33,13 @@ public class OrderService {
         UUID userId = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
         UserManagementEntity userManagementEntity = userManagementService.findById(userId);
 
-        OrderEntity savedOrderEntity = orderRepository.save(request.toEntity(userManagementEntity));
-        orderItemService.createOrderItem(request.getOrderItems(), savedOrderEntity);
+        OrderEntity orderEntity = request.toEntity(userManagementEntity);
+        orderRepository.save(orderEntity);
 
-        return OrderRegisterResponse.toResponse(savedOrderEntity);
+        List<OrderItemEntity> orderItemEntities = orderItemService.createOrderItem(request.getOrderItems(), orderEntity);
+        orderEntity.addOrderItem(orderItemEntities);
+
+        return OrderRegisterResponse.toResponse(orderEntity);
     }
 
     public OrderSearchBuyerResponse[] searchBuyerOrders(LocalDate startDate, LocalDate endDate) {
@@ -45,7 +49,7 @@ public class OrderService {
 
         List<OrderEntity> orderEntityList = orderRepository.findOrdersByCreatedAtBetweenAndBuyerId(startDateTime, endDateTime, userId);
 
-        return orderEntityList.stream()
+        return orderEntityList.parallelStream()
                 .map(OrderSearchBuyerResponse::toResponse)
                 .toArray(OrderSearchBuyerResponse[]::new);
     }

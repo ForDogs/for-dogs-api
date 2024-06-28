@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Schema(description = "구매자 주문 내역 응답")
 @Getter
@@ -25,7 +27,7 @@ public class OrderSearchBuyerResponse {
     private BigDecimal orderTotalPrice;
 
     @Schema(description = "주문 아이템 정보")
-    private OrderItemResponse[] orderItems;
+    private List<OrderItemResponse> orderItems;
 
     public static OrderSearchBuyerResponse toResponse(OrderEntity orderEntity) {
         return OrderSearchBuyerResponse.builder()
@@ -34,7 +36,7 @@ public class OrderSearchBuyerResponse {
                 .orderTotalPrice(orderEntity.getTotalPrice().getValue())
                 .orderItems(orderEntity.getOrderItems().stream()
                         .map(OrderItemResponse::toResponse)
-                        .toArray(OrderItemResponse[]::new))
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Schema(description = "주문 등록 요청")
 @Getter
@@ -23,7 +24,7 @@ public class OrderRegisterRequest {
     private BigDecimal orderTotalPrice;
 
     @Schema(description = "주문 아이템 정보")
-    private OrderItemRequest[] orderItems;
+    private List<OrderItemRequest> orderItems;
 
     public OrderEntity toEntity(UserManagementEntity userManagementEntity) {
         return OrderEntity.builder()

@@ -14,8 +14,8 @@ import java.math.BigDecimal;
 @Builder
 public class OrderItemResponse {
 
-    @Schema(description = "주문 내 개별 상품의 주문 ID")
-    private String itemOrderId;
+    @Schema(description = "개별 주문 상품 ID")
+    private String productOrderId;
 
     @Schema(description = "주문 상품 ID")
     private String orderProductId;
@@ -24,18 +24,18 @@ public class OrderItemResponse {
     private String orderProductName;
 
     @Schema(description = "주문 상품 가격")
-    private BigDecimal orderItemUnitPrice;
+    private BigDecimal orderProductUnitPrice;
 
     @Schema(description = "주문 상품 수량")
-    private Integer orderItemQuantity;
+    private Integer orderProductQuantity;
 
     public static OrderItemResponse toResponse(OrderItemEntity orderItemEntity) {
         return OrderItemResponse.builder()
-                .itemOrderId(orderItemEntity.getId().toString())
+                .productOrderId(orderItemEntity.getId().toString())
                 .orderProductId(orderItemEntity.getProduct().getId().toString())
                 .orderProductName(orderItemEntity.getProduct().getName())
-                .orderItemUnitPrice(orderItemEntity.getUnitPrice().getValue())
-                .orderItemQuantity(orderItemEntity.getQuantity())
+                .orderProductUnitPrice(orderItemEntity.getUnitPrice().getValue())
+                .orderProductQuantity(orderItemEntity.getQuantity())
                 .build();
     }
 }

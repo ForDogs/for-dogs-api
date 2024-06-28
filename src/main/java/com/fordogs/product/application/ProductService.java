@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -88,6 +89,15 @@ public class ProductService {
     public ProductEntity findActiveProductWithActiveUserById(UUID productId) {
         return productRepository.findByIdAndEnabledTrueAndUserEnabledTrue(productId)
                 .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
+    }
+
+    public List<ProductEntity> findActiveProductsWithActiveUserByIds(Set<UUID> productIds) {
+        List<ProductEntity> products = productRepository.findAllByIdAndEnabledTrueAndUserEnabledTrue(productIds);
+        if (products.size() != productIds.size() || products.isEmpty()) {
+            throw ProductErrorCode.PRODUCT_NOT_FOUND.toException();
+        }
+
+        return products;
     }
 
     private void checkProductNameDuplicate(String productName) {

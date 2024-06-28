@@ -7,6 +7,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Schema(description = "주문 등록 응답")
 @Getter
 @Setter
@@ -17,12 +21,22 @@ public class OrderRegisterResponse {
     private String orderId;
 
     @Schema(description = "등록된 상품 상태")
-    private OrderStatus status;
+    private OrderStatus orderStatus;
+
+    @Schema(description = "등록된 주문 총 가격")
+    private BigDecimal orderTotalPrice;
+
+    @Schema(description = "등록된 개별 상품 주문 ID 리스트")
+    private List<String> productOrderIds;
 
     public static OrderRegisterResponse toResponse(OrderEntity orderEntity) {
         return OrderRegisterResponse.builder()
                 .orderId(orderEntity.getId().toString())
-                .status(orderEntity.getStatus())
+                .orderStatus(orderEntity.getStatus())
+                .orderTotalPrice(orderEntity.getTotalPrice().getValue())
+                .productOrderIds(orderEntity.getOrderItems().stream()
+                        .map(item -> item.getId().toString())
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

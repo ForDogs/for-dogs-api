@@ -28,7 +28,7 @@ public class OrderEntity extends BaseEntity {
     })
     private Price totalPrice;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<OrderItemEntity> orderItems = new ArrayList<>();
 
     @Builder
@@ -36,5 +36,12 @@ public class OrderEntity extends BaseEntity {
         this.buyer = buyer;
         this.status = orderStatus != null ? orderStatus : OrderStatus.PAID;
         this.totalPrice = totalPrice;
+    }
+
+    public void addOrderItem(List<OrderItemEntity> orderItemEntities) {
+        for (OrderItemEntity orderItemEntity : orderItemEntities) {
+            orderItems.add(orderItemEntity);
+            orderItemEntity.setOrder(this);
+        }
     }
 }
