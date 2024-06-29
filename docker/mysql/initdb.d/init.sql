@@ -14,18 +14,6 @@ CREATE TABLE `for_dog_db`.`user`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='회원 정보';
 
-CREATE TABLE `for_dog_db`.`refresh_token`
-(
-    `id`         BINARY(16)   NOT NULL COMMENT 'RefreshToken ID',
-    `token`      VARCHAR(255) NOT NULL COMMENT 'RefreshToken 값',
-    `user_id`    BINARY(16)   NOT NULL COMMENT '회원 ID',
-    `created_at` DATETIME     NULL DEFAULT NOW() COMMENT '최초 생성 일시',
-    `updated_at` DATETIME     NULL DEFAULT NOW() COMMENT '최종 수정 일시',
-    PRIMARY KEY (`id`),
-    CONSTRAINT `fk_refresh_token_user_id` FOREIGN KEY (`user_id`) REFERENCES `for_dog_db`.`user` (`id`) ON DELETE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='RefreshToken 정보';
-
 CREATE TABLE `for_dog_db`.`product`
 (
     `id`          BINARY(16)                                                                   NOT NULL COMMENT '상품 ID',
@@ -73,5 +61,6 @@ CREATE TABLE `for_dog_db`.`order_items`
   DEFAULT CHARSET = utf8mb4 COMMENT ='주문 항목 정보';
 
 -- INDEX
-CREATE INDEX idx_product_seller_id ON product (seller_id);
-CREATE INDEX idx_orders_product_id ON order_items (product_id);
+CREATE INDEX idx_orders_createdAt_buyerId ON orders (created_at, user_id);
+CREATE INDEX idx_product_sellerId ON product (seller_id);
+CREATE INDEX idx_orders_createdAt ON orders (created_at);
