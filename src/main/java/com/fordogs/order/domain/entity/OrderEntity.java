@@ -6,7 +6,10 @@ import com.fordogs.order.domain.eums.OrderStatus;
 import com.fordogs.order.error.OrderErrorCode;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +53,13 @@ public class OrderEntity extends BaseEntity {
         if (this.status == OrderStatus.CANCELLED) {
             throw OrderErrorCode.ORDER_CANNOT_BE_MODIFIED.toException();
         }
+        if ((this.status == OrderStatus.AWAITING_SHIPMENT
+                || this.status == OrderStatus.SHIPPED
+                || this.status == OrderStatus.DELIVERED)
+                && newStatus == OrderStatus.CANCELLED) {
+            throw OrderErrorCode.ORDER_CANNOT_BE_CANCELLED.toException();
+        }
+
         this.status = newStatus;
     }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 public class ApiRouteConstants {
 
     public static final String ROLE_SELLER = Role.SELLER.name();
+    public static final String ROLE_BUYER = Role.BUYER.name();
 
     public static final List<String> PUBLIC_ENDPOINTS = List.of(
             "/swagger-ui/**",
@@ -18,7 +19,6 @@ public class ApiRouteConstants {
 
             "/users/signup",
             "/users/login",
-            "/user/refresh",
 
             "/products/*/details",
             "/products/search",
@@ -32,11 +32,14 @@ public class ApiRouteConstants {
             "/users/refresh",
             "/users/logout",
 
-            "/orders",
-            "/orders/buyer",
             "/orders/*/status",
 
             "/health/token"
+    );
+
+    public static final List<String> BUYER_ONLY_ENDPOINTS = List.of(
+            "/orders",
+            "/orders/buyer"
     );
 
     public static final List<String> SELLER_ONLY_ENDPOINTS = List.of(

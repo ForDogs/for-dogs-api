@@ -47,6 +47,10 @@ public class SecurityConfiguration {
                     authorizeRequest.requestMatchers(path).authenticated()
             );
 
+            ApiRouteConstants.BUYER_ONLY_ENDPOINTS.forEach((path) ->
+                    authorizeRequest.requestMatchers(path).hasAuthority(ApiRouteConstants.ROLE_BUYER)
+            );
+
             ApiRouteConstants.SELLER_ONLY_ENDPOINTS.forEach((path) ->
                     authorizeRequest.requestMatchers(path).hasAuthority(ApiRouteConstants.ROLE_SELLER)
             );
