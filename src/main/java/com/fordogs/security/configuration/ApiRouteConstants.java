@@ -34,6 +34,7 @@ public class ApiRouteConstants {
 
             "/orders",
             "/orders/buyer",
+            "/orders/*/status",
 
             "/health/token"
     );

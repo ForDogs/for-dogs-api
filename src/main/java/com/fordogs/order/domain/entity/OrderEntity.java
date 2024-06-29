@@ -3,6 +3,7 @@ package com.fordogs.order.domain.entity;
 import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.domain.vo.wapper.Price;
 import com.fordogs.order.domain.eums.OrderStatus;
+import com.fordogs.order.error.OrderErrorCode;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,5 +44,12 @@ public class OrderEntity extends BaseEntity {
             orderItems.add(orderItemEntity);
             orderItemEntity.setOrder(this);
         }
+    }
+
+    public void changeOrderStatus(OrderStatus newStatus) {
+        if (this.status == OrderStatus.CANCELLED) {
+            throw OrderErrorCode.ORDER_CANNOT_BE_MODIFIED.toException();
+        }
+        this.status = newStatus;
     }
 }

@@ -5,6 +5,7 @@ import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.order.application.OrderService;
 import com.fordogs.order.error.OrderErrorCode;
 import com.fordogs.order.presentation.request.OrderRegisterRequest;
+import com.fordogs.order.presentation.request.OrderStatusUpdateRequest;
 import com.fordogs.order.presentation.response.OrderRegisterResponse;
 import com.fordogs.order.presentation.response.OrderSearchBuyerResponse;
 import com.fordogs.order.presentation.response.OrderSearchSellerResponse;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Tag(name = "Order", description = "Order APIs")
 @RestController
@@ -59,5 +61,16 @@ public class OrderController {
         OrderSearchSellerResponse[] response = orderService.searchSellerOrders(startDate, endDate);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "주문 상태 변경", operationId = "/orders/{orderId}/status")
+    @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
+    @PatchMapping("/{orderId}/status")
+    public ResponseEntity<SuccessResponse<Object>> handleOrderStatusUpdateRequest(
+            @PathVariable("orderId") UUID orderId,
+            @Valid @RequestBody OrderStatusUpdateRequest request) {
+        orderService.orderStatusUpdate(orderId, request);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
