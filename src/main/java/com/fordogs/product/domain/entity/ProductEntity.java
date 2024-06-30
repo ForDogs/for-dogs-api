@@ -1,10 +1,10 @@
 package com.fordogs.product.domain.entity;
 
 import com.fordogs.core.domain.entity.BaseEntity;
+import com.fordogs.core.domain.vo.wapper.Price;
 import com.fordogs.core.util.converter.JsonConverter;
 import com.fordogs.product.domain.enums.Category;
 import com.fordogs.product.domain.vo.wrapper.Description;
-import com.fordogs.core.domain.vo.wapper.Price;
 import com.fordogs.product.error.ProductErrorCode;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import jakarta.persistence.*;

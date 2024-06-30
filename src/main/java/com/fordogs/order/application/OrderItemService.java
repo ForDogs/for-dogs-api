@@ -24,17 +24,17 @@ public class OrderItemService {
     private final OrderItemRepository orderItemRepository;
     private final ProductService productService;
 
-    public List<OrderItemEntity> createOrderItem(List<OrderItemRequest> orderItems, OrderEntity orderEntity) {
-        Set<UUID> productIds = orderItems.stream()
+    public List<OrderItemEntity> createOrderItems(List<OrderItemRequest> orderItemRequests, OrderEntity orderEntity) {
+        Set<UUID> orderProductIds = orderItemRequests.stream()
                 .map(OrderItemRequest::getOrderProductId)
                 .collect(Collectors.toSet());
 
-        List<ProductEntity> products = productService.findActiveProductsWithActiveUserByIds(productIds);
+        List<ProductEntity> products = productService.findActiveProductsWithActiveUserByIds(orderProductIds);
 
         Map<UUID, ProductEntity> productCache = products.stream()
                 .collect(Collectors.toMap(ProductEntity::getId, product -> product));
 
-        List<OrderItemEntity> orderItemEntities = orderItems.stream()
+        List<OrderItemEntity> orderItemEntities = orderItemRequests.stream()
                 .map(orderItem -> {
                     UUID productId = orderItem.getOrderProductId();
                     ProductEntity productEntity = productCache.get(productId);

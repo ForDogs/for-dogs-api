@@ -27,14 +27,14 @@ public class OrderRegisterResponse {
     private BigDecimal orderTotalPrice;
 
     @Schema(description = "등록된 개별 상품 주문 ID 리스트")
-    private List<String> productOrderIds;
+    private List<String> orderItemIds;
 
     public static OrderRegisterResponse toResponse(OrderEntity orderEntity) {
         return OrderRegisterResponse.builder()
                 .orderId(orderEntity.getId().toString())
                 .orderStatus(orderEntity.getStatus())
                 .orderTotalPrice(orderEntity.getTotalPrice().getValue())
-                .productOrderIds(orderEntity.getOrderItems().stream()
+                .orderItemIds(orderEntity.getOrderItems().stream()
                         .map(item -> item.getId().toString())
                         .collect(Collectors.toList()))
                 .build();

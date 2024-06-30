@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class OrderItemResponse {
 
     @Schema(description = "개별 주문 상품 ID")
-    private String productOrderId;
+    private String orderItemId;
 
     @Schema(description = "주문 상품 ID")
     private String orderProductId;
@@ -33,7 +33,7 @@ public class OrderItemResponse {
 
     public static OrderItemResponse toResponse(OrderItemEntity orderItemEntity) {
         return OrderItemResponse.builder()
-                .productOrderId(orderItemEntity.getId().toString())
+                .orderItemId(orderItemEntity.getId().toString())
                 .orderProductId(orderItemEntity.getProduct().getId().toString())
                 .orderProductName(orderItemEntity.getProduct().getName())
                 .orderProductUnitPrice(orderItemEntity.getUnitPrice().getValue())

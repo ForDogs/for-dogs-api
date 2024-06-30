@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,11 +43,19 @@ public class OrderEntity extends BaseEntity {
         this.totalPrice = totalPrice;
     }
 
-    public void addOrderItem(List<OrderItemEntity> orderItemEntities) {
+    public void addOrderItems(List<OrderItemEntity> orderItemEntities) {
         for (OrderItemEntity orderItemEntity : orderItemEntities) {
             orderItems.add(orderItemEntity);
             orderItemEntity.setOrder(this);
         }
+    }
+
+    public void calculateTotalPrice(List<BigDecimal> unitPrices, List<Integer> quantities) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (int i = 0; i < unitPrices.size(); i++) {
+            total = total.add(unitPrices.get(i).multiply(BigDecimal.valueOf(quantities.get(i))));
+        }
+        this.totalPrice = Price.builder().value(total).build();
     }
 
     public void changeOrderStatus(OrderStatus newStatus) {

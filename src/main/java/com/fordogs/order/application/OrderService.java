@@ -39,8 +39,8 @@ public class OrderService {
         OrderEntity orderEntity = request.toEntity(userManagementEntity);
         orderRepository.save(orderEntity);
 
-        List<OrderItemEntity> orderItemEntities = orderItemService.createOrderItem(request.getOrderItems(), orderEntity);
-        orderEntity.addOrderItem(orderItemEntities);
+        List<OrderItemEntity> orderItemEntities = orderItemService.createOrderItems(request.getOrderItems(), orderEntity);
+        orderEntity.addOrderItems(orderItemEntities);
 
         return OrderRegisterResponse.toResponse(orderEntity);
     }
