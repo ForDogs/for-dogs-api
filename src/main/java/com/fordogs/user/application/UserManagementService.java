@@ -83,6 +83,7 @@ public class UserManagementService {
     public UserRefreshResponse renewAccessToken(String accessToken, String refreshToken, String uuidToken) {
         RefreshTokenCache tokenCache = refreshTokenService.getRefreshToken(refreshToken, accessToken);
         UserManagementEntity userManagementEntity = findByAccount(Account.builder().value(tokenCache.getUserAccount()).build());
+        userManagementEntity.validateIfEnabled();
 
         AccessToken newAccessToken = jwtUtil.generateAccessToken(userManagementEntity, UUIDToken.from(uuidToken).toEncryptedString());
 
