@@ -34,3 +34,8 @@ cloud:
       secretKey:
     s3:
       bucketName:
+
+# PortOne
+port-one:
+  api-key:
+  api-secret:

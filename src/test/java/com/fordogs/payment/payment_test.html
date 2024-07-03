@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Page</title>
+    <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+    <script>
+        function requestPayment() {
+            IMP.init("imp54081713");
+            IMP.request_pay({
+                pg: "nice",
+                pay_method: "card",
+                merchant_uid: `11ef38fb-0eff-da50-a63f-6982e156638a`,
+                name: "상품",
+                amount: 515,
+                buyer_email: "gildong@gmail.com",
+                buyer_name: "홍길동",
+                buyer_tel: "010-4242-4242",
+                buyer_addr: "서울특별시 강남구 신사동",
+                buyer_postcode: "01181",
+            }, function (response) {
+                if (response.success) {
+                    console.log('결제가 성공적으로 완료되었습니다.');
+                } else {
+                    console.log('결제에 실패하였습니다. 다시 시도해 주세요.');
+                }
+                console.log(response);
+            });
+        }
+
+        window.onload = requestPayment;
+    </script>
+</head>
+<body>
+<h1>결제 페이지</h1>
+<p>결제를 진행하려면 잠시 기다려 주세요...</p>
+</body>
+</html>

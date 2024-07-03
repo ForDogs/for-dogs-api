@@ -1,14 +1,15 @@
 package com.fordogs.core.exception.error;
 
-import com.fordogs.core.exception.DomainException;
+import com.fordogs.core.exception.GlobalException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum GlobalErrorCode implements BaseErrorCode<DomainException> {
+public enum GlobalErrorCode implements BaseErrorCode<GlobalException> {
 
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."),
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "인증되지 않은 접근으로 요청을 처리할 수 없습니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "해당 요청에 대한 권한이 없어 정상적으로 처리할 수 없습니다."),
     MISSING_REQUEST_COOKIE(HttpStatus.BAD_REQUEST, "필수 요청 쿠키가 누락되었습니다."),
@@ -22,7 +23,7 @@ public enum GlobalErrorCode implements BaseErrorCode<DomainException> {
     private final String message;
 
     @Override
-    public DomainException toException() {
-        return new DomainException(httpStatus, message);
+    public GlobalException toException() {
+        return new GlobalException(httpStatus, message);
     }
 }

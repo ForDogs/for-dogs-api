@@ -39,7 +39,9 @@ public class ApiRouteConstants {
 
     public static final List<String> BUYER_ONLY_ENDPOINTS = List.of(
             "/orders",
-            "/orders/buyer"
+            "/orders/buyer",
+
+            "/payments"
     );
 
     public static final List<String> SELLER_ONLY_ENDPOINTS = List.of(

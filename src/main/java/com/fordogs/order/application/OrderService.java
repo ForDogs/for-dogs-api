@@ -71,9 +71,13 @@ public class OrderService {
 
     @Transactional
     public void orderStatusUpdate(UUID orderId, OrderStatusUpdateRequest request) {
-        OrderEntity orderEntity = orderRepository.findById(orderId)
-                .orElseThrow(OrderErrorCode.ORDER_NOT_FOUND::toException);
+        OrderEntity orderEntity = findOrderById(orderId);
         orderEntity.changeOrderStatus(request.getOrderStatus());
         // TODO: CANCELLED 일 경우 결제 취소 진행
+    }
+
+    public OrderEntity findOrderById(UUID orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(OrderErrorCode.ORDER_NOT_FOUND::toException);
     }
 }
