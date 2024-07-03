@@ -40,12 +40,12 @@ CREATE TABLE `for_dog_db`.`product`
 
 CREATE TABLE `for_dog_db`.`orders`
 (
-    `id`          BINARY(16)                                                                                             NOT NULL COMMENT '주문 ID',
-    `user_id`     BINARY(16)                                                                                             NOT NULL COMMENT '구매자 회원 ID',
-    `status`      ENUM ('PAID', 'PAYMENT_FAILED', 'CONFIRMED', 'AWAITING_SHIPMENT', 'SHIPPED', 'DELIVERED', 'CANCELLED') NOT NULL DEFAULT 'PAID' COMMENT '주문 상태 (PAID: 결제 완료, PAYMENT_FAILED:결제 오류, CONFIRMED: 구매 확인, AWAITING_SHIPMENT: 배송 대기 중, SHIPPED: 배송 중, DELIVERED: 배송 완료, CANCELLED: 주문 취소)',
-    `total_price` DECIMAL(10, 2)                                                                                         NOT NULL COMMENT '총 주문 금액',
-    `created_at`  DATETIME                                                                                               NULL     DEFAULT NOW() COMMENT '최초 생성 일시',
-    `updated_at`  DATETIME                                                                                               NULL     DEFAULT NOW() COMMENT '최종 수정 일시',
+    `id`          BINARY(16)                                                                                                                 NOT NULL COMMENT '주문 ID',
+    `user_id`     BINARY(16)                                                                                                                 NOT NULL COMMENT '구매자 회원 ID',
+    `status`      ENUM ('AWAITING_PAYMENT', 'PAID', 'PAYMENT_FAILED', 'CONFIRMED', 'AWAITING_SHIPMENT', 'SHIPPED', 'DELIVERED', 'CANCELLED') NOT NULL DEFAULT 'PAID' COMMENT '주문 상태 (AWAITING_PAYMENT: 결제 대기 중, PAID: 결제 완료, PAYMENT_FAILED: 결제 오류, CONFIRMED: 구매 확인, AWAITING_SHIPMENT: 배송 대기 중, SHIPPED: 배송 중, DELIVERED: 배송 완료, CANCELLED: 주문 취소)',
+    `total_price` DECIMAL(10, 2)                                                                                                             NOT NULL COMMENT '총 주문 금액',
+    `created_at`  DATETIME                                                                                                                   NULL     DEFAULT NOW() COMMENT '최초 생성 일시',
+    `updated_at`  DATETIME                                                                                                                   NULL     DEFAULT NOW() COMMENT '최종 수정 일시',
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_orders_user_id` FOREIGN KEY (`user_id`) REFERENCES `for_dog_db`.`user` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB

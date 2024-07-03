@@ -25,7 +25,7 @@ public class OrderEntity extends BaseEntity {
     private UserManagementEntity buyer;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status = OrderStatus.PAID;
+    private OrderStatus status = OrderStatus.AWAITING_PAYMENT;
 
     @Embedded
     @AttributeOverrides({
@@ -39,7 +39,7 @@ public class OrderEntity extends BaseEntity {
     @Builder
     public OrderEntity(UserManagementEntity buyer, OrderStatus orderStatus, Price totalPrice) {
         this.buyer = buyer;
-        this.status = orderStatus != null ? orderStatus : OrderStatus.PAID;
+        this.status = orderStatus != null ? orderStatus : OrderStatus.AWAITING_PAYMENT;
         this.totalPrice = totalPrice;
     }
 
@@ -59,7 +59,7 @@ public class OrderEntity extends BaseEntity {
     }
 
     public void changeOrderStatus(OrderStatus newStatus) {
-        if (this.status == OrderStatus.CANCELLED) {
+        if (this.status == OrderStatus.CANCELLED || this.status == OrderStatus.PAYMENT_FAILED) {
             throw OrderErrorCode.ORDER_CANNOT_BE_MODIFIED.toException();
         }
         if ((this.status == OrderStatus.AWAITING_SHIPMENT
