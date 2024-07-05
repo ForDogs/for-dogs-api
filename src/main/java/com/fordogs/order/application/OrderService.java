@@ -2,6 +2,7 @@ package com.fordogs.order.application;
 
 import com.fordogs.order.domain.entity.OrderEntity;
 import com.fordogs.order.domain.entity.OrderItemEntity;
+import com.fordogs.order.domain.eums.OrderStatus;
 import com.fordogs.order.error.OrderErrorCode;
 import com.fordogs.order.infrastructure.OrderRepository;
 import com.fordogs.order.presentation.request.OrderRegisterRequest;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,13 +73,25 @@ public class OrderService {
 
     @Transactional
     public void orderStatusUpdate(UUID orderId, OrderStatusUpdateRequest request) {
+        validateOrderStatus(request.getOrderStatus());
         OrderEntity orderEntity = findOrderById(orderId);
         orderEntity.changeOrderStatus(request.getOrderStatus());
-        // TODO: CANCELLED 일 경우 결제 취소 진행
     }
 
     public OrderEntity findOrderById(UUID orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(OrderErrorCode.ORDER_NOT_FOUND::toException);
+    }
+
+    private void validateOrderStatus(OrderStatus orderStatus) {
+        List<OrderStatus> allowedStatusesForSeller = Arrays.asList(
+                OrderStatus.CONFIRMED,
+                OrderStatus.AWAITING_SHIPMENT,
+                OrderStatus.SHIPPED,
+                OrderStatus.DELIVERED
+        );
+        if (!allowedStatusesForSeller.contains(orderStatus)) {
+            throw OrderErrorCode.INVALID_ACTION_FOR_ORDER_STATUS.toException();
+        }
     }
 }

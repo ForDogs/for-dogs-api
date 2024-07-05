@@ -63,7 +63,11 @@ public class OrderController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 
-    @Operation(summary = "주문 상태 변경", operationId = "/orders/{orderId}/status")
+    @Operation(
+            summary = "주문 상태 변경",
+            operationId = "/orders/{orderId}/status",
+            description = "주문 상태는 '구매 확인', '배송 대기 중', '배송 중', '배송 완료' 상태로만 변경할 수 있습니다."
+    )
     @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
     @PatchMapping("/{orderId}/status")
     public ResponseEntity<SuccessResponse<Object>> handleOrderStatusUpdateRequest(

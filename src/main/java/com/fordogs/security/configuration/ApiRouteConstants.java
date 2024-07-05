@@ -32,8 +32,6 @@ public class ApiRouteConstants {
             "/users/refresh",
             "/users/logout",
 
-            "/orders/*/status",
-
             "/health/token"
     );
 
@@ -51,6 +49,7 @@ public class ApiRouteConstants {
             "/products/*/deactivate",
             "/products/images",
 
-            "/orders/seller"
+            "/orders/seller",
+            "/orders/*/status"
     );
 }
