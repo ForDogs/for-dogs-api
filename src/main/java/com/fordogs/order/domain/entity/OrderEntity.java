@@ -11,7 +11,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,10 +49,13 @@ public class OrderEntity extends BaseEntity {
         }
     }
 
-    public void calculateTotalPrice(List<BigDecimal> unitPrices, List<Integer> quantities) {
-        BigDecimal total = BigDecimal.ZERO;
+    public void calculateTotalPrice(List<Integer> unitPrices, List<Integer> quantities) {
+        if (unitPrices.size() != quantities.size()) {
+            throw new IllegalArgumentException("unitPrices와 quantities 리스트의 크기가 일치하지 않습니다.");
+        }
+        int total = 0;
         for (int i = 0; i < unitPrices.size(); i++) {
-            total = total.add(unitPrices.get(i).multiply(BigDecimal.valueOf(quantities.get(i))));
+            total += unitPrices.get(i) * quantities.get(i);
         }
         this.totalPrice = Price.builder().value(total).build();
     }

@@ -16,7 +16,8 @@ public enum GlobalErrorCode implements BaseErrorCode<GlobalException> {
     MISSING_REQUEST_HEADER(HttpStatus.BAD_REQUEST, "필수 요청 헤더가 누락되었습니다."),
     MAX_UPLOAD_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "최대 허용 파일 크기는 {0}, 요청 전체 크기는 {1}로 제한되어 있습니다."),
     INVALID_REQUEST_PARAMETERS(HttpStatus.BAD_REQUEST, "해당 요청 값을 다시 확인해주세요:"),
-    INVALID_PRICE(HttpStatus.BAD_REQUEST, "가격은 음수가 될 수 없습니다.");
+    INVALID_PRICE_NEGATIVE(HttpStatus.BAD_REQUEST, "가격은 음수일 수 없습니다."),
+    INVALID_PRICE_EXCEEDS_MAX(HttpStatus.BAD_REQUEST, "가격은 최대값을 초과할 수 없습니다.");
 
     private final HttpStatus httpStatus;
 

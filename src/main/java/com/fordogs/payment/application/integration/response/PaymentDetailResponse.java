@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
 public class PaymentDetailResponse extends PaymentBaseResponse {
@@ -101,7 +99,7 @@ public class PaymentDetailResponse extends PaymentBaseResponse {
 
         private String name;
 
-        private BigDecimal amount;
+        private Integer amount;
 
         private String currency;
 

@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,11 +24,11 @@ public class OrderRegisterRequest {
     public OrderEntity toEntity(UserManagementEntity userManagementEntity) {
         OrderEntity orderEntity = OrderEntity.builder()
                 .buyer(userManagementEntity)
-                .totalPrice(Price.builder().value(BigDecimal.ZERO).build())
+                .totalPrice(Price.builder().value(0).build())
                 .build();
 
         if (orderItems != null && !orderItems.isEmpty()) {
-            List<BigDecimal> unitPrices = orderItems.stream()
+            List<Integer> unitPrices = orderItems.stream()
                     .map(OrderItemRequest::getOrderUnitPrice)
                     .collect(Collectors.toList());
 

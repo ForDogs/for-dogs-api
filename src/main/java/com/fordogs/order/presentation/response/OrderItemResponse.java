@@ -7,8 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Schema(description = "주문 상품 내역 응답")
 @Getter
 @Setter
@@ -26,7 +24,7 @@ public class OrderItemResponse {
     private String orderProductName;
 
     @Schema(description = "주문 상품 가격")
-    private BigDecimal orderProductUnitPrice;
+    private Integer orderProductUnitPrice;
 
     @Schema(description = "주문 상품 수량")
     private Integer orderProductQuantity;

@@ -4,26 +4,27 @@ import com.fordogs.core.exception.error.GlobalErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Getter
 @Embeddable
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Price extends ValueWrapperObject<BigDecimal> {
+public class Price extends ValueWrapperObject<Integer> {
 
-    private static final BigDecimal NEGATIVE_PRICE = BigDecimal.ZERO;
+    private static final int MAX_PRICE = 1_000_000_000;
 
     @Builder
-    public Price(BigDecimal value) {
+    public Price(Integer value) {
         super(value);
         validate(value);
     }
 
     @Override
-    protected void validate(BigDecimal value) {
-        if (value.compareTo(NEGATIVE_PRICE) < 0) {
-            throw GlobalErrorCode.INVALID_PRICE.toException();
+    protected void validate(Integer value) {
+        if (value < 0) {
+            throw GlobalErrorCode.INVALID_PRICE_NEGATIVE.toException();
+        }
+        if (value > MAX_PRICE) {
+            throw GlobalErrorCode.INVALID_PRICE_EXCEEDS_MAX.toException();
         }
     }
 }

@@ -10,8 +10,6 @@ import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,7 +37,7 @@ public class ProductEntity extends BaseEntity {
     private Description description;
 
     @Enumerated(EnumType.STRING)
-    private Category category = Category.NONE;
+    private Category category;
 
     @Column(columnDefinition = "JSON")
     private String images;
@@ -53,12 +51,12 @@ public class ProductEntity extends BaseEntity {
         this.price = price;
         this.quantity = quantity;
         this.description = description;
-        this.category = category != null ? category : Category.NONE;
+        this.category = category;
         this.images = JsonConverter.convertArrayToJson(images);
         this.enabled = true;
     }
 
-    public void update(String name, BigDecimal price, Integer quantity, String description, String[] images, Category category) {
+    public void update(String name, Integer price, Integer quantity, String description, String[] images, Category category) {
         if (name != null) {
             this.name = name;
         }

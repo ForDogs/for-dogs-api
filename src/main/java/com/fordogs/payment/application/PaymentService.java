@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.RoundingMode;
 import java.util.Objects;
 
 @Service
@@ -54,7 +53,7 @@ public class PaymentService {
     }
 
     private void validatePaymentAmount(OrderEntity orderEntity, PaymentDetailResponse paymentDetailResponse) {
-        if (!Objects.equals(orderEntity.getTotalPrice().getValue().setScale(0, RoundingMode.DOWN), paymentDetailResponse.getResponse().getAmount())) {
+        if (!Objects.equals(orderEntity.getTotalPrice().getValue(), paymentDetailResponse.getResponse().getAmount())) {
             orderEntity.changeOrderStatus(OrderStatus.CANCELLED);
             // TODO: 결제 취소 로직 호출
             throw PaymentErrorCode.PAYMENT_AMOUNT_MISMATCH.toException();

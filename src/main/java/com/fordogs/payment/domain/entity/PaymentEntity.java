@@ -2,10 +2,11 @@ package com.fordogs.payment.domain.entity;
 
 import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.order.domain.entity.OrderEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.*;
-
-import java.math.BigDecimal;
 
 @Getter
 @Builder
@@ -70,7 +71,7 @@ public class PaymentEntity extends BaseEntity {
 
     private String name;
 
-    private BigDecimal amount;
+    private Integer amount;
 
     private String currency;
 

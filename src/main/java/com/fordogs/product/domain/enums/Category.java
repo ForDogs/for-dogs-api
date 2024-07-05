@@ -11,8 +11,7 @@ public enum Category {
     SNACK("간식"),
     TOY("장난감"),
     ACCESSORY("악세서리"),
-    SUPPLEMENT("보충제"),
-    NONE("카테고리 없음");
+    SUPPLEMENT("보충제");
 
     private final String description;
 

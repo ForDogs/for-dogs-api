@@ -1,14 +1,12 @@
 package com.fordogs.product.presentation.response;
 
+import com.fordogs.core.util.converter.JsonConverter;
 import com.fordogs.product.domain.entity.ProductEntity;
 import com.fordogs.product.domain.enums.Category;
-import com.fordogs.core.util.converter.JsonConverter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 @Schema(description = "상품 전체 검색 응답")
 @Getter
@@ -23,10 +21,10 @@ public class ProductSearchResponse {
     private String productName;
 
     @Schema(description = "상품 가격")
-    private BigDecimal productPrice;
+    private Integer productPrice;
 
     @Schema(description = "상품 수량")
-    private int productQuantity;
+    private Integer productQuantity;
 
     @Schema(description = "상품 카테고리")
     private Category productCategory;

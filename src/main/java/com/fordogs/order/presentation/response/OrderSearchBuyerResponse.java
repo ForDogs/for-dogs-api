@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +23,7 @@ public class OrderSearchBuyerResponse {
     private OrderStatus orderStatus;
 
     @Schema(description = "주문 총 금액")
-    private BigDecimal orderTotalPrice;
+    private Integer orderTotalPrice;
 
     @Schema(description = "주문 아이템 정보")
     private List<OrderItemResponse> orderItems;

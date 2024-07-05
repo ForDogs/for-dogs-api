@@ -7,8 +7,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,7 +20,7 @@ public class PaymentCancelEntity extends BaseEntity {
 
     private String cancellationId;
 
-    private BigDecimal cancelAmount;
+    private Integer cancelAmount;
 
     private String cancelReceiptUrl;
 

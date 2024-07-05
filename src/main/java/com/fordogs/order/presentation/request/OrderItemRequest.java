@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Schema(description = "주문 항목 정보")
@@ -28,9 +27,9 @@ public class OrderItemRequest {
     @NotNull(message = "주문 상품 수량을 입력해주세요.")
     private Integer orderQuantity;
 
-    @Schema(description = "주문 당시 상품 단가", requiredMode = Schema.RequiredMode.REQUIRED, example = "19.99")
+    @Schema(description = "주문 당시 상품 단가", requiredMode = Schema.RequiredMode.REQUIRED, example = "200")
     @NotNull(message = "주문 당시 상품 단가를 입력해주세요.")
-    private BigDecimal orderUnitPrice;
+    private Integer orderUnitPrice;
 
     public OrderItemEntity toEntity(OrderEntity orderEntity, ProductEntity productEntity) {
         return OrderItemEntity.builder()
