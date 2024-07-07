@@ -2,8 +2,10 @@ package com.fordogs.order.domain.eums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fordogs.order.error.OrderErrorCode;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum OrderStatus {
     AWAITING_PAYMENT("결제 대기 중"),

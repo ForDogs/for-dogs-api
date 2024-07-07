@@ -3,7 +3,7 @@ package com.fordogs.payment.application.integration.client;
 import com.fordogs.configuraion.properties.PortOneProperties;
 import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.constants.PortOneApiConstants;
-import com.fordogs.payment.application.integration.response.PaymentDetailResponse;
+import com.fordogs.payment.application.integration.response.PaymentResponse;
 import com.fordogs.payment.application.integration.response.PaymentTokenResponse;
 import com.fordogs.core.util.api.WebClientUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +20,36 @@ public class PaymentApiClient {
     private final WebClientUtil webClientUtil;
     private final PortOneProperties portOneProperties;
 
-    private static final String TOKEN_REQUEST_KEY = "imp_key";
-    private static final String TOKEN_REQUEST_SECRET = "imp_secret";
+    public PaymentResponse getPaymentDetail(String impUid) {
+        String accessToken = getAccessToken().getResponse().getAccessToken();
+        String url = String.format("%s/%s", PortOneApiConstants.ENDPOINT_GET_PAYMENT, impUid);
 
-    public PaymentTokenResponse getAccessToken() {
-        Map<String, String> requestBody = createTokenRequestBody();
+        return webClientUtil.get(
+                url,
+                PaymentResponse.class,
+                HttpHeaders.AUTHORIZATION, "Bearer " + accessToken
+        );
+    }
+
+    public PaymentResponse cancelPayment(String impUid, String reason) {
+        String accessToken = getAccessToken().getResponse().getAccessToken();
+        String url = PortOneApiConstants.ENDPOINT_CANCEL_PAYMENT;
+        Map<String, String> requestBody = buildCancelPaymentRequestBody(impUid, reason);
+
+        return webClientUtil.post(
+                url,
+                requestBody,
+                PaymentResponse.class,
+                HttpHeaders.AUTHORIZATION, "Bearer " + accessToken
+        );
+    }
+
+    private PaymentTokenResponse getAccessToken() {
+        String url = PortOneApiConstants.ENDPOINT_GET_TOKEN;
+        Map<String, String> requestBody = buildTokenRequestBody();
 
         PaymentTokenResponse tokenResponse = webClientUtil.post(
-                PortOneApiConstants.ENDPOINT_GET_TOKEN,
+                url,
                 requestBody,
                 PaymentTokenResponse.class
         );
@@ -39,20 +61,18 @@ public class PaymentApiClient {
         return tokenResponse;
     }
 
-    public PaymentDetailResponse getPaymentDetail(String impUid, String accessToken) {
-        String url = String.format("%s/%s", PortOneApiConstants.ENDPOINT_GET_PAYMENT, impUid);
+    private Map<String, String> buildCancelPaymentRequestBody(String impUid, String reason) {
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("imp_uid", impUid);
+        requestBody.put("reason", reason);
 
-        return webClientUtil.get(
-                url,
-                PaymentDetailResponse.class,
-                HttpHeaders.AUTHORIZATION, "Bearer " + accessToken
-        );
+        return requestBody;
     }
 
-    private Map<String, String> createTokenRequestBody() {
+    private Map<String, String> buildTokenRequestBody() {
         Map<String, String> requestBody = new HashMap<>();
-        requestBody.put(TOKEN_REQUEST_KEY, portOneProperties.getApiKey());
-        requestBody.put(TOKEN_REQUEST_SECRET, portOneProperties.getApiSecret());
+        requestBody.put("imp_key", portOneProperties.getApiKey());
+        requestBody.put("imp_secret", portOneProperties.getApiSecret());
 
         return requestBody;
     }

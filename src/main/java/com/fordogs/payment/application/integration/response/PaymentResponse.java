@@ -3,20 +3,21 @@ package com.fordogs.payment.application.integration.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fordogs.order.domain.entity.OrderEntity;
 import com.fordogs.payment.domain.entity.PaymentEntity;
+import com.fordogs.payment.domain.vo.PaymentCancellation;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
-public class PaymentDetailResponse extends PaymentBaseResponse {
+public class PaymentResponse extends PaymentBaseResponse {
 
-    private PaymentResponse response;
+    private PaymentResult response;
 
     @Getter
     @Setter
     @ToString
-    public static class PaymentResponse {
+    public static class PaymentResult {
 
         @JsonProperty("imp_uid")
         private String impUid;
@@ -149,10 +150,39 @@ public class PaymentDetailResponse extends PaymentBaseResponse {
 
         @JsonProperty("customer_uid_usage")
         private String customerUidUsage;
+
+        @JsonProperty("cancel_history")
+        private CancelHistory[] cancelHistory;
+
+        @Getter
+        @Setter
+        @ToString
+        public static class CancelHistory {
+
+            @JsonProperty("cancellation_id")
+            private String cancellationId;
+
+            @JsonProperty("amount")
+            private Integer cancellationAmount;
+
+            @JsonProperty("receipt_url")
+            private String cancellationReceiptUrl;
+
+            @JsonProperty("reason")
+            private String cancellationReason;
+
+            @JsonProperty("cancelled_at")
+            private Integer cancellationAt;
+        }
     }
 
     public PaymentEntity toEntity(OrderEntity order) {
-        PaymentResponse response = this.getResponse();
+        PaymentResult response = this.getResponse();
+        PaymentResult.CancelHistory cancelHistory = null;
+
+        if (response.getCancelHistory() != null && response.getCancelHistory().length > 0) {
+            cancelHistory = response.getCancelHistory()[0];
+        }
 
         return PaymentEntity.builder()
                 .order(order)
@@ -189,6 +219,13 @@ public class PaymentDetailResponse extends PaymentBaseResponse {
                 .paidAt(response.getPaidAt())
                 .failedAt(response.getFailedAt())
                 .failReason(response.getFailReason())
+                .paymentCancellation(cancelHistory != null ? PaymentCancellation.builder()
+                        .cancellationId(cancelHistory.getCancellationId())
+                        .cancellationAmount(cancelHistory.getCancellationAmount())
+                        .cancellationReceiptUrl(cancelHistory.getCancellationReceiptUrl())
+                        .cancellationReason(cancelHistory.getCancellationReason())
+                        .cancellationAt(cancelHistory.getCancellationAt())
+                        .build() : null)
                 .build();
     }
 }

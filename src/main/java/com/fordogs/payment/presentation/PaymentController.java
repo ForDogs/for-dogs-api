@@ -31,7 +31,7 @@ public class PaymentController {
     @PostMapping
     public ResponseEntity<SuccessResponse<PaymentCompleteResponse>> handleSignupUserRequest(
             @Valid @RequestBody PaymentCompleteRequest request) {
-        PaymentCompleteResponse response = paymentService.paymentComplete(request);
+        PaymentCompleteResponse response = paymentService.completePayment(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }

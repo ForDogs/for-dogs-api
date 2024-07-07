@@ -4,6 +4,7 @@ import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.domain.vo.wapper.Price;
 import com.fordogs.order.domain.eums.OrderStatus;
 import com.fordogs.order.error.OrderErrorCode;
+import com.fordogs.payment.domain.entity.PaymentEntity;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,6 +23,9 @@ public class OrderEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private UserManagementEntity buyer;
+
+    @OneToOne(mappedBy = "order")
+    private PaymentEntity payment;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.AWAITING_PAYMENT;

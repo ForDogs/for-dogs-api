@@ -93,4 +93,11 @@ public class ProductEntity extends BaseEntity {
         }
         this.quantity -= quantityToDecrease;
     }
+
+    public void increaseQuantity(int quantityToIncrease) {
+        if (quantityToIncrease <= 0) {
+            throw ProductErrorCode.INVALID_QUANTITY_INCREASE.toException();
+        }
+        this.quantity += quantityToIncrease;
+    }
 }

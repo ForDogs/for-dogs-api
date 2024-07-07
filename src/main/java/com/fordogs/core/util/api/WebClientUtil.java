@@ -36,4 +36,14 @@ public class WebClientUtil {
                 .bodyToMono(responseDtoClass)
                 .block();
     }
+
+    public <T, V> T post(String url, V requestDto, Class<T> responseDtoClass, String headerName, String headerValue) {
+        return webClientConfiguration.webClient().method(HttpMethod.POST)
+                .uri(url)
+                .header(headerName, headerValue)
+                .bodyValue(requestDto)
+                .retrieve()
+                .bodyToMono(responseDtoClass)
+                .block();
+    }
 }

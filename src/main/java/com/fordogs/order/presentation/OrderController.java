@@ -2,8 +2,10 @@ package com.fordogs.order.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
+import com.fordogs.order.application.OrderQueryService;
 import com.fordogs.order.application.OrderService;
 import com.fordogs.order.error.OrderErrorCode;
+import com.fordogs.order.presentation.request.OrderCancelRequest;
 import com.fordogs.order.presentation.request.OrderRegisterRequest;
 import com.fordogs.order.presentation.request.OrderStatusUpdateRequest;
 import com.fordogs.order.presentation.response.OrderRegisterResponse;
@@ -30,6 +32,7 @@ import java.util.UUID;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderQueryService orderQueryService;
 
     @Operation(summary = "주문 등록", operationId = "/orders")
     @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
@@ -41,13 +44,27 @@ public class OrderController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "주문 취소",
+            operationId = "/orders/cancel",
+            description = "주문 ID를 기반으로 특정 주문을 취소 후 취소된 주문의 결제도 함께 취소합니다."
+    )
+    @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
+    @PostMapping("/cancel")
+    public ResponseEntity<SuccessResponse<Object>> handleCancelOrderRequest(
+            @Valid @RequestBody OrderCancelRequest request) {
+        orderService.cancelOrder(request);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @Operation(summary = "주문 내역 검색", operationId = "/orders/buyer")
     @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
     @GetMapping("/buyer")
     public ResponseEntity<SuccessResponse<OrderSearchBuyerResponse[]>> handleSearchBuyerOrdersRequest(
             @Parameter(example = "2024-06-23") @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @Parameter(example = "2024-06-30") @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        OrderSearchBuyerResponse[] response = orderService.searchBuyerOrders(startDate, endDate);
+        OrderSearchBuyerResponse[] response = orderQueryService.searchBuyerOrders(startDate, endDate);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
@@ -58,7 +75,7 @@ public class OrderController {
     public ResponseEntity<SuccessResponse<OrderSearchSellerResponse[]>> handleSearchSellerOrdersRequest(
             @Parameter(example = "2024-06-23") @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @Parameter(example = "2024-06-30") @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        OrderSearchSellerResponse[] response = orderService.searchSellerOrders(startDate, endDate);
+        OrderSearchSellerResponse[] response = orderQueryService.searchSellerOrders(startDate, endDate);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }

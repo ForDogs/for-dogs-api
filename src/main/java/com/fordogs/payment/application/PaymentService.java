@@ -3,12 +3,11 @@ package com.fordogs.payment.application;
 
 import com.fordogs.core.exception.DomainException;
 import com.fordogs.core.exception.error.GlobalErrorCode;
-import com.fordogs.order.application.OrderService;
+import com.fordogs.order.application.OrderQueryService;
 import com.fordogs.order.domain.entity.OrderEntity;
 import com.fordogs.order.domain.eums.OrderStatus;
 import com.fordogs.payment.application.integration.client.PaymentApiClient;
-import com.fordogs.payment.application.integration.response.PaymentDetailResponse;
-import com.fordogs.payment.application.integration.response.PaymentTokenResponse;
+import com.fordogs.payment.application.integration.response.PaymentResponse;
 import com.fordogs.payment.domain.entity.PaymentEntity;
 import com.fordogs.payment.error.PaymentErrorCode;
 import com.fordogs.payment.infrastructure.PaymentRepository;
@@ -21,41 +20,52 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class PaymentService {
 
-    private final OrderService orderService;
+    private final OrderQueryService orderQueryService;
     private final PaymentApiClient paymentApiClient;
+    private final PaymentQueryService paymentQueryService;
     private final PaymentRepository paymentRepository;
 
     @Transactional(noRollbackFor = DomainException.class)
-    public PaymentCompleteResponse paymentComplete(PaymentCompleteRequest request) {
-        PaymentTokenResponse tokenResponse = paymentApiClient.getAccessToken();
-        PaymentDetailResponse paymentDetailResponse = paymentApiClient.getPaymentDetail(request.getImpUid(), tokenResponse.getResponse().getAccessToken());
+    public PaymentCompleteResponse completePayment(PaymentCompleteRequest request) {
+        PaymentResponse paymentResponse = paymentApiClient.getPaymentDetail(request.getImpUid());
 
-        OrderEntity orderEntity = orderService.findOrderById(request.getMerchantUid());
-        validatePaymentAmount(orderEntity, paymentDetailResponse);
+        OrderEntity orderEntity = orderQueryService.findOrderById(request.getMerchantUid());
+        validatePaymentAmount(orderEntity, paymentResponse);
 
-        String paymentStatus = paymentDetailResponse.getResponse().getStatus();
+        String paymentStatus = paymentResponse.getResponse().getStatus();
         if (paymentStatus.equals("paid")) {
-            PaymentEntity savedPaymentEntity = paymentRepository.save(paymentDetailResponse.toEntity(orderEntity));
+            PaymentEntity savedPaymentEntity = paymentRepository.save(paymentResponse.toEntity(orderEntity));
             orderEntity.changeOrderStatus(OrderStatus.PAID);
+
             return PaymentCompleteResponse.toResponse(savedPaymentEntity);
         }
         if (paymentStatus.equals("ready")) {
             orderEntity.changeOrderStatus(OrderStatus.PAYMENT_FAILED);
             throw PaymentErrorCode.VIRTUAL_ACCOUNT_NOT_ALLOWED.toException();
         }
+        if (paymentStatus.equals("cancelled")) {
+            orderEntity.changeOrderStatus(OrderStatus.CANCELLED);
+            throw PaymentErrorCode.PAYMENT_ALREADY_CANCELLED.toException();
+        }
 
-        orderEntity.changeOrderStatus(OrderStatus.PAYMENT_FAILED);
         throw GlobalErrorCode.INTERNAL_SERVER_ERROR.toException();
     }
 
-    private void validatePaymentAmount(OrderEntity orderEntity, PaymentDetailResponse paymentDetailResponse) {
-        if (!Objects.equals(orderEntity.getTotalPrice().getValue(), paymentDetailResponse.getResponse().getAmount())) {
-            orderEntity.changeOrderStatus(OrderStatus.CANCELLED);
-            // TODO: 결제 취소 로직 호출
+    public void cancelPayment(OrderEntity orderEntity, String reason) {
+        PaymentEntity paymentEntity = paymentQueryService.findPaymentById(orderEntity.getPayment().getId());
+        PaymentResponse paymentResponse = paymentApiClient.cancelPayment(paymentEntity.getImpUid(), reason);
+        paymentEntity.updateFromPaymentResponse(paymentResponse);
+    }
+
+    private void validatePaymentAmount(OrderEntity orderEntity, PaymentResponse paymentResponse) {
+        if (!Objects.equals(orderEntity.getTotalPrice().getValue(), paymentResponse.getResponse().getAmount())) {
+            orderEntity.changeOrderStatus(OrderStatus.PAYMENT_FAILED);
+            cancelPayment(orderEntity, OrderStatus.PAYMENT_FAILED.getDescription());
+
             throw PaymentErrorCode.PAYMENT_AMOUNT_MISMATCH.toException();
         }
     }
