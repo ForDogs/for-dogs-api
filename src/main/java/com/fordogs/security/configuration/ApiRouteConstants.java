@@ -32,7 +32,9 @@ public class ApiRouteConstants {
             "/users/refresh",
             "/users/logout",
 
-            "/health/token"
+            "/health/token",
+
+            "/payments/*"
     );
 
     public static final List<String> BUYER_ONLY_ENDPOINTS = List.of(
