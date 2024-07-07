@@ -12,14 +12,14 @@ import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<OrderEntity, UUID> {
 
-    @EntityGraph(attributePaths = {"orderItems", "orderItems.product"})
+    @EntityGraph(attributePaths = {"payment", "orderItems", "orderItems.product"})
     @Query("SELECT o FROM orders o WHERE o.createdAt BETWEEN :startDate AND :endDate AND o.buyer.id = :buyerId")
     List<OrderEntity> findOrdersByCreatedAtBetweenAndBuyerId(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             @Param("buyerId") UUID buyerId);
 
-    @EntityGraph(attributePaths = {"buyer", "orderItems", "orderItems.product"})
+    @EntityGraph(attributePaths = {"buyer", "payment", "orderItems", "orderItems.product"})
     @Query("SELECT o FROM orders o " +
             "JOIN o.orderItems oi " +
             "JOIN oi.product p " +

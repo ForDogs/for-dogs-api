@@ -87,6 +87,11 @@ public class PaymentEntity extends BaseEntity {
 
     private String failReason;
 
+    public void addOrder(OrderEntity order) {
+        this.order = order;
+        order.setOrder(this);
+    }
+
     public void updateFromPaymentResponse(PaymentResponse response) {
         if (response == null || response.getResponse() == null) {
             throw new IllegalArgumentException("PaymentResponse 값이 유효하지 않습니다.");

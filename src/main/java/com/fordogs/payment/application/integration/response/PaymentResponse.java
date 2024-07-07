@@ -184,8 +184,7 @@ public class PaymentResponse extends PaymentBaseResponse {
             cancelHistory = response.getCancelHistory()[0];
         }
 
-        return PaymentEntity.builder()
-                .order(order)
+        PaymentEntity paymentEntity = PaymentEntity.builder()
                 .impUid(response.getImpUid())
                 .payMethod(response.getPayMethod())
                 .channel(response.getChannel())
@@ -227,5 +226,9 @@ public class PaymentResponse extends PaymentBaseResponse {
                         .cancellationAt(cancelHistory.getCancellationAt())
                         .build() : null)
                 .build();
+
+        paymentEntity.addOrder(order);
+
+        return paymentEntity;
     }
 }

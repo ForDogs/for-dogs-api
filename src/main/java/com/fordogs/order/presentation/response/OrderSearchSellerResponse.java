@@ -23,6 +23,9 @@ public class OrderSearchSellerResponse {
     @Schema(description = "주문 ID")
     private String orderId;
 
+    @Schema(description = "결제 ID")
+    private String paymentId;
+
     @Schema(description = "주문 상태")
     private OrderStatus orderStatus;
 
@@ -39,6 +42,7 @@ public class OrderSearchSellerResponse {
         return OrderSearchSellerResponse.builder()
                 .buyerAccount(orderEntity.getBuyer().getAccount().getValue())
                 .orderId(orderEntity.getId().toString())
+                .paymentId(orderEntity.getPayment() != null ? orderEntity.getPayment().getId().toString() : null)
                 .orderStatus(orderEntity.getStatus())
                 .orderTotalPrice(orderEntity.getTotalPrice().getValue())
                 .orderDate(orderEntity.getCreatedAt())

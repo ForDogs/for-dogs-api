@@ -46,6 +46,10 @@ public class OrderEntity extends BaseEntity {
         this.totalPrice = totalPrice;
     }
 
+    public void setOrder(PaymentEntity payment) {
+        this.payment = payment;
+    }
+
     public void addOrderItems(List<OrderItemEntity> orderItemEntities) {
         for (OrderItemEntity orderItemEntity : orderItemEntities) {
             orderItems.add(orderItemEntity);
