@@ -32,9 +32,9 @@ public class UserController {
 
     private final UserManagementService userManagementService;
 
-    @Operation(summary = "회원 가입", operationId = "/users/signup")
+    @Operation(summary = "회원 가입", operationId = "/users")
     @ApiErrorCode(UserManagementErrorCode.class)
-    @PostMapping("/signup")
+    @PostMapping
     public ResponseEntity<SuccessResponse<UserSignupResponse>> handleSignupUserRequest(
             @Valid @RequestBody UserSignupRequest request) {
         UserSignupResponse response = userManagementService.signupUser(request);
@@ -86,18 +86,18 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "회원 탈퇴", operationId = "/users/deactivate")
+    @Operation(summary = "회원 탈퇴", operationId = "/users/profile")
     @ApiErrorCode({UserManagementErrorCode.class, SecurityErrorCode.class})
-    @DeleteMapping("/deactivate")
+    @DeleteMapping("/profile")
     public ResponseEntity<SuccessResponse<Object>> handleDeactivateUserRequest() {
         userManagementService.deactivateUser();
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Operation(summary = "회원 정보 조회", operationId = "/users/details")
+    @Operation(summary = "회원 정보 조회", operationId = "/users/profile")
     @ApiErrorCode({UserManagementErrorCode.class, SecurityErrorCode.class})
-    @GetMapping("/details")
+    @GetMapping("/profile")
     public ResponseEntity<SuccessResponse<UserDetailsResponse>> handleFindUserDetailsRequest() {
         UserDetailsResponse response = userManagementService.findUserDetails();
 

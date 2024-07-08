@@ -36,9 +36,9 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @Operation(summary = "상품 등록", operationId = "/products/register")
+    @Operation(summary = "상품 등록", operationId = "/products")
     @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<SuccessResponse<ProductRegisterResponse>> handleCreateProductRequest(
             @Valid @RequestBody ProductRegisterRequest request) {
         ProductRegisterResponse response = productService.createProduct(request);
@@ -46,9 +46,9 @@ public class ProductController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "상품 전체 검색 및 필터링", operationId = "/products/search")
+    @Operation(summary = "상품 전체 조회 및 필터링", operationId = "/products")
     @ApiErrorCode(ProductErrorCode.class)
-    @GetMapping("/search")
+    @GetMapping
     public ResponseEntity<SuccessResponse<Page<ProductSearchResponse>>> handleSearchProductsRequest(
             @Parameter(name = "seller", description = "판매자 ID", example = "hong1234") @RequestParam(required = false, value = "seller") String sellerId,
             @Parameter(name = "category", description = "상품 카테고리") @RequestParam(required = false, value = "category") Category category,
@@ -58,9 +58,9 @@ public class ProductController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 
-    @Operation(summary = "상품 상세 검색", operationId = "/products/{productId}/details")
+    @Operation(summary = "상품 상세 조회", operationId = "/products/{productId}")
     @ApiErrorCode(ProductErrorCode.class)
-    @GetMapping("/{productId}/details")
+    @GetMapping("/{productId}")
     public ResponseEntity<SuccessResponse<ProductDetailsResponse>> handleFindProductDetailsRequest(
             @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") UUID productId) {
         ProductDetailsResponse response = productService.findProductDetails(productId);
@@ -68,9 +68,9 @@ public class ProductController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 
-    @Operation(summary = "상품 수정", operationId = "/products/{productId}/update")
+    @Operation(summary = "상품 수정", operationId = "/products/{productId}")
     @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
-    @PatchMapping("/{productId}/update")
+    @PatchMapping("/{productId}")
     public ResponseEntity<SuccessResponse<ProductUpdateResponse>> handleUpdateProductRequest(
             @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") UUID productId,
             @RequestBody @Valid ProductUpdateRequest request) {
@@ -79,9 +79,9 @@ public class ProductController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 
-    @Operation(summary = "상품 비활성화", operationId = "/products/{productId}/deactivate")
+    @Operation(summary = "상품 비활성화", operationId = "/products/{productId}")
     @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
-    @DeleteMapping("/{productId}/deactivate")
+    @DeleteMapping("/{productId}")
     public ResponseEntity<SuccessResponse<Object>> handleDeactivateProductRequest(
             @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") UUID productId) {
         productService.deactivateProduct(productId);
@@ -89,9 +89,9 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Operation(summary = "상품 이미지 파일 업로드", operationId = "/products/images/upload", description = "업로드 가능 이미지 확장자: jpg, jpeg, png, gif")
+    @Operation(summary = "상품 이미지 파일 업로드", operationId = "/products/images", description = "업로드 가능 이미지 확장자: jpg, jpeg, png, gif")
     @ApiErrorCode({S3ErrorCode.class, SecurityErrorCode.class})
-    @PostMapping(value = "/images/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SuccessResponse<ProductImageUploadResponse>> handleUploadProductImagesRequest(
             @RequestPart(value = "imageFiles") MultipartFile[] imageFiles) {
         ProductImageUploadResponse response = productService.uploadProductImages(imageFiles);

@@ -52,13 +52,13 @@ public class OrderService {
         orderEntity.changeOrderStatus(request.getOrderStatus());
     }
 
-    public void cancelOrder(OrderCancelRequest request) {
-        OrderEntity orderEntity = orderQueryService.findOrderById(request.getOrderId());
+    public void cancelOrder(UUID orderId, OrderCancelRequest request) {
+        OrderEntity orderEntity = orderQueryService.findOrderById(orderId);
         orderEntity.changeOrderStatus(OrderStatus.CANCELLED);
 
         paymentService.cancelPayment(orderEntity, request.getCancelReason());
 
-        List<OrderItemEntity> orderItems = orderItemQueryService.getOrderItemsWithProductsByOrderId(request.getOrderId());
+        List<OrderItemEntity> orderItems = orderItemQueryService.getOrderItemsWithProductsByOrderId(orderId);
         orderItems.forEach(orderItem ->
                 orderItem.getProduct().increaseQuantity(orderItem.getQuantity()));
     }

@@ -14,6 +14,7 @@ import com.fordogs.order.presentation.response.OrderSearchSellerResponse;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,38 +47,17 @@ public class OrderController {
 
     @Operation(
             summary = "주문 취소",
-            operationId = "/orders/cancel",
+            operationId = "/orders/{orderId}/cancel",
             description = "주문 ID를 기반으로 특정 주문을 취소 후 취소된 주문의 결제도 함께 취소합니다."
     )
     @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
-    @PostMapping("/cancel")
+    @PostMapping("/{orderId}/cancel")
     public ResponseEntity<SuccessResponse<Object>> handleCancelOrderRequest(
+            @Schema(name = "orderId", description = "주문 ID", example = "11ef3c60-149c-2901-9ff0-7decf5c16a75") @PathVariable("orderId") UUID orderId,
             @Valid @RequestBody OrderCancelRequest request) {
-        orderService.cancelOrder(request);
+        orderService.cancelOrder(orderId, request);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @Operation(summary = "주문 내역 검색", operationId = "/orders/buyer")
-    @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
-    @GetMapping("/buyer")
-    public ResponseEntity<SuccessResponse<OrderSearchBuyerResponse[]>> handleSearchBuyerOrdersRequest(
-            @Parameter(example = "2024-06-23") @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @Parameter(example = "2024-06-30") @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        OrderSearchBuyerResponse[] response = orderQueryService.searchBuyerOrders(startDate, endDate);
-
-        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
-    }
-
-    @Operation(summary = "판매 내역 검색", operationId = "/orders/seller")
-    @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
-    @GetMapping("/seller")
-    public ResponseEntity<SuccessResponse<OrderSearchSellerResponse[]>> handleSearchSellerOrdersRequest(
-            @Parameter(example = "2024-06-23") @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @Parameter(example = "2024-06-30") @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        OrderSearchSellerResponse[] response = orderQueryService.searchSellerOrders(startDate, endDate);
-
-        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 
     @Operation(
@@ -88,10 +68,32 @@ public class OrderController {
     @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
     @PatchMapping("/{orderId}/status")
     public ResponseEntity<SuccessResponse<Object>> handleOrderStatusUpdateRequest(
-            @PathVariable("orderId") UUID orderId,
+            @Schema(name = "orderId", description = "주문 ID", example = "11ef3c60-149c-2901-9ff0-7decf5c16a75") @PathVariable("orderId") UUID orderId,
             @Valid @RequestBody OrderStatusUpdateRequest request) {
         orderService.orderStatusUpdate(orderId, request);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Operation(summary = "주문 내역 조회", operationId = "/orders/buyer")
+    @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
+    @GetMapping("/buyer")
+    public ResponseEntity<SuccessResponse<OrderSearchBuyerResponse[]>> handleSearchBuyerOrdersRequest(
+            @Parameter(example = "2024-06-23") @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(example = "2024-06-30") @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        OrderSearchBuyerResponse[] response = orderQueryService.searchBuyerOrders(startDate, endDate);
+
+        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "판매 내역 조회", operationId = "/orders/seller")
+    @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
+    @GetMapping("/seller")
+    public ResponseEntity<SuccessResponse<OrderSearchSellerResponse[]>> handleSearchSellerOrdersRequest(
+            @Parameter(example = "2024-06-23") @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(example = "2024-06-30") @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        OrderSearchSellerResponse[] response = orderQueryService.searchSellerOrders(startDate, endDate);
+
+        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 }

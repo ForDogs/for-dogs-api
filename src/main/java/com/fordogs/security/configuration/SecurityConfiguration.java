@@ -39,20 +39,25 @@ public class SecurityConfiguration {
         );
 
         http.authorizeHttpRequests(authorizeRequest -> {
-            ApiRouteConstants.PUBLIC_ENDPOINTS.forEach(path ->
-                    authorizeRequest.requestMatchers(path).permitAll()
+            ApiRouteConstants.PUBLIC_ENDPOINTS.forEach((path, method) ->
+                    authorizeRequest.requestMatchers(method, path).permitAll()
             );
 
-            ApiRouteConstants.MEMBER_ONLY_ENDPOINTS.forEach(path ->
-                    authorizeRequest.requestMatchers(path).authenticated()
+            ApiRouteConstants.MEMBER_ONLY_ENDPOINTS.forEach((path, methods) ->
+                    methods.forEach(method ->
+                            authorizeRequest.requestMatchers(method, path).authenticated()
+                    )
             );
 
-            ApiRouteConstants.BUYER_ONLY_ENDPOINTS.forEach((path) ->
-                    authorizeRequest.requestMatchers(path).hasAuthority(ApiRouteConstants.ROLE_BUYER)
+            ApiRouteConstants.BUYER_ONLY_ENDPOINTS.forEach((path, method) ->
+                    authorizeRequest.requestMatchers(method, path).hasAuthority(ApiRouteConstants.ROLE_BUYER)
             );
 
-            ApiRouteConstants.SELLER_ONLY_ENDPOINTS.forEach((path) ->
-                    authorizeRequest.requestMatchers(path).hasAuthority(ApiRouteConstants.ROLE_SELLER)
+            ApiRouteConstants.SELLER_ONLY_ENDPOINTS.forEach((path, methods) ->
+                    methods.forEach(method ->
+                            authorizeRequest.requestMatchers(method, path).hasAuthority(ApiRouteConstants.ROLE_SELLER)
+                    )
+
             );
 
             authorizeRequest.anyRequest().authenticated();

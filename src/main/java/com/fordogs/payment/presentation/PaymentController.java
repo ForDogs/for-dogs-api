@@ -29,7 +29,7 @@ public class PaymentController {
     private final PaymentQueryService paymentQueryService;
     private final PaymentService paymentService;
 
-    @Operation(summary = "결제 저장", operationId = "/payments")
+    @Operation(summary = "결제 등록", operationId = "/payments")
     @ApiErrorCode({PaymentErrorCode.class, SecurityErrorCode.class})
     @PostMapping
     public ResponseEntity<SuccessResponse<PaymentCompleteResponse>> handleCompletePaymentRequest(
