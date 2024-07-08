@@ -1,6 +1,7 @@
 package com.fordogs.user.application;
 
 import com.fordogs.core.util.cookie.CookieUtil;
+import com.fordogs.core.util.crypto.PasswordHasherUtil;
 import com.fordogs.core.util.http.HttpServletUtil;
 import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.security.util.JwtUtil;
@@ -50,9 +51,15 @@ public class UserManagementService {
     public UserLoginResponse performLogin(UserLoginRequest request) {
         UserManagementEntity userManagementEntity = findByAccount(Account.builder().value(request.getUserId()).build());
 
-        userManagementEntity.validateRole(request.getUserRole());
-        userManagementEntity.validatePassword(request.getUserPassword());
-        userManagementEntity.validateIfEnabled();
+        if (!userManagementEntity.getRole().equals(request.getUserRole())) {
+            throw UserManagementErrorCode.USER_ROLE_MISMATCH.toException();
+        }
+        if (!PasswordHasherUtil.matches(request.getUserPassword(), userManagementEntity.getPassword().getValue())) {
+            throw UserManagementErrorCode.LOGIN_PASSWORD_FAILED.toException();
+        }
+        if (!userManagementEntity.isEnabled()) {
+            throw UserManagementErrorCode.USER_DISABLED.toException();
+        }
 
         UUIDToken uuidToken = UUIDToken.generate();
         AccessToken accessToken = jwtUtil.generateAccessToken(userManagementEntity, uuidToken.toEncryptedString());
@@ -69,21 +76,13 @@ public class UserManagementService {
         removeTokensFromResponseHeaders();
     }
 
-    private void addTokensToResponseHeaders(RefreshToken refreshToken, UUIDToken uuidToken) {
-        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createRefreshTokenCookie(refreshToken));
-        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createUUIDTokenCookie(uuidToken, refreshToken.getExpirationTime()));
-    }
-
-    private void removeTokensFromResponseHeaders() {
-        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createExpiredCookie(CookieConstants.COOKIE_NAME_REFRESH_TOKEN));
-        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createExpiredCookie(CookieConstants.COOKIE_NAME_UUID_TOKEN));
-    }
-
     @Transactional
     public UserRefreshResponse renewAccessToken(String accessToken, String refreshToken, String uuidToken) {
         RefreshTokenCache tokenCache = refreshTokenService.getRefreshToken(refreshToken, accessToken);
         UserManagementEntity userManagementEntity = findByAccount(Account.builder().value(tokenCache.getUserAccount()).build());
-        userManagementEntity.validateIfEnabled();
+        if (!userManagementEntity.isEnabled()) {
+            throw UserManagementErrorCode.USER_DISABLED.toException();
+        }
 
         AccessToken newAccessToken = jwtUtil.generateAccessToken(userManagementEntity, UUIDToken.from(uuidToken).toEncryptedString());
 
@@ -112,5 +111,15 @@ public class UserManagementService {
     public UserManagementEntity findByAccount(Account account) {
         return userManagementRepository.findByAccount(account)
                 .orElseThrow(UserManagementErrorCode.USER_NOT_FOUND::toException);
+    }
+
+    private void addTokensToResponseHeaders(RefreshToken refreshToken, UUIDToken uuidToken) {
+        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createRefreshTokenCookie(refreshToken));
+        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createUUIDTokenCookie(uuidToken, refreshToken.getExpirationTime()));
+    }
+
+    private void removeTokensFromResponseHeaders() {
+        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createExpiredCookie(CookieConstants.COOKIE_NAME_REFRESH_TOKEN));
+        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createExpiredCookie(CookieConstants.COOKIE_NAME_UUID_TOKEN));
     }
 }

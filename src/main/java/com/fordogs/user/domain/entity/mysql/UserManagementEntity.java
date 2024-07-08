@@ -4,11 +4,10 @@ import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.util.crypto.PasswordHasherUtil;
 import com.fordogs.user.domain.enums.Role;
 import com.fordogs.user.domain.vo.Email;
-import com.fordogs.user.domain.vo.wrapper.EncryptedPassword;
 import com.fordogs.user.domain.vo.wrapper.Account;
+import com.fordogs.user.domain.vo.wrapper.EncryptedPassword;
 import com.fordogs.user.domain.vo.wrapper.Name;
 import com.fordogs.user.domain.vo.wrapper.Password;
-import com.fordogs.user.error.UserManagementErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -55,24 +54,6 @@ public class UserManagementEntity extends BaseEntity {
                 .build();
         this.role = role != null ? role : Role.BUYER;
         this.enabled = true;
-    }
-
-    public void validateRole(Role role) {
-        if (!this.role.equals(role)) {
-            throw UserManagementErrorCode.USER_ROLE_MISMATCH.toException();
-        }
-    }
-
-    public void validatePassword(String requestPassword) {
-        if (!PasswordHasherUtil.matches(requestPassword, this.password.getValue())) {
-            throw UserManagementErrorCode.LOGIN_PASSWORD_FAILED.toException();
-        }
-    }
-
-    public void validateIfEnabled() {
-        if (!this.enabled) {
-            throw UserManagementErrorCode.USER_DISABLED.toException();
-        }
     }
 
     public void disable() {
