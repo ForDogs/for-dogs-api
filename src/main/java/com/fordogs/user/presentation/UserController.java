@@ -2,7 +2,8 @@ package com.fordogs.user.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
-import com.fordogs.core.util.http.HttpTokenExtractor;
+import com.fordogs.core.util.TokenExtractor;
+import com.fordogs.core.util.constants.AuthConstants;
 import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.user.application.UserManagementService;
@@ -19,7 +20,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -78,10 +78,10 @@ public class UserController {
     @ApiErrorCode({RefreshTokenErrorCode.class, SecurityErrorCode.class})
     @PostMapping("/refresh")
     public ResponseEntity<SuccessResponse<UserRefreshResponse>> handleRenewAccessTokenRequest(
-            @RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerTokenHeader,
+            @RequestHeader(value = AuthConstants.AUTHORIZATION_HEADER) String bearerTokenHeader,
             @CookieValue(value = CookieConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken,
             @CookieValue(value = CookieConstants.COOKIE_NAME_UUID_TOKEN) String uuidToken) {
-        UserRefreshResponse response = userManagementService.renewAccessToken(HttpTokenExtractor.extractAccessToken(bearerTokenHeader), refreshToken, uuidToken);
+        UserRefreshResponse response = userManagementService.renewAccessToken(TokenExtractor.extractAccessToken(bearerTokenHeader), refreshToken, uuidToken);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }

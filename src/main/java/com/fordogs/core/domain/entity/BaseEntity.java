@@ -1,6 +1,6 @@
 package com.fordogs.core.domain.entity;
 
-import com.fordogs.core.util.generator.UUIDGenerator;
+import com.fordogs.core.util.UUIDGenerator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

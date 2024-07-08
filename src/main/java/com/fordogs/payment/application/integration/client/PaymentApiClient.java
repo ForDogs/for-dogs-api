@@ -2,12 +2,10 @@ package com.fordogs.payment.application.integration.client;
 
 import com.fordogs.configuraion.properties.PortOneProperties;
 import com.fordogs.core.exception.error.GlobalErrorCode;
-import com.fordogs.core.util.constants.PortOneApiConstants;
+import com.fordogs.core.util.api.WebClientUtil;
 import com.fordogs.payment.application.integration.response.PaymentResponse;
 import com.fordogs.payment.application.integration.response.PaymentTokenResponse;
-import com.fordogs.core.util.api.WebClientUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -27,7 +25,7 @@ public class PaymentApiClient {
         return webClientUtil.get(
                 url,
                 PaymentResponse.class,
-                HttpHeaders.AUTHORIZATION, "Bearer " + accessToken
+                headers -> headers.setBearerAuth(accessToken)
         );
     }
 
@@ -40,7 +38,7 @@ public class PaymentApiClient {
                 url,
                 requestBody,
                 PaymentResponse.class,
-                HttpHeaders.AUTHORIZATION, "Bearer " + accessToken
+                headers -> headers.setBearerAuth(accessToken)
         );
     }
 

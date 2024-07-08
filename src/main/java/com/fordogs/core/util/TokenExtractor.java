@@ -1,20 +1,18 @@
-package com.fordogs.core.util.http;
+package com.fordogs.core.util;
 
+import com.fordogs.core.util.constants.AuthConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class HttpTokenExtractor {
-
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String BEARER_TOKEN_PREFIX = "Bearer ";
+public class TokenExtractor {
 
     public static String extractAccessToken(HttpServletRequest request) {
         try {
-            String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-            if (bearerToken != null && bearerToken.startsWith(BEARER_TOKEN_PREFIX)) {
-                return bearerToken.substring(BEARER_TOKEN_PREFIX.length());
+            String bearerToken = request.getHeader(AuthConstants.AUTHORIZATION_HEADER);
+            if (bearerToken != null && bearerToken.startsWith(AuthConstants.BEARER_TOKEN_PREFIX)) {
+                return bearerToken.substring(AuthConstants.BEARER_TOKEN_PREFIX.length());
             }
             return null;
         } catch (Exception e) {
@@ -24,8 +22,8 @@ public class HttpTokenExtractor {
 
     public static String extractAccessToken(String bearerToken) {
         try {
-            if (bearerToken != null && bearerToken.startsWith(BEARER_TOKEN_PREFIX)) {
-                return bearerToken.substring(BEARER_TOKEN_PREFIX.length());
+            if (bearerToken != null && bearerToken.startsWith(AuthConstants.BEARER_TOKEN_PREFIX)) {
+                return bearerToken.substring(AuthConstants.BEARER_TOKEN_PREFIX.length());
             }
             return null;
         } catch (Exception e) {

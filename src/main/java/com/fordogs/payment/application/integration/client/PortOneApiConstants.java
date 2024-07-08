@@ -1,4 +1,4 @@
-package com.fordogs.core.util.constants;
+package com.fordogs.payment.application.integration.client;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

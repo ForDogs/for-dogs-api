@@ -21,4 +21,8 @@ public class SecurityAuthenticationException extends AuthenticationException {
     public SecurityAuthenticationException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public static String getExceptionName() {
+        return SecurityAuthenticationException.class.getSimpleName();
+    }
 }

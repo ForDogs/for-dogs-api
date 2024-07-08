@@ -1,4 +1,4 @@
-package com.fordogs.core.util.http;
+package com.fordogs.core.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

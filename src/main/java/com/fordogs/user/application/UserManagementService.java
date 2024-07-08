@@ -1,8 +1,8 @@
 package com.fordogs.user.application;
 
-import com.fordogs.core.util.cookie.CookieUtil;
+import com.fordogs.core.util.CookieUtil;
 import com.fordogs.core.util.crypto.PasswordHasherUtil;
-import com.fordogs.core.util.http.HttpServletUtil;
+import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.security.util.JwtUtil;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;

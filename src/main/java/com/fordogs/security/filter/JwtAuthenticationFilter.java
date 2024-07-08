@@ -1,9 +1,8 @@
 package com.fordogs.security.filter;
 
-import com.fordogs.core.util.cookie.CookieUtil;
-import com.fordogs.core.util.http.HttpTokenExtractor;
+import com.fordogs.core.util.CookieUtil;
+import com.fordogs.core.util.TokenExtractor;
 import com.fordogs.core.util.constants.CookieConstants;
-import com.fordogs.core.util.constants.RequestAttributeConstants;
 import com.fordogs.security.exception.SecurityAuthenticationException;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.security.util.JwtUtil;
@@ -26,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String accessToken = HttpTokenExtractor.extractAccessToken(request);
+            String accessToken = TokenExtractor.extractAccessToken(request);
             if (accessToken == null || SecurityContextHolder.getContext().getAuthentication() != null) {
                 filterChain.doFilter(request, response);
                 return;
@@ -51,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (SecurityAuthenticationException e) {
             SecurityContextHolder.clearContext();
-            request.setAttribute(RequestAttributeConstants.REQUEST_ATTRIBUTE_SECURITY_AUTH_EXCEPTION, e);
+            request.setAttribute(SecurityAuthenticationException.getExceptionName(), e);
         }
 
         filterChain.doFilter(request, response);

@@ -1,4 +1,4 @@
-package com.fordogs.core.util.generator;
+package com.fordogs.core.util;
 
 import com.fasterxml.uuid.Generators;
 import lombok.AccessLevel;

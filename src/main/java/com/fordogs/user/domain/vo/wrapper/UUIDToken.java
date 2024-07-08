@@ -2,7 +2,7 @@ package com.fordogs.user.domain.vo.wrapper;
 
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
 import com.fordogs.core.util.crypto.EncryptionUtil;
-import com.fordogs.core.util.generator.UUIDGenerator;
+import com.fordogs.core.util.UUIDGenerator;
 import com.fordogs.core.util.validator.StringValidator;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
