@@ -59,7 +59,7 @@ public class UserController {
     @Operation(
             summary = "로그아웃",
             operationId = "/users/logout",
-            description = "해당 API는 Swagger UI에서 테스트할 수 없습니다."
+            description = "로그아웃 시 클라이언트의 쿠키에 저장되어 있던 UUID 토큰과 Refresh 토큰이 만료되며, 서버에 저장된 해당 Refresh 토큰도 삭제됩니다."
     )
     @ApiErrorCode({RefreshTokenErrorCode.class, SecurityErrorCode.class})
     @PostMapping("/logout")
@@ -73,14 +73,14 @@ public class UserController {
     @Operation(
             summary = "액세스 토큰 재발급",
             operationId = "/users/refresh",
-            description = "해당 API는 Swagger UI에서 테스트할 수 없습니다."
+            description = "액세스 토큰이 만료되기 전에 호출하여 리프레쉬 토큰을 통해 새로운 액세스 토큰을 재발급받을 수 있습니다."
     )
     @ApiErrorCode({RefreshTokenErrorCode.class, SecurityErrorCode.class})
     @PostMapping("/refresh")
     public ResponseEntity<SuccessResponse<UserRefreshResponse>> handleRenewAccessTokenRequest(
-            @RequestHeader(value = AuthConstants.AUTHORIZATION_HEADER) String bearerTokenHeader,
-            @CookieValue(value = CookieConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken,
-            @CookieValue(value = CookieConstants.COOKIE_NAME_UUID_TOKEN) String uuidToken) {
+            @Parameter(hidden = true) @RequestHeader(value = AuthConstants.AUTHORIZATION_HEADER) String bearerTokenHeader,
+            @Parameter(hidden = true) @CookieValue(value = CookieConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken,
+            @Parameter(hidden = true) @CookieValue(value = CookieConstants.COOKIE_NAME_UUID_TOKEN) String uuidToken) {
         UserRefreshResponse response = userManagementService.renewAccessToken(TokenExtractor.extractAccessToken(bearerTokenHeader), refreshToken, uuidToken);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
