@@ -38,7 +38,7 @@ public class CookieUtil {
                 .domain(serviceDomain)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Strict")
+                .sameSite("None")
                 .maxAge(maxAge)
                 .build()
                 .toString();
@@ -50,7 +50,7 @@ public class CookieUtil {
                 .domain(serviceDomain)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Strict")
+                .sameSite("None")
                 .maxAge(0)
                 .build()
                 .toString();
