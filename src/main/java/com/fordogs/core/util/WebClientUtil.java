@@ -1,4 +1,4 @@
-package com.fordogs.core.util.api;
+package com.fordogs.core.util;
 
 import com.fordogs.configuraion.WebClientConfiguration;
 import lombok.RequiredArgsConstructor;

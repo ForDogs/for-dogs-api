@@ -1,7 +1,7 @@
 package com.fordogs.security.util;
 
 import com.fordogs.configuraion.properties.TokenProperties;
-import com.fordogs.core.util.constants.TokenClaimConstants;
+import com.fordogs.core.util.constants.TokenConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.security.authentication.JwtAuthentication;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
@@ -63,8 +63,8 @@ public class JwtUtil {
 
         return JwtAuthentication.builder()
                 .account(claims.getSubject())
-                .id(claims.get(TokenClaimConstants.USER_ID, String.class))
-                .role(claims.get(TokenClaimConstants.ROLE, String.class))
+                .id(claims.get(TokenConstants.USER_ID_CLAIM, String.class))
+                .role(claims.get(TokenConstants.ROLE_CLAIM, String.class))
                 .build();
     }
 
@@ -101,7 +101,7 @@ public class JwtUtil {
 
     public boolean validateUUIDToken(String accessToken, String providedUUIDToken) {
         Claims claims = extractAllClaims(accessToken);
-        String extractedUUIDToken = claims.get(TokenClaimConstants.UUID_TOKEN, String.class);
+        String extractedUUIDToken = claims.get(TokenConstants.UUID_TOKEN_CLAIM, String.class);
         String decryptedUUIDToken = UUIDToken.decryptToken(extractedUUIDToken);
         if (!decryptedUUIDToken.equals(providedUUIDToken)) {
             throw SecurityErrorCode.UUID_TOKEN_VALIDATION_FAILED.toException();

@@ -1,7 +1,7 @@
 package com.fordogs.user.domain.vo.wrapper;
 
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
-import com.fordogs.core.util.constants.TokenClaimConstants;
+import com.fordogs.core.util.constants.TokenConstants;
 import com.fordogs.core.util.validator.StringValidator;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import io.jsonwebtoken.Jwts;
@@ -49,9 +49,9 @@ public class AccessToken extends ValueWrapperObject<String> {
         Date expirationDate = DateUtils.addMinutes(now, expirationHours);
         String jwt = Jwts.builder()
                 .setSubject(account)
-                .claim(TokenClaimConstants.USER_ID, userId)
-                .claim(TokenClaimConstants.ROLE, role)
-                .claim(TokenClaimConstants.UUID_TOKEN, encryptedUUIDToken)
+                .claim(TokenConstants.USER_ID_CLAIM, userId)
+                .claim(TokenConstants.ROLE_CLAIM, role)
+                .claim(TokenConstants.UUID_TOKEN_CLAIM, encryptedUUIDToken)
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
                 .signWith(secretKey)

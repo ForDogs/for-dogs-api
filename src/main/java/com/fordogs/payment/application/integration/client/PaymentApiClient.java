@@ -2,7 +2,7 @@ package com.fordogs.payment.application.integration.client;
 
 import com.fordogs.configuraion.properties.PortOneProperties;
 import com.fordogs.core.exception.error.GlobalErrorCode;
-import com.fordogs.core.util.api.WebClientUtil;
+import com.fordogs.core.util.WebClientUtil;
 import com.fordogs.payment.application.integration.response.PaymentResponse;
 import com.fordogs.payment.application.integration.response.PaymentTokenResponse;
 import lombok.RequiredArgsConstructor;

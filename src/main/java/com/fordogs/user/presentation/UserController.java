@@ -3,8 +3,8 @@ package com.fordogs.user.presentation;
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.TokenExtractor;
-import com.fordogs.core.util.constants.AuthConstants;
 import com.fordogs.core.util.constants.CookieConstants;
+import com.fordogs.core.util.constants.HeaderConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.user.application.UserManagementService;
 import com.fordogs.user.error.RefreshTokenErrorCode;
@@ -78,7 +78,7 @@ public class UserController {
     @ApiErrorCode({RefreshTokenErrorCode.class, SecurityErrorCode.class})
     @PostMapping("/refresh")
     public ResponseEntity<SuccessResponse<UserRefreshResponse>> handleRenewAccessTokenRequest(
-            @Parameter(hidden = true) @RequestHeader(value = AuthConstants.AUTHORIZATION_HEADER) String bearerTokenHeader,
+            @Parameter(hidden = true) @RequestHeader(value = HeaderConstants.AUTHORIZATION_HEADER) String bearerTokenHeader,
             @Parameter(hidden = true) @CookieValue(value = CookieConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken,
             @Parameter(hidden = true) @CookieValue(value = CookieConstants.COOKIE_NAME_UUID_TOKEN) String uuidToken) {
         UserRefreshResponse response = userManagementService.renewAccessToken(TokenExtractor.extractAccessToken(bearerTokenHeader), refreshToken, uuidToken);
