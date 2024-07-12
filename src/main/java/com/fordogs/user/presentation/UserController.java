@@ -5,6 +5,7 @@ import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.core.util.TokenExtractor;
 import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.core.util.constants.HeaderConstants;
+import com.fordogs.core.util.logging.ApiLogging;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.user.application.UserManagementService;
 import com.fordogs.user.error.RefreshTokenErrorCode;
@@ -47,6 +48,7 @@ public class UserController {
             operationId = "/users/login",
             description = "로그인 시 RefreshToken과 UUIDToken은 Set-Cookie 헤더를 통해 응답으로 전달됩니다."
     )
+    @ApiLogging
     @ApiErrorCode(UserManagementErrorCode.class)
     @PostMapping("/login")
     public ResponseEntity<SuccessResponse<UserLoginResponse>> handlePerformLoginRequest(
@@ -61,6 +63,7 @@ public class UserController {
             operationId = "/users/logout",
             description = "로그아웃 시 클라이언트의 쿠키에 저장되어 있던 UUID 토큰과 Refresh 토큰이 만료되며, 서버에 저장된 해당 Refresh 토큰도 삭제됩니다."
     )
+    @ApiLogging
     @ApiErrorCode({RefreshTokenErrorCode.class, SecurityErrorCode.class})
     @PostMapping("/logout")
     public ResponseEntity<SuccessResponse<UserLoginResponse>> handlePerformLogoutRequest(

@@ -9,11 +9,13 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "cloud.aws")
-public class S3Properties {
+public class AWSProperties {
 
     private String region;
     private Credentials credentials;
     private S3 s3;
+    private Dynamodb dynamodb;
+
 
     @Getter
     @Setter
@@ -26,5 +28,11 @@ public class S3Properties {
     @Setter
     public static class S3 {
         private String bucketName;
+    }
+
+    @Getter
+    @Setter
+    public static class Dynamodb {
+        private String endpoint;
     }
 }

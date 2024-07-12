@@ -10,6 +10,7 @@ services:
     depends_on:
       - mysql
       - redis
+      - dynamodb
     ports:
       - "80:80"
       - "443:443"
@@ -17,6 +18,9 @@ services:
       - ./docker/server/dumps:/dumps
       - ./src/main/resources/ssl:/app/ssl
     environment:
+      AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
+      AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+      REGION: 'ap-northeast-2'
       GRADLE_OPTS: "-Xmx1g"
       TZ: Asia/Seoul
 
@@ -48,3 +52,13 @@ services:
       - ./docker/redis/data:/data
     ports:
       - '6379:6379'
+
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    container_name: for_dog_dynamodb
+    ports:
+      - '8000:8000'
+    volumes:
+      - './docker/dynamodb/data:/home/dynamodblocal/data"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    working_dir: /home/dynamodblocal

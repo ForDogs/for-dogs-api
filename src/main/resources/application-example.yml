@@ -25,7 +25,7 @@ token:
   access-token-expiration-minutes:
   refresh-token-expiration-days:
 
-# Image Upload S3
+# AWS
 cloud:
   aws:
     region:
@@ -34,6 +34,10 @@ cloud:
       secretKey:
     s3:
       bucketName:
+
+# application-local.yml
+    dynamodb:
+      endpoint:
 
 # PortOne
 port-one:

@@ -1,6 +1,6 @@
 package com.fordogs.configuraion;
 
-import com.fordogs.configuraion.properties.S3Properties;
+import com.fordogs.configuraion.properties.AWSProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,14 +14,14 @@ import software.amazon.awssdk.services.s3.S3Client;
 @RequiredArgsConstructor
 public class S3Configuration {
 
-    private final S3Properties s3Properties;
+    private final AWSProperties awsProperties;
 
     @Bean
     public S3Client createS3Client() {
-        AwsCredentials credentials = AwsBasicCredentials.create(s3Properties.getCredentials().getAccessKey(), s3Properties.getCredentials().getSecretKey());
+        AwsCredentials credentials = AwsBasicCredentials.create(awsProperties.getCredentials().getAccessKey(), awsProperties.getCredentials().getSecretKey());
 
         return S3Client.builder()
-                .region(Region.of(s3Properties.getRegion()))
+                .region(Region.of(awsProperties.getRegion()))
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .build();
     }

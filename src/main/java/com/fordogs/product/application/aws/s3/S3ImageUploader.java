@@ -1,6 +1,6 @@
 package com.fordogs.product.application.aws.s3;
 
-import com.fordogs.configuraion.properties.S3Properties;
+import com.fordogs.configuraion.properties.AWSProperties;
 import com.fordogs.product.error.S3ErrorCode;
 import com.fordogs.product.application.aws.s3.response.ImageUploadInfo;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class S3ImageUploader {
 
     private static final List<String> ALLOWED_FILE_EXTENSIONS = List.of("jpg", "jpeg", "png", "gif");
 
-    private final S3Properties s3Properties;
+    private final AWSProperties AWSProperties;
     private final S3Client s3Client;
 
     public ImageUploadInfo uploadImage(MultipartFile imageFile) {
@@ -38,7 +38,7 @@ public class S3ImageUploader {
 
         try {
             PutObjectRequest putRequest = PutObjectRequest.builder()
-                    .bucket(s3Properties.getS3().getBucketName())
+                    .bucket(AWSProperties.getS3().getBucketName())
                     .key(storedFilename)
                     .contentType(imageFile.getContentType())
                     .contentLength(imageFile.getSize())
@@ -51,7 +51,7 @@ public class S3ImageUploader {
 
         String fileUrl = s3Client.utilities().getUrl(
                 GetUrlRequest.builder()
-                        .bucket(s3Properties.getS3().getBucketName())
+                        .bucket(AWSProperties.getS3().getBucketName())
                         .key(storedFilename)
                         .build()).toString();
 
@@ -75,7 +75,7 @@ public class S3ImageUploader {
         String key = extractKeyFromImageUrl(imagePath);
         try {
             DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
-                    .bucket(s3Properties.getS3().getBucketName())
+                    .bucket(AWSProperties.getS3().getBucketName())
                     .key(key)
                     .build();
 
