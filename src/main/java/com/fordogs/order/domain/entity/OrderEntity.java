@@ -2,6 +2,7 @@ package com.fordogs.order.domain.entity;
 
 import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.domain.vo.wapper.Price;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.order.domain.eums.OrderStatus;
 import com.fordogs.order.error.OrderErrorCode;
 import com.fordogs.payment.domain.entity.PaymentEntity;
@@ -59,7 +60,7 @@ public class OrderEntity extends BaseEntity {
 
     public void calculateTotalPrice(List<Integer> unitPrices, List<Integer> quantities) {
         if (unitPrices.size() != quantities.size()) {
-            throw new IllegalArgumentException("unitPrices와 quantities 리스트의 크기가 일치하지 않습니다.");
+            throw GlobalErrorCode.internalServerException("리스트의 크기가 일치하지 않습니다.");
         }
         int total = 0;
         for (int i = 0; i < unitPrices.size(); i++) {

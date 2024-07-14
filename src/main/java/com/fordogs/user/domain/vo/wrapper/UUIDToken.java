@@ -1,6 +1,7 @@
 package com.fordogs.user.domain.vo.wrapper;
 
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.crypto.EncryptionUtil;
 import com.fordogs.core.util.UUIDGenerator;
 import com.fordogs.core.util.validator.StringValidator;
@@ -30,7 +31,7 @@ public class UUIDToken extends ValueWrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!StringValidator.validateUUID(value)) {
-            throw new IllegalArgumentException("유효한 UUID 형식이 아닙니다.");
+            throw GlobalErrorCode.internalServerException("유효한 UUID 형식이 아닙니다.");
         }
     }
 

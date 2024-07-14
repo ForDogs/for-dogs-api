@@ -1,5 +1,6 @@
 package com.fordogs.core.util;
 
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,18 +20,18 @@ public class HttpServletUtil {
     public static String getHttpMethod() {
         return getCurrentHttpServletRequest()
                 .map(HttpServletRequest::getMethod)
-                .orElseThrow(() -> new IllegalStateException("HTTP 메소드를 가져오는 중 예외가 발생했습니다."));
+                    .orElseThrow(() -> GlobalErrorCode.internalServerException("HTTP 메소드를 가져오는 중 예외가 발생했습니다."));
     }
 
     public static String getRequestUrlAndQuery() {
         return getCurrentHttpServletRequest()
                 .map(request -> request.getRequestURI() + (request.getQueryString() != null ? "?" + request.getQueryString() : ""))
-                .orElseThrow(() -> new IllegalStateException("URL 및 쿼리 문자열을 가져오는 중 예외가 발생했습니다."));
+                .orElseThrow(() -> GlobalErrorCode.internalServerException("URL 및 쿼리 문자열을 가져오는 중 예외가 발생했습니다."));
     }
 
     public static Map<String, String> getRequestHeaders() {
         HttpServletRequest request = getCurrentHttpServletRequest()
-                .orElseThrow(() -> new IllegalStateException("요청 헤더를 가져오는 중 예외가 발생했습니다."));
+                .orElseThrow(() -> GlobalErrorCode.internalServerException("요청 헤더를 가져오는 중 예외가 발생했습니다."));
 
         Map<String, String> headerMap = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
@@ -74,7 +75,7 @@ public class HttpServletUtil {
     public static Object getRequestAttribute(String attributeName) {
         return getCurrentHttpServletRequest()
                 .map(request -> request.getAttribute(attributeName))
-                .orElseThrow(() -> new IllegalStateException("요청 속성을 가져오는 중 예외가 발생했습니다."));
+                .orElseThrow(() -> GlobalErrorCode.internalServerException("요청 속성을 가져오는 중 예외가 발생했습니다."));
     }
 
     public static void addHeaderToResponse(String headerName, String headerValue) {

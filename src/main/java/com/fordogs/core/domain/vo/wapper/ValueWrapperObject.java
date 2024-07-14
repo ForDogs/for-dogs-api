@@ -1,6 +1,7 @@
 package com.fordogs.core.domain.vo.wapper;
 
 import com.fordogs.core.domain.vo.ValueObject;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public abstract class ValueWrapperObject<T> extends ValueObject {
 
     protected ValueWrapperObject(T value) {
         if (value == null) {
-            throw new IllegalArgumentException(this.getClass().getName() + "가 존재하지 않습니다.");
+            throw GlobalErrorCode.internalServerException(this.getClass().getName() + "가 존재하지 않습니다.");
         }
         this.value = value;
     }

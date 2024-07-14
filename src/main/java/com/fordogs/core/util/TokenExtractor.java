@@ -1,5 +1,6 @@
 package com.fordogs.core.util;
 
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.constants.HeaderConstants;
 import com.fordogs.core.util.constants.TokenConstants;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ public class TokenExtractor {
             }
             return null;
         } catch (Exception e) {
-            throw new IllegalArgumentException("액세스 토큰을 추출하는 중 오류가 발생했습니다.", e);
+            throw GlobalErrorCode.internalServerException("액세스 토큰을 추출하는 중 오류가 발생했습니다.");
         }
     }
 
@@ -28,7 +29,7 @@ public class TokenExtractor {
             }
             return null;
         } catch (Exception e) {
-            throw new IllegalArgumentException("액세스 토큰을 추출하는 중 오류가 발생했습니다.", e);
+            throw GlobalErrorCode.internalServerException("액세스 토큰을 추출하는 중 오류가 발생했습니다.");
         }
     }
 }

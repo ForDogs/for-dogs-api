@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +19,7 @@ public class JsonConverter {
         try {
             return objectMapper.writeValueAsString(array);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("배열을 JSON으로 변환하는 중 오류가 발생했습니다.", e);
+            throw GlobalErrorCode.internalServerException("배열을 JSON으로 변환하는 중 오류가 발생했습니다.");
         }
     }
 
@@ -26,7 +27,7 @@ public class JsonConverter {
         try {
             return objectMapper.readValue(json, String[].class);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("JSON을 배열로 변환하는 중 오류가 발생했습니다.", e);
+            throw GlobalErrorCode.internalServerException("JSON을 배열로 변환하는 중 오류가 발생했습니다.");
         }
     }
 
@@ -34,7 +35,7 @@ public class JsonConverter {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("객체를 JSON으로 변환하는 중 오류가 발생했습니다.", e);
+            throw GlobalErrorCode.internalServerException("객체를 JSON으로 변환하는 중 오류가 발생했습니다.");
         }
     }
 }

@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final String MB = "MB";
-
     private final MultipartProperties multipartProperties;
 
     @ExceptionHandler(Exception.class)
@@ -37,6 +35,15 @@ public class GlobalExceptionHandler {
         logErrorWithException(e);
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(response);
+    }
+
+    @ExceptionHandler(GlobalException.class)
+    public ResponseEntity<ErrorResponse> handleGlobalException(GlobalException e) {
+        ErrorResponse response = ErrorResponse.of(e);
+        logErrorWithException(e);
+
+        return ResponseEntity.status(e.getHttpStatus())
                 .body(response);
     }
 
@@ -60,19 +67,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentValidException(MethodArgumentNotValidException e) {
-        ErrorResponse response = ErrorResponse.of(e, buildErrorMessage(e));
+        ErrorResponse response = ErrorResponse.of(e, getMethodArgumentNotValidErrorMessage(e));
         logErrorWithException(e);
 
-        return ResponseEntity.status(GlobalErrorCode.INVALID_REQUEST_PARAMETERS.getHttpStatus())
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 
-    private String buildErrorMessage(MethodArgumentNotValidException e) {
+    private String getMethodArgumentNotValidErrorMessage(MethodArgumentNotValidException e) {
+        String errorMessage = "해당 요청 값을 다시 확인해주세요.";
         String fieldErrors = e.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getField)
                 .collect(Collectors.joining(", "));
 
-        return GlobalErrorCode.INVALID_REQUEST_PARAMETERS.getMessage() + " " + fieldErrors;
+        return errorMessage + " : " + fieldErrors;
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
@@ -80,34 +88,35 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e, getMaxUploadSizeErrorMessage());
         logErrorWithException(e);
 
-        return ResponseEntity.status(GlobalErrorCode.MAX_UPLOAD_SIZE_EXCEEDED.getHttpStatus())
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 
     private String getMaxUploadSizeErrorMessage() {
-        String maxFileSize = multipartProperties.getMaxFileSize().toMegabytes() + MB;
-        String maxRequestSize = multipartProperties.getMaxRequestSize().toMegabytes() + MB;
+        String errorMessage = "최대 허용 파일 크기는 {0}, 요청 전체 크기는 {1}로 제한되어 있습니다.";
+        String maxFileSize = multipartProperties.getMaxFileSize().toMegabytes() + "MB";
+        String maxRequestSize = multipartProperties.getMaxRequestSize().toMegabytes() + "MB";
 
-        return MessageFormat.format(GlobalErrorCode.MAX_UPLOAD_SIZE_EXCEEDED.getMessage(), maxFileSize, maxRequestSize);
+        return MessageFormat.format(errorMessage, maxFileSize, maxRequestSize);
     }
 
     @ExceptionHandler(MissingRequestCookieException.class)
     public ResponseEntity<ErrorResponse> handleMissingRequestCookieException(MissingRequestCookieException e) {
-        String errorMessage = e.getCookieName() + " " + GlobalErrorCode.MISSING_REQUEST_COOKIE.getMessage();
+        String errorMessage = e.getCookieName() + " 필수 요청 쿠키가 누락되었습니다.";
         ErrorResponse response = ErrorResponse.of(e, errorMessage);
         logErrorWithException(e);
 
-        return ResponseEntity.status(GlobalErrorCode.MISSING_REQUEST_COOKIE.getHttpStatus())
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)
     public ResponseEntity<ErrorResponse> handleMissingRequestHeaderException(MissingRequestHeaderException e) {
-        String errorMessage = e.getHeaderName() + " " + GlobalErrorCode.MISSING_REQUEST_HEADER.getMessage();
+        String errorMessage = e.getHeaderName() + " 필수 요청 헤더가 누락되었습니다.";
         ErrorResponse response = ErrorResponse.of(e, errorMessage);
         logErrorWithException(e);
 
-        return ResponseEntity.status(GlobalErrorCode.MISSING_REQUEST_HEADER.getHttpStatus())
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 

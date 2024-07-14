@@ -1,6 +1,7 @@
 package com.fordogs.security.util;
 
 import com.fordogs.configuraion.properties.TokenProperties;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.constants.TokenConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.security.authentication.JwtAuthentication;
@@ -38,7 +39,7 @@ public class JwtUtil {
 
     private String encodeBase64SecretKey() {
         if (tokenProperties.getSecretKey() == null) {
-            throw new IllegalArgumentException("토큰 발행을 위한 SecretKey 값이 존재하지 않습니다.");
+            throw GlobalErrorCode.internalServerException("토큰 발행을 위한 SecretKey 값이 존재하지 않습니다.");
         }
 
         return Encoders.BASE64.encode(tokenProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));

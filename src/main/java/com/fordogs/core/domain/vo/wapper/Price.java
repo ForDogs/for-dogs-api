@@ -1,6 +1,6 @@
 package com.fordogs.core.domain.vo.wapper;
 
-import com.fordogs.core.exception.error.GlobalErrorCode;
+import com.fordogs.core.exception.error.GlobalDomainErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -21,10 +21,10 @@ public class Price extends ValueWrapperObject<Integer> {
     @Override
     protected void validate(Integer value) {
         if (value < 0) {
-            throw GlobalErrorCode.INVALID_PRICE_NEGATIVE.toException();
+            throw GlobalDomainErrorCode.INVALID_PRICE_NEGATIVE.toException();
         }
         if (value > MAX_PRICE) {
-            throw GlobalErrorCode.INVALID_PRICE_EXCEEDS_MAX.toException();
+            throw GlobalDomainErrorCode.INVALID_PRICE_EXCEEDS_MAX.toException();
         }
     }
 }

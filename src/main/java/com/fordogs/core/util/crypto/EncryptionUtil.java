@@ -1,5 +1,6 @@
 package com.fordogs.core.util.crypto;
 
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +23,7 @@ public class EncryptionUtil {
 
             return Base64.getEncoder().encodeToString(encryptedBytes);
         } catch (Exception e) {
-            throw new IllegalArgumentException("데이터를 암호화하는 중 예외가 발생했습니다.", e);
+            throw GlobalErrorCode.internalServerException("데이터를 암호화하는 중 예외가 발생했습니다.");
         }
     }
 
@@ -36,7 +37,7 @@ public class EncryptionUtil {
 
             return new String(decryptedBytes);
         } catch (Exception e) {
-            throw new IllegalArgumentException("데이터를 복호화하는 중 예외가 발생했습니다.", e);
+            throw GlobalErrorCode.internalServerException("데이터를 복호화하는 중 예외가 발생했습니다.");
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.fordogs.payment.domain.entity;
 
 import com.fordogs.core.domain.entity.BaseEntity;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.order.domain.entity.OrderEntity;
 import com.fordogs.payment.application.integration.response.PaymentResponse;
 import com.fordogs.payment.domain.vo.PaymentCancellation;
@@ -94,7 +95,7 @@ public class PaymentEntity extends BaseEntity {
 
     public void updateFromPaymentResponse(PaymentResponse response) {
         if (response == null || response.getResponse() == null) {
-            throw new IllegalArgumentException("PaymentResponse 값이 유효하지 않습니다.");
+            throw GlobalErrorCode.internalServerException("PaymentResponse 값이 유효하지 않습니다.");
         }
 
         PaymentResponse.PaymentResult result = response.getResponse();

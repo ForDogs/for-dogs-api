@@ -1,6 +1,7 @@
 package com.fordogs.user.domain.vo.wrapper;
 
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.validator.StringValidator;
 import jakarta.persistence.Embeddable;
 import lombok.*;
@@ -20,7 +21,7 @@ public class EncryptedPassword extends ValueWrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!StringValidator.validateBCryptEncoding(value)) {
-            throw new IllegalArgumentException("비밀번호가 BCrypt 인코딩 값이 아닙니다.");
+            throw GlobalErrorCode.internalServerException("비밀번호가 BCrypt 인코딩 값이 아닙니다.");
         }
     }
 }

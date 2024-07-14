@@ -1,5 +1,6 @@
 package com.fordogs.security.authentication;
 
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -28,13 +29,13 @@ public class JwtAuthentication implements Authentication {
 
     private void validate(String account, String id, String role) {
         if (account == null || account.isEmpty()) {
-            throw new IllegalArgumentException("회원 계정 ID가 존재하지 않습니다.");
+            throw GlobalErrorCode.internalServerException("회원 계정 ID가 존재하지 않습니다.");
         }
         if (id == null || id.isEmpty()) {
-            throw new IllegalArgumentException("회원 식별자가 존재하지 않습니다.");
+            throw GlobalErrorCode.internalServerException("회원 식별자가 존재하지 않습니다.");
         }
         if (role == null || role.isEmpty()) {
-            throw new IllegalArgumentException("회원 권한이 존재하지 않습니다.");
+            throw GlobalErrorCode.internalServerException("회원 권한이 존재하지 않습니다.");
         }
     }
 

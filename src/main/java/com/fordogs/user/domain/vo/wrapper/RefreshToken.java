@@ -1,6 +1,7 @@
 package com.fordogs.user.domain.vo.wrapper;
 
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.validator.StringValidator;
 import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
 import io.jsonwebtoken.Jwts;
@@ -33,7 +34,7 @@ public class RefreshToken extends ValueWrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!StringValidator.validateJWTToken(value)) {
-            throw new IllegalArgumentException("RefreshToken이 JWT 토큰 형식이 아닙니다.");
+            throw GlobalErrorCode.internalServerException("RefreshToken이 JWT 토큰 형식이 아닙니다.");
         }
     }
 
@@ -41,7 +42,7 @@ public class RefreshToken extends ValueWrapperObject<String> {
         final String account = user.getAccount().getValue();
 
         if (account == null) {
-            throw new IllegalArgumentException("RefreshToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
+            throw GlobalErrorCode.internalServerException("RefreshToken 발행을 위한 회원 데이터가 존재하지 않습니다.");
         }
 
         Date now = new Date();
