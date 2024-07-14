@@ -18,6 +18,7 @@ public class ApiRouteConstants {
             "/swagger-ui/**", HttpMethod.GET,
             "/api-docs/**", HttpMethod.GET,
             "/docs", HttpMethod.GET,
+            "/swagger-ui.html", HttpMethod.GET,
 
             "/users", HttpMethod.POST,
             "/users/login",  HttpMethod.POST,
@@ -38,14 +39,14 @@ public class ApiRouteConstants {
             "/payments/*", Set.of(HttpMethod.GET)
     );
 
-    public static final Map<String, HttpMethod> BUYER_ONLY_ENDPOINTS = Map.of(
-            "/orders", HttpMethod.POST,
-            "/orders/*/cancel", HttpMethod.POST,
-            "/orders/buyer", HttpMethod.GET,
+    public static final Map<String, Set<HttpMethod>> BUYER_ONLY_ENDPOINTS = Map.of(
+            "/orders", Set.of(HttpMethod.POST),
+            "/orders/*/cancel", Set.of(HttpMethod.POST),
+            "/orders/buyer", Set.of(HttpMethod.GET),
 
-            "/payments", HttpMethod.POST,
+            "/payments", Set.of(HttpMethod.POST),
 
-            "/carts", HttpMethod.POST
+            "/carts", Set.of(HttpMethod.POST, HttpMethod.GET)
     );
 
     public static final Map<String, Set<HttpMethod>> SELLER_ONLY_ENDPOINTS = Map.of(

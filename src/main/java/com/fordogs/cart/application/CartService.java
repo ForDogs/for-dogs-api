@@ -1,6 +1,5 @@
 package com.fordogs.cart.application;
 
-import com.fordogs.cart.domain.entity.CartEntity;
 import com.fordogs.cart.error.CartErrorCode;
 import com.fordogs.cart.infrastructure.CartRepository;
 import com.fordogs.cart.presentation.request.CartCreateRequest;
@@ -33,6 +32,6 @@ public class CartService {
             throw CartErrorCode.INSUFFICIENT_STOCK.toException();
         }
 
-        CartEntity savedCartEntity = cartRepository.save(request.toEntity(userManagementEntity, productEntity));
+        cartRepository.save(request.toEntity(userManagementEntity, productEntity));
     }
 }
