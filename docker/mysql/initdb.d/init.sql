@@ -114,3 +114,18 @@ CREATE TABLE `for_dog_db`.`payment`
     CONSTRAINT `fk_payment_order_id` FOREIGN KEY (`order_id`) REFERENCES `for_dog_db`.`orders` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='결제 정보';
+
+CREATE TABLE `for_dog_db`.`cart`
+(
+    `id`         BINARY(16) NOT NULL COMMENT '장바구니 항목 ID',
+    `product_id` BINARY(16) NOT NULL COMMENT '상품 ID',
+    `user_id`    BINARY(16) NOT NULL COMMENT '사용자 ID',
+    `quantity`   INT      NOT NULL COMMENT '상품 수량',
+    `canceled`   TINYINT(1) NOT NULL DEFAULT 0 COMMENT '장바구니 상품 삭제 여부 (1: 삭제됨, 0: 삭제되지 않음)',
+    `created_at` DATETIME NOT NULL DEFAULT NOW() COMMENT '최초 생성 일시',
+    `updated_at` DATETIME NOT NULL DEFAULT NOW() COMMENT '최종 수정 일시',
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_cart_product_id` FOREIGN KEY (`product_id`) REFERENCES `for_dog_db`.`product` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_cart_user_id` FOREIGN KEY (`user_id`) REFERENCES `for_dog_db`.`user` (`id`) ON DELETE CASCADE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='장바구니 정보';

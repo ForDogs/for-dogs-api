@@ -37,7 +37,7 @@ public class ProductSearchResponse {
                 .productId(productEntity.getId().toString())
                 .productName(productEntity.getName())
                 .productPrice(productEntity.getPrice().getValue())
-                .productQuantity(productEntity.getQuantity())
+                .productQuantity(productEntity.getQuantity().getValue())
                 .productCategory(productEntity.getCategory())
                 .productImages(JsonConverter.convertJsonToArray(productEntity.getImages()))
                 .build();

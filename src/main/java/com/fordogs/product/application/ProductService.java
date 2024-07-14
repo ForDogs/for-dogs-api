@@ -86,11 +86,6 @@ public class ProductService {
         Arrays.stream(imageUrls).forEach(s3ImageUploader::deleteImage);
     }
 
-    public ProductEntity findActiveProductWithActiveUserById(UUID productId) {
-        return productRepository.findByIdAndEnabledTrueAndUserEnabledTrue(productId)
-                .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
-    }
-
     public List<ProductEntity> findActiveProductsWithActiveUserByIds(Set<UUID> productIds) {
         List<ProductEntity> products = productRepository.findAllByIdAndEnabledTrueAndUserEnabledTrue(productIds);
         if (products.size() != productIds.size() || products.isEmpty()) {
@@ -98,6 +93,16 @@ public class ProductService {
         }
 
         return products;
+    }
+
+    public ProductEntity findById(UUID productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
+    }
+
+    private ProductEntity findActiveProductWithActiveUserById(UUID productId) {
+        return productRepository.findByIdAndEnabledTrueAndUserEnabledTrue(productId)
+                .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
     }
 
     private void checkProductNameDuplicate(String productName) {

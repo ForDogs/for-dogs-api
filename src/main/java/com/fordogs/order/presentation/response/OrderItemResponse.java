@@ -35,7 +35,7 @@ public class OrderItemResponse {
                 .orderProductId(orderItemEntity.getProduct().getId().toString())
                 .orderProductName(orderItemEntity.getProduct().getName())
                 .orderProductUnitPrice(orderItemEntity.getUnitPrice().getValue())
-                .orderProductQuantity(orderItemEntity.getQuantity())
+                .orderProductQuantity(orderItemEntity.getQuantity().getValue())
                 .build();
     }
 }

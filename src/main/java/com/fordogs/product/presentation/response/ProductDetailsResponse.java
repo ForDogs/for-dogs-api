@@ -44,7 +44,7 @@ public class ProductDetailsResponse {
                 .productId(productEntity.getId().toString())
                 .productName(productEntity.getName())
                 .productPrice(productEntity.getPrice().getValue())
-                .productQuantity(productEntity.getQuantity())
+                .productQuantity(productEntity.getQuantity().getValue())
                 .productDescription(productEntity.getDescription().getValue())
                 .productCategory(productEntity.getCategory())
                 .productImages(JsonConverter.convertJsonToArray(productEntity.getImages()))

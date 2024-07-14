@@ -2,6 +2,7 @@ package com.fordogs.product.domain.entity;
 
 import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.domain.vo.wapper.Price;
+import com.fordogs.core.domain.vo.wapper.Quantity;
 import com.fordogs.core.util.converter.JsonConverter;
 import com.fordogs.product.domain.enums.Category;
 import com.fordogs.product.domain.vo.wrapper.Description;
@@ -28,7 +29,11 @@ public class ProductEntity extends BaseEntity {
     })
     private Price price;
 
-    private Integer quantity;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "value", column = @Column(name = "quantity"))
+    })
+    private Quantity quantity;
 
     @Embedded
     @AttributeOverrides({
@@ -45,7 +50,7 @@ public class ProductEntity extends BaseEntity {
     private boolean enabled = true;
 
     @Builder
-    public ProductEntity(UserManagementEntity seller, String name, Price price, Integer quantity, Description description, Category category, String[] images) {
+    public ProductEntity(UserManagementEntity seller, String name, Price price, Quantity quantity, Description description, Category category, String[] images) {
         this.seller = seller;
         this.name = name;
         this.price = price;
@@ -61,13 +66,13 @@ public class ProductEntity extends BaseEntity {
             this.name = name;
         }
         if (price != null) {
-            this.price = new Price(price);
+            this.price = Price.builder().value(price).build();
         }
         if (quantity != null) {
-            this.quantity = quantity;
+            this.quantity = Quantity.builder().value(quantity).build();
         }
         if (description != null) {
-            this.description = new Description(description);
+            this.description = Description.builder().value(description).build();
         }
         if (images != null) {
             this.images = JsonConverter.convertArrayToJson(images);
@@ -85,19 +90,21 @@ public class ProductEntity extends BaseEntity {
     }
 
     public void decreaseQuantity(int quantityToDecrease) {
-        if (quantityToDecrease <= 0) {
-            throw ProductErrorCode.INVALID_QUANTITY_DECREASE.toException();
-        }
-        if (this.quantity < quantityToDecrease) {
+        if (this.quantity.getValue() < quantityToDecrease) {
             throw ProductErrorCode.INSUFFICIENT_STOCK.toException();
         }
-        this.quantity -= quantityToDecrease;
+        this.quantity = Quantity.builder()
+                .value(this.quantity.getValue() - quantityToDecrease)
+                .build();
     }
 
     public void increaseQuantity(int quantityToIncrease) {
-        if (quantityToIncrease <= 0) {
-            throw ProductErrorCode.INVALID_QUANTITY_INCREASE.toException();
-        }
-        this.quantity += quantityToIncrease;
+        this.quantity = Quantity.builder()
+                .value(this.quantity.getValue() + quantityToIncrease)
+                .build();
+    }
+
+    public boolean isStockAvailable(int requestedQuantity) {
+        return this.quantity.getValue() >= requestedQuantity;
     }
 }

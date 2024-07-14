@@ -1,6 +1,7 @@
 package com.fordogs.order.presentation.request;
 
 import com.fordogs.core.domain.vo.wapper.Price;
+import com.fordogs.core.domain.vo.wapper.Quantity;
 import com.fordogs.order.domain.entity.OrderEntity;
 import com.fordogs.order.domain.entity.OrderItemEntity;
 import com.fordogs.product.domain.entity.ProductEntity;
@@ -35,10 +36,8 @@ public class OrderItemRequest {
         return OrderItemEntity.builder()
                 .order(orderEntity)
                 .product(productEntity)
-                .quantity(this.orderQuantity)
-                .unitPrice(Price.builder()
-                        .value(this.orderUnitPrice)
-                        .build())
+                .quantity(Quantity.builder().value(this.orderQuantity).build())
+                .unitPrice(Price.builder().value(this.orderUnitPrice).build())
                 .build();
     }
 }

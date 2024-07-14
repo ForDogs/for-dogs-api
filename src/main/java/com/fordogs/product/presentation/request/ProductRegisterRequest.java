@@ -1,6 +1,7 @@
 package com.fordogs.product.presentation.request;
 
 import com.fordogs.core.domain.vo.wapper.Price;
+import com.fordogs.core.domain.vo.wapper.Quantity;
 import com.fordogs.product.domain.entity.ProductEntity;
 import com.fordogs.product.domain.enums.Category;
 import com.fordogs.product.domain.vo.wrapper.Description;
@@ -47,7 +48,7 @@ public class ProductRegisterRequest {
                 .price(Price.builder()
                         .value(this.productPrice)
                         .build())
-                .quantity(this.productQuantity)
+                .quantity(Quantity.builder().value(this.productQuantity).build())
                 .description(Description.builder()
                         .value(this.productDescription)
                         .build())

@@ -60,7 +60,7 @@ public class OrderService {
 
         List<OrderItemEntity> orderItems = orderItemQueryService.getOrderItemsWithProductsByOrderId(orderId);
         orderItems.forEach(orderItem ->
-                orderItem.getProduct().increaseQuantity(orderItem.getQuantity()));
+                orderItem.getProduct().increaseQuantity(orderItem.getQuantity().getValue()));
     }
 
     private void validateOrderStatus(OrderStatus orderStatus) {

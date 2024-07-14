@@ -2,6 +2,7 @@ package com.fordogs.order.domain.entity;
 
 import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.domain.vo.wapper.Price;
+import com.fordogs.core.domain.vo.wapper.Quantity;
 import com.fordogs.product.domain.entity.ProductEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,7 +20,7 @@ public class OrderItemEntity extends BaseEntity {
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private ProductEntity product;
 
-    private Integer quantity;
+    private Quantity quantity;
 
     @Embedded
     @AttributeOverrides({
@@ -28,7 +29,7 @@ public class OrderItemEntity extends BaseEntity {
     private Price unitPrice;
 
     @Builder
-    public OrderItemEntity(OrderEntity order, ProductEntity product, Integer quantity, Price unitPrice) {
+    public OrderItemEntity(OrderEntity order, ProductEntity product, Quantity quantity, Price unitPrice) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
