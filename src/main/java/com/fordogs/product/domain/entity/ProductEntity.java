@@ -103,8 +103,4 @@ public class ProductEntity extends BaseEntity {
                 .value(this.quantity.getValue() + quantityToIncrease)
                 .build();
     }
-
-    public boolean isStockAvailable(int requestedQuantity) {
-        return this.quantity.getValue() >= requestedQuantity;
-    }
 }

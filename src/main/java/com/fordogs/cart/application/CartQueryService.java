@@ -1,6 +1,7 @@
 package com.fordogs.cart.application;
 
 import com.fordogs.cart.domain.entity.CartEntity;
+import com.fordogs.cart.error.CartErrorCode;
 import com.fordogs.cart.infrastructure.CartRepository;
 import com.fordogs.cart.presentation.response.CartSearchResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,12 @@ public class CartQueryService {
         List<CartEntity> cartEntityList = cartRepository.findActiveCartsByUserId(userId);
 
         return cartEntityList.stream()
-                .map(cartEntity ->  CartSearchResponse.toResponse(cartEntity.getProduct(), cartEntity.getQuantity()))
+                .map(CartSearchResponse::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    public CartEntity findById(UUID cartId) {
+        return cartRepository.findById(cartId)
+                .orElseThrow(CartErrorCode.CART_PRODUCT_NOT_FOUND::toException);
     }
 }

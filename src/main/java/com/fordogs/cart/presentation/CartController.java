@@ -4,6 +4,7 @@ import com.fordogs.cart.application.CartQueryService;
 import com.fordogs.cart.application.CartService;
 import com.fordogs.cart.error.CartErrorCode;
 import com.fordogs.cart.presentation.request.CartCreateRequest;
+import com.fordogs.cart.presentation.request.CartQuantityUpdateRequest;
 import com.fordogs.cart.presentation.response.CartSearchResponse;
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Cart", description = "Cart APIs")
 @RestController
@@ -44,5 +46,16 @@ public class CartController {
         List<CartSearchResponse> response = cartQueryService.getAllCartsByUserId();
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "장바구니 상품 수량 수정", operationId = "/carts/{cartId}")
+    @ApiErrorCode({CartErrorCode.class, SecurityErrorCode.class})
+    @PatchMapping("/{cartId}")
+    public ResponseEntity<SuccessResponse<Object>> handleUpdateCartQuantityRequest(
+            @PathVariable("cartId") UUID cartId,
+            @Valid @RequestBody CartQuantityUpdateRequest request) {
+        cartService.updateCartQuantity(cartId, request.getProductQuantity());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
