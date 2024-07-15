@@ -42,4 +42,9 @@ public class CartService {
         CartEntity cartEntity = cartQueryService.findById(cartId);
         cartEntity.updateQuantity(Quantity.builder().value(quantity).build());
     }
+
+    public void deleteCart(UUID cartId) {
+        CartEntity cartEntity = cartQueryService.findById(cartId);
+        cartEntity.cancel();
+    }
 }

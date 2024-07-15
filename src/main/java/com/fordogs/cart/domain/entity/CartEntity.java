@@ -40,4 +40,8 @@ public class CartEntity extends BaseEntity {
     public void updateQuantity(Quantity quantity) {
         this.quantity = quantity;
     }
+
+    public void cancel() {
+        this.canceled = true;
+    }
 }

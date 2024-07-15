@@ -10,6 +10,7 @@ import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,10 +53,20 @@ public class CartController {
     @ApiErrorCode({CartErrorCode.class, SecurityErrorCode.class})
     @PatchMapping("/{cartId}")
     public ResponseEntity<SuccessResponse<Object>> handleUpdateCartQuantityRequest(
-            @PathVariable("cartId") UUID cartId,
+            @Schema(name = "cartId", description = "장바구니 ID", example = "11ef4284-dd00-ad4e-9cc0-072e1b0b8cda") @PathVariable("cartId") UUID cartId,
             @Valid @RequestBody CartQuantityUpdateRequest request) {
         cartService.updateCartQuantity(cartId, request.getProductQuantity());
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "장바구니 상품 삭제", operationId = "/carts/{cartId}")
+    @ApiErrorCode({CartErrorCode.class, SecurityErrorCode.class})
+    @DeleteMapping("/{cartId}")
+    public ResponseEntity<SuccessResponse<Object>> handleDeleteCartRequest(
+            @Schema(name = "cartId", description = "장바구니 ID", example = "11ef4284-dd00-ad4e-9cc0-072e1b0b8cda") @PathVariable("cartId") UUID cartId) {
+        cartService.deleteCart(cartId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

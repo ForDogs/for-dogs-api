@@ -46,7 +46,8 @@ public class ApiRouteConstants {
 
             "/payments", Set.of(HttpMethod.POST),
 
-            "/carts", Set.of(HttpMethod.POST, HttpMethod.GET)
+            "/carts", Set.of(HttpMethod.POST, HttpMethod.GET),
+            "/carts/*", Set.of(HttpMethod.PATCH, HttpMethod.DELETE)
     );
 
     public static final Map<String, Set<HttpMethod>> SELLER_ONLY_ENDPOINTS = Map.of(
