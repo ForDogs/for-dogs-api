@@ -1,5 +1,6 @@
-package com.fordogs.core.util.logging.log;
+package com.fordogs.core.util.logging.log.repository;
 
+import com.fordogs.core.util.logging.log.ResponseLog;
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
@@ -12,26 +13,26 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import java.time.Instant;
 
 @Repository
-public class RequestLogRepository {
+public class ResponseLogRepository {
 
-    private final DynamoDbTable<RequestLog> requestLogDynamoDbTable;
+    private final DynamoDbTable<ResponseLog> responseLogDynamoDbTable;
 
-    public RequestLogRepository(DynamoDbClient dynamoDbClient) {
+    public ResponseLogRepository(DynamoDbClient dynamoDbClient) {
         DynamoDbEnhancedClient enhancedClient = DynamoDbEnhancedClient.builder()
                 .dynamoDbClient(dynamoDbClient)
                 .build();
-        this.requestLogDynamoDbTable = enhancedClient.table(RequestLog.class.getSimpleName(), TableSchema.fromBean(RequestLog.class));
+        this.responseLogDynamoDbTable = enhancedClient.table(ResponseLog.class.getSimpleName(), TableSchema.fromBean(ResponseLog.class));
     }
 
-    public void insert(RequestLog requestLog){
-        requestLogDynamoDbTable.putItem(requestLog);
+    public void insert(ResponseLog responseLog){
+        responseLogDynamoDbTable.putItem(responseLog);
     }
 
-    public RequestLog findBy(RequestLog requestLog){
-        return requestLogDynamoDbTable.getItem(requestLog);
+    public ResponseLog findBy(ResponseLog responseLog){
+        return responseLogDynamoDbTable.getItem(responseLog);
     }
 
-    public RequestLog findById(String id){
+    public ResponseLog findById(String id){
         QueryConditional conditional = QueryConditional.keyEqualTo(
                 Key.builder()
                         .partitionValue(id)
@@ -42,25 +43,25 @@ public class RequestLogRepository {
                 .limit(1)
                 .build();
 
-        return requestLogDynamoDbTable.query(queryRequest).items().stream()
+        return responseLogDynamoDbTable.query(queryRequest).items().stream()
                 .findAny()
                 .orElseGet(()-> null);
     }
 
-    public RequestLog findByIdAndDate(String id, Instant date){
+    public ResponseLog findByIdAndDate(String id, Instant date){
         Key key = Key.builder()
                 .partitionValue(id)
                 .sortValue(String.valueOf(date))
                 .build();
 
-        return requestLogDynamoDbTable.getItem(key);
+        return responseLogDynamoDbTable.getItem(key);
     }
 
-    public RequestLog update(RequestLog requestLog){
-        return requestLogDynamoDbTable.updateItem(requestLog);
+    public ResponseLog update(ResponseLog responseLog){
+        return responseLogDynamoDbTable.updateItem(responseLog);
     }
 
-    public void delete(RequestLog requestLog){
-        requestLogDynamoDbTable.deleteItem(requestLog);
+    public void delete(ResponseLog responseLog){
+        responseLogDynamoDbTable.deleteItem(responseLog);
     }
 }

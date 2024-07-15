@@ -1,6 +1,7 @@
 package com.fordogs.configuraion;
 
 import com.fordogs.configuraion.properties.AWSProperties;
+import com.fordogs.core.util.logging.log.ErrorLog;
 import com.fordogs.core.util.logging.log.RequestLog;
 import com.fordogs.core.util.logging.log.ResponseLog;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,7 @@ public class DynamoDBConfiguration {
 
         createTableIfNotExists(dynamoDbClient, enhancedClient, ResponseLog.class, 10L, 10L);
         createTableIfNotExists(dynamoDbClient, enhancedClient, RequestLog.class, 10L, 10L);
+        createTableIfNotExists(dynamoDbClient, enhancedClient, ErrorLog.class, 10L, 10L);
 
         return enhancedClient;
     }

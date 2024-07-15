@@ -1,5 +1,6 @@
 package com.fordogs.core.util.logging;
 
+import com.fordogs.core.presentation.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -30,7 +31,7 @@ public class ApiLoggingAspect extends ApiLoggingPointCut {
     }
 
     @AfterReturning(value = "within(com.fordogs.core.exception.GlobalExceptionHandler)", returning = "response")
-    public void apiThrowException(ResponseEntity<?> response) {
+    public void apiThrowException(ResponseEntity<ErrorResponse> response) {
         apiLogger.failLog(response);
     }
 }

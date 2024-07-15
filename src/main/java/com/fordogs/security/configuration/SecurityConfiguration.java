@@ -1,5 +1,6 @@
 package com.fordogs.security.configuration;
 
+
 import com.fordogs.security.filter.JwtAuthenticationFilter;
 import com.fordogs.security.handler.CustomAccessDeniedHandler;
 import com.fordogs.security.handler.CustomAuthenticationEntryPoint;
@@ -39,6 +40,10 @@ public class SecurityConfiguration {
         );
 
         http.authorizeHttpRequests(authorizeRequest -> {
+            ApiRouteConstants.SWAGGER_ENDPOINTS.forEach((path, method) ->
+                    authorizeRequest.requestMatchers(method, path).permitAll()
+            );
+
             ApiRouteConstants.PUBLIC_ENDPOINTS.forEach((path, method) ->
                     authorizeRequest.requestMatchers(method, path).permitAll()
             );

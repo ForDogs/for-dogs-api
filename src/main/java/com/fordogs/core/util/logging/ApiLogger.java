@@ -1,16 +1,20 @@
 package com.fordogs.core.util.logging;
 
+import com.fordogs.core.presentation.ErrorResponse;
 import com.fordogs.core.util.HttpServletUtil;
 import com.fordogs.core.util.TimeUtil;
 import com.fordogs.core.util.constants.HeaderConstants;
 import com.fordogs.core.util.converter.JsonConverter;
+import com.fordogs.core.util.logging.log.ErrorLog;
 import com.fordogs.core.util.logging.log.RequestLog;
-import com.fordogs.core.util.logging.log.RequestLogRepository;
 import com.fordogs.core.util.logging.log.ResponseLog;
-import com.fordogs.core.util.logging.log.ResponseLogRepository;
+import com.fordogs.core.util.logging.log.repository.ErrorLogRepository;
+import com.fordogs.core.util.logging.log.repository.RequestLogRepository;
+import com.fordogs.core.util.logging.log.repository.ResponseLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
@@ -20,6 +24,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ApiLogger {
 
+    private final ErrorLogRepository errorLogRepository;
     private final RequestLogRepository requestLogRepository;
     private final ResponseLogRepository responseLogRepository;
 
@@ -55,16 +60,22 @@ public class ApiLogger {
         responseLogRepository.insert(responseLog);
     }
 
-    public void failLog(ResponseEntity<?> response) {
-        ResponseLog responseLog = ResponseLog.builder()
+    public void failLog(ResponseEntity<ErrorResponse> response) {
+        String userId = null;
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            userId = SecurityContextHolder.getContext().getAuthentication().getName();
+        }
+
+        ErrorLog errorLog = ErrorLog.builder()
                 .requestId(HttpServletUtil.getRequestAttribute(HeaderConstants.REQUEST_ID_HEADER).toString())
+                .userId(userId)
+                .path(response.getBody() != null ? response.getBody().getPath() : null)
                 .statusCode(response.getStatusCode().value())
-                .body(JsonConverter.convertObjectToJson(response.getBody()))
-                .header(response.getHeaders().toSingleValueMap())
-                .isError(true)
-                .createAt(TimeUtil.formatLocalDateTime(LocalDateTime.now()))
+                .message(response.getBody() != null ? response.getBody().getError().getMessage() : null)
+                .stackTrace(response.getBody() != null ? JsonConverter.convertArrayToJson(response.getBody().getError().getStack()) : null)
+                .timeStamp(response.getBody() != null ? response.getBody().getTimeStamp() : null)
                 .build();
 
-        responseLogRepository.insert(responseLog);
+        errorLogRepository.insert(errorLog);
     }
 }

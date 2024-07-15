@@ -14,19 +14,19 @@ public class ApiRouteConstants {
     public static final String ROLE_SELLER = Role.SELLER.name();
     public static final String ROLE_BUYER = Role.BUYER.name();
 
-    public static final Map<String, HttpMethod> PUBLIC_ENDPOINTS = Map.of(
+    public static final Map<String, HttpMethod> SWAGGER_ENDPOINTS = Map.of(
             "/swagger-ui/**", HttpMethod.GET,
             "/api-docs/**", HttpMethod.GET,
             "/docs", HttpMethod.GET,
-            "/swagger-ui.html", HttpMethod.GET,
+            "/swagger-ui.html", HttpMethod.GET
+    );
 
+    public static final Map<String, HttpMethod> PUBLIC_ENDPOINTS = Map.of(
             "/users", HttpMethod.POST,
-            "/users/login",  HttpMethod.POST,
-
-            "/products/*",  HttpMethod.GET,
-            "/products",  HttpMethod.GET,
-
-            "/health/status",  HttpMethod.GET
+            "/users/login", HttpMethod.POST,
+            "/products/*", HttpMethod.GET,
+            "/products", HttpMethod.GET,
+            "/health/status", HttpMethod.GET
     );
 
     public static final Map<String, Set<HttpMethod>> MEMBER_ONLY_ENDPOINTS = Map.of(
