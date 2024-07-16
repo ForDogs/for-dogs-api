@@ -20,6 +20,10 @@ public class OrderItemEntity extends BaseEntity {
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private ProductEntity product;
 
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "value", column = @Column(name = "quantity"))
+    })
     private Quantity quantity;
 
     @Embedded
@@ -38,5 +42,9 @@ public class OrderItemEntity extends BaseEntity {
 
     protected void setOrder(OrderEntity order) {
         this.order = order;
+    }
+
+    public Integer calculateItemTotal() {
+        return unitPrice.getValue() * quantity.getValue();
     }
 }

@@ -34,7 +34,7 @@ public class OrderItemService {
         Map<UUID, ProductEntity> productCache = products.stream()
                 .collect(Collectors.toMap(ProductEntity::getId, product -> product));
 
-        List<OrderItemEntity> orderItemEntities = orderItemRequests.stream()
+        return orderItemRequests.stream()
                 .map(orderItem -> {
                     UUID productId = orderItem.getOrderProductId();
                     ProductEntity productEntity = productCache.get(productId);
@@ -43,7 +43,9 @@ public class OrderItemService {
                     return orderItem.toEntity(orderEntity, productEntity);
                 })
                 .collect(Collectors.toList());
+    }
 
-        return orderItemRepository.saveAll(orderItemEntities);
+    public void saveAll(List<OrderItemEntity> orderItemEntities) {
+        orderItemRepository.saveAll(orderItemEntities);
     }
 }

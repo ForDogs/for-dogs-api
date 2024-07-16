@@ -38,10 +38,14 @@ public class OrderService {
         UserManagementEntity userManagementEntity = userManagementService.findById(userId);
 
         OrderEntity orderEntity = request.toEntity(userManagementEntity);
-        orderRepository.save(orderEntity);
 
         List<OrderItemEntity> orderItemEntities = orderItemService.createOrderItems(request.getOrderItems(), orderEntity);
+
         orderEntity.addOrderItems(orderItemEntities);
+        orderEntity.calculateTotal();
+
+        orderRepository.save(orderEntity);
+        orderItemService.saveAll(orderItemEntities);
 
         return OrderRegisterResponse.toResponse(orderEntity);
     }

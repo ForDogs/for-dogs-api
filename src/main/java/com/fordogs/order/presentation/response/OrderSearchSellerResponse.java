@@ -1,6 +1,7 @@
 package com.fordogs.order.presentation.response;
 
 import com.fordogs.order.domain.entity.OrderEntity;
+import com.fordogs.order.domain.entity.OrderItemEntity;
 import com.fordogs.order.domain.eums.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -44,7 +45,9 @@ public class OrderSearchSellerResponse {
                 .orderId(orderEntity.getId().toString())
                 .paymentId(orderEntity.getPayment() != null ? orderEntity.getPayment().getId().toString() : null)
                 .orderStatus(orderEntity.getStatus())
-                .orderTotalPrice(orderEntity.getTotalPrice().getValue())
+                .orderTotalPrice(orderEntity.getOrderItems().stream()
+                        .mapToInt(OrderItemEntity::calculateItemTotal)
+                        .sum())
                 .orderDate(orderEntity.getCreatedAt())
                 .orderItems(orderEntity.getOrderItems().stream()
                         .map(OrderItemResponse::toResponse)

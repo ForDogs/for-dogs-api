@@ -58,15 +58,15 @@ public class OrderEntity extends BaseEntity {
         }
     }
 
-    public void calculateTotalPrice(List<Integer> unitPrices, List<Integer> quantities) {
-        if (unitPrices.size() != quantities.size()) {
-            throw GlobalErrorCode.internalServerException("리스트의 크기가 일치하지 않습니다.");
+    public void calculateTotal() {
+        if (orderItems.isEmpty()) {
+           throw GlobalErrorCode.internalServerException("주문 상품 내역이 존재하지 않습니다.");
         }
-        int total = 0;
-        for (int i = 0; i < unitPrices.size(); i++) {
-            total += unitPrices.get(i) * quantities.get(i);
-        }
-        this.totalPrice = Price.builder().value(total).build();
+        this.totalPrice = Price.builder()
+                .value(orderItems.stream()
+                        .mapToInt(OrderItemEntity::calculateItemTotal)
+                        .sum())
+                .build();
     }
 
     public void changeOrderStatus(OrderStatus newStatus) {
