@@ -31,7 +31,7 @@ public class CartService {
         UserManagementEntity userManagementEntity = userManagementService.findById(userId);
 
         ProductEntity productEntity = productService.findById(request.getProductId());
-        if (productEntity.getQuantity().getValue() > request.getProductQuantity()) {
+        if (productEntity.getQuantity().getValue() < request.getProductQuantity()) {
             throw CartErrorCode.INSUFFICIENT_STOCK.toException();
         }
 
