@@ -5,7 +5,7 @@ import com.fordogs.core.domain.vo.wapper.Quantity;
 import com.fordogs.product.domain.entity.ProductEntity;
 import com.fordogs.product.domain.enums.Category;
 import com.fordogs.product.domain.vo.wrapper.Description;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -42,7 +42,7 @@ public class ProductRegisterRequest {
     @NotNull(message = "상품 카테고리를 입력해주세요.")
     private Category productCategory;
 
-    public ProductEntity toEntity(UserManagementEntity userManagementEntity) {
+    public ProductEntity toEntity(UserEntity userEntity) {
         return ProductEntity.builder()
                 .name(this.productName)
                 .price(Price.builder()
@@ -54,7 +54,7 @@ public class ProductRegisterRequest {
                         .build())
                 .images(this.productImages)
                 .category(this.productCategory)
-                .seller(userManagementEntity)
+                .seller(userEntity)
                 .build();
     }
 }

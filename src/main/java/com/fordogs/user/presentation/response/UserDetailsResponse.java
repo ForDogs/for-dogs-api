@@ -1,6 +1,6 @@
 package com.fordogs.user.presentation.response;
 
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import com.fordogs.user.domain.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -25,12 +25,12 @@ public class UserDetailsResponse {
     @Schema(description = "회원 역할")
     private Role userRole;
 
-    public static UserDetailsResponse toResponse(UserManagementEntity userManagementEntity) {
+    public static UserDetailsResponse toResponse(UserEntity userEntity) {
         return UserDetailsResponse.builder()
-                .userId(userManagementEntity.getAccount().getValue())
-                .userName(userManagementEntity.getName().getValue())
-                .userEmail(userManagementEntity.getEmail().formattedEmail())
-                .userRole(userManagementEntity.getRole())
+                .userId(userEntity.getAccount().getValue())
+                .userName(userEntity.getName().getValue())
+                .userEmail(userEntity.getEmail().formattedEmail())
+                .userRole(userEntity.getRole())
                 .build();
     }
 }

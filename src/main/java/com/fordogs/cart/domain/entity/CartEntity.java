@@ -3,7 +3,7 @@ package com.fordogs.cart.domain.entity;
 import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.domain.vo.wapper.Quantity;
 import com.fordogs.product.domain.entity.ProductEntity;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +19,7 @@ public class CartEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private UserManagementEntity user;
+    private UserEntity user;
 
     @Embedded
     @AttributeOverrides({
@@ -30,7 +30,7 @@ public class CartEntity extends BaseEntity {
     private boolean canceled = false;
 
     @Builder
-    public CartEntity(ProductEntity product, UserManagementEntity user, Quantity quantity) {
+    public CartEntity(ProductEntity product, UserEntity user, Quantity quantity) {
         this.product = product;
         this.user = user;
         this.quantity = quantity;

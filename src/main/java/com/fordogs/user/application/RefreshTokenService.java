@@ -2,7 +2,7 @@ package com.fordogs.user.application;
 
 import com.fordogs.configuraion.properties.TokenProperties;
 import com.fordogs.security.util.JwtUtil;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import com.fordogs.user.domain.entity.redis.RefreshTokenCache;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;
 import com.fordogs.user.error.RefreshTokenErrorCode;
@@ -21,10 +21,10 @@ public class RefreshTokenService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public void saveRefreshToken(UserManagementEntity userManagementEntity, RefreshToken refreshToken) {
+    public void saveRefreshToken(UserEntity userEntity, RefreshToken refreshToken) {
         RefreshTokenCache refreshTokenCache = RefreshTokenCache.builder()
                 .token(refreshToken)
-                .userAccount(userManagementEntity.getAccount())
+                .userAccount(userEntity.getAccount())
                 .expirationTime((long) tokenProperties.getRefreshTokenExpirationDays())
                 .build();
 

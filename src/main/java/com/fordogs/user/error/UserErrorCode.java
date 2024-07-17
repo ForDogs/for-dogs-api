@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum UserManagementErrorCode implements BaseErrorCode<DomainException> {
+public enum UserErrorCode implements BaseErrorCode<DomainException> {
 
     DUPLICATE_USER_ID(HttpStatus.CONFLICT, "이미 사용 중인 회원 ID입니다."),
     LOGIN_PASSWORD_FAILED(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),

@@ -1,7 +1,7 @@
 package com.fordogs.user.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fordogs.user.error.UserManagementErrorCode;
+import com.fordogs.user.error.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -18,6 +18,6 @@ public enum Role {
                 return role;
             }
         }
-        throw UserManagementErrorCode.INVALID_USER_ROLE_NAME.toException();
+        throw UserErrorCode.INVALID_USER_ROLE_NAME.toException();
     }
 }

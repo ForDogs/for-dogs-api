@@ -1,7 +1,7 @@
 package com.fordogs.order.presentation.request;
 
 import com.fordogs.order.domain.entity.OrderEntity;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,9 +19,9 @@ public class OrderRegisterRequest {
     @Schema(description = "주문 아이템 정보")
     private List<OrderItemRequest> orderItems;
 
-    public OrderEntity toEntity(UserManagementEntity userManagementEntity) {
+    public OrderEntity toEntity(UserEntity userEntity) {
         return OrderEntity.builder()
-                .buyer(userManagementEntity)
+                .buyer(userEntity)
                 .build();
     }
 }

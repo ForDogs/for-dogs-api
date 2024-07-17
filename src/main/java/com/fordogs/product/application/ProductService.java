@@ -10,8 +10,8 @@ import com.fordogs.product.infrastructure.ProductRepository;
 import com.fordogs.product.presentation.request.ProductRegisterRequest;
 import com.fordogs.product.presentation.request.ProductUpdateRequest;
 import com.fordogs.product.presentation.response.*;
-import com.fordogs.user.application.UserManagementService;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.application.UserQueryService;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,15 +33,15 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final S3ImageUploader s3ImageUploader;
-    private final UserManagementService userManagementService;
+    private final UserQueryService userQueryService;
 
     @Transactional
     public ProductRegisterResponse createProduct(ProductRegisterRequest request) {
         UUID userId = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
-        UserManagementEntity userManagementEntity = userManagementService.findById(userId);
+        UserEntity userEntity = userQueryService.findById(userId);
 
         checkProductNameDuplicate(request.getProductName());
-        ProductEntity savedProductEntity = productRepository.save(request.toEntity(userManagementEntity));
+        ProductEntity savedProductEntity = productRepository.save(request.toEntity(userEntity));
 
         return ProductRegisterResponse.toResponse(savedProductEntity);
     }

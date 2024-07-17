@@ -7,15 +7,15 @@ import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.core.util.constants.HeaderConstants;
 import com.fordogs.core.util.logging.ApiLogging;
 import com.fordogs.security.exception.error.SecurityErrorCode;
-import com.fordogs.user.application.UserManagementService;
+import com.fordogs.user.application.UserQueryService;
+import com.fordogs.user.application.UserService;
 import com.fordogs.user.error.RefreshTokenErrorCode;
-import com.fordogs.user.error.UserManagementErrorCode;
+import com.fordogs.user.error.UserErrorCode;
 import com.fordogs.user.presentation.request.UserLoginRequest;
+import com.fordogs.user.presentation.request.UserPasswordResetRequest;
+import com.fordogs.user.presentation.request.UserPasswordResetVerifyRequest;
 import com.fordogs.user.presentation.request.UserSignupRequest;
-import com.fordogs.user.presentation.response.UserDetailsResponse;
-import com.fordogs.user.presentation.response.UserLoginResponse;
-import com.fordogs.user.presentation.response.UserRefreshResponse;
-import com.fordogs.user.presentation.response.UserSignupResponse;
+import com.fordogs.user.presentation.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,14 +31,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserManagementService userManagementService;
+    private final UserService userService;
+    private final UserQueryService userQueryService;
 
     @Operation(summary = "회원 가입", operationId = "/users")
-    @ApiErrorCode(UserManagementErrorCode.class)
+    @ApiErrorCode(UserErrorCode.class)
     @PostMapping
     public ResponseEntity<SuccessResponse<UserSignupResponse>> handleSignupUserRequest(
             @Valid @RequestBody UserSignupRequest request) {
-        UserSignupResponse response = userManagementService.signupUser(request);
+        UserSignupResponse response = userService.signupUser(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
@@ -49,11 +50,11 @@ public class UserController {
             description = "로그인 시 RefreshToken과 UUIDToken은 Set-Cookie 헤더를 통해 응답으로 전달됩니다."
     )
     @ApiLogging
-    @ApiErrorCode(UserManagementErrorCode.class)
+    @ApiErrorCode(UserErrorCode.class)
     @PostMapping("/login")
     public ResponseEntity<SuccessResponse<UserLoginResponse>> handlePerformLoginRequest(
             @Valid @RequestBody UserLoginRequest request) {
-        UserLoginResponse response = userManagementService.performLogin(request);
+        UserLoginResponse response = userService.performLogin(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
@@ -68,7 +69,7 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseEntity<SuccessResponse<UserLoginResponse>> handlePerformLogoutRequest(
             @Parameter(hidden = true) @CookieValue(value = CookieConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken) {
-        userManagementService.performLogout(refreshToken);
+        userService.performLogout(refreshToken);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -84,25 +85,43 @@ public class UserController {
             @Parameter(hidden = true) @RequestHeader(value = HeaderConstants.AUTHORIZATION_HEADER) String bearerTokenHeader,
             @Parameter(hidden = true) @CookieValue(value = CookieConstants.COOKIE_NAME_REFRESH_TOKEN) String refreshToken,
             @Parameter(hidden = true) @CookieValue(value = CookieConstants.COOKIE_NAME_UUID_TOKEN) String uuidToken) {
-        UserRefreshResponse response = userManagementService.renewAccessToken(TokenExtractor.extractAccessToken(bearerTokenHeader), refreshToken, uuidToken);
+        UserRefreshResponse response = userService.renewAccessToken(TokenExtractor.extractAccessToken(bearerTokenHeader), refreshToken, uuidToken);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
     }
 
     @Operation(summary = "회원 탈퇴", operationId = "/users/profile")
-    @ApiErrorCode({UserManagementErrorCode.class, SecurityErrorCode.class})
+    @ApiErrorCode({UserErrorCode.class, SecurityErrorCode.class})
     @DeleteMapping("/profile")
     public ResponseEntity<SuccessResponse<Object>> handleDeactivateUserRequest() {
-        userManagementService.deactivateUser();
+        userService.deactivateUser();
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Operation(summary = "회원 정보 조회", operationId = "/users/profile")
-    @ApiErrorCode({UserManagementErrorCode.class, SecurityErrorCode.class})
+    @ApiErrorCode({UserErrorCode.class, SecurityErrorCode.class})
     @GetMapping("/profile")
     public ResponseEntity<SuccessResponse<UserDetailsResponse>> handleFindUserDetailsRequest() {
-        UserDetailsResponse response = userManagementService.findUserDetails();
+        UserDetailsResponse response = userQueryService.findUserDetails();
+
+        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "비밀번호 초기화 요청", operationId = "/users/password-reset")
+    @PostMapping("/password-reset")
+    public ResponseEntity<SuccessResponse<UserPasswordResetResponse>> handlePasswordResetRequest(
+            @Valid @RequestBody UserPasswordResetRequest request) {
+        UserPasswordResetResponse response = userService.requestPasswordReset(request);
+
+        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "비밀번호 초기화 인증 확인", operationId = "/users/password-reset/verify")
+    @PostMapping("/password-reset/verify")
+    public ResponseEntity<SuccessResponse<UserPasswordResetVerifyResponse>> handlePasswordVerifyRequest(
+            @Valid @RequestBody UserPasswordResetVerifyRequest request) {
+        UserPasswordResetVerifyResponse response = userService.verifyPasswordReset(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }

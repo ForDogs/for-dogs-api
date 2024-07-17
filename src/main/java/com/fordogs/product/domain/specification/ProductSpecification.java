@@ -1,7 +1,7 @@
 package com.fordogs.product.domain.specification;
 
 import com.fordogs.product.domain.entity.ProductEntity;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import com.fordogs.product.domain.enums.Category;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
@@ -26,7 +26,7 @@ public class ProductSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             if (sellerId != null) {
-                Join<ProductEntity, UserManagementEntity> sellerJoin = root.join(SELLER);
+                Join<ProductEntity, UserEntity> sellerJoin = root.join(SELLER);
                 predicates.add(criteriaBuilder.equal(sellerJoin.get(ACCOUNT).get(VALUE), sellerId));
             }
 

@@ -1,6 +1,6 @@
 package com.fordogs.user.presentation.response;
 
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import com.fordogs.user.domain.vo.wrapper.AccessToken;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -19,9 +19,9 @@ public class UserLoginResponse {
     @Schema(description = "Access Token")
     private TokenInfo accessToken;
 
-    public static UserLoginResponse toResponse(UserManagementEntity userManagementEntity, AccessToken accessToken) {
+    public static UserLoginResponse toResponse(UserEntity userEntity, AccessToken accessToken) {
         return UserLoginResponse.builder()
-                .userId(userManagementEntity.getAccount().getValue())
+                .userId(userEntity.getAccount().getValue())
                 .accessToken(TokenInfo.toResponse(accessToken.getValue(), accessToken.getExpirationTime()))
                 .build();
     }

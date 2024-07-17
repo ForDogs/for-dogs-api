@@ -3,7 +3,7 @@ package com.fordogs.user.domain.vo.wrapper;
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
 import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.validator.StringValidator;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Transient;
@@ -38,7 +38,7 @@ public class RefreshToken extends ValueWrapperObject<String> {
         }
     }
 
-    public static RefreshToken createToken(UserManagementEntity user, Key secretKey, int expirationDays) {
+    public static RefreshToken createToken(UserEntity user, Key secretKey, int expirationDays) {
         final String account = user.getAccount().getValue();
 
         if (account == null) {

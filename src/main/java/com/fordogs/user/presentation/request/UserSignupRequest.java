@@ -1,6 +1,6 @@
 package com.fordogs.user.presentation.request;
 
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import com.fordogs.user.domain.enums.Role;
 import com.fordogs.user.domain.vo.Email;
 import com.fordogs.user.domain.vo.wrapper.Account;
@@ -42,8 +42,8 @@ public class UserSignupRequest {
     @Schema(description = "회원 역할", defaultValue = "BUYER", example = "SELLER")
     private Role userRole;
 
-    public UserManagementEntity toEntity() {
-        return UserManagementEntity.builder()
+    public UserEntity toEntity() {
+        return UserEntity.builder()
                 .account(Account.builder()
                         .value(this.userId)
                         .build())

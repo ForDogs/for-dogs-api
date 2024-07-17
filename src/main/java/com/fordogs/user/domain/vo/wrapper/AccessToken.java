@@ -4,7 +4,7 @@ import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
 import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.constants.TokenConstants;
 import com.fordogs.core.util.validator.StringValidator;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -37,7 +37,7 @@ public class AccessToken extends ValueWrapperObject<String> {
         }
     }
 
-    public static AccessToken createToken(UserManagementEntity user, String encryptedUUIDToken, Key secretKey, int expirationHours) {
+    public static AccessToken createToken(UserEntity user, String encryptedUUIDToken, Key secretKey, int expirationHours) {
         final String userId = user.getId().toString();
         final String account = user.getAccount().getValue();
         final String role = user.getRole().name();

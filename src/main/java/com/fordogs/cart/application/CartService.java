@@ -7,8 +7,8 @@ import com.fordogs.cart.presentation.request.CartCreateRequest;
 import com.fordogs.core.domain.vo.wapper.Quantity;
 import com.fordogs.product.application.ProductService;
 import com.fordogs.product.domain.entity.ProductEntity;
-import com.fordogs.user.application.UserManagementService;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.application.UserQueryService;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,19 +23,19 @@ public class CartService {
 
     private final CartQueryService cartQueryService;
     private final ProductService productService;
-    private final UserManagementService userManagementService;
+    private final UserQueryService userQueryService;
     private final CartRepository cartRepository;
 
     public void createCart(CartCreateRequest request) {
         UUID userId = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
-        UserManagementEntity userManagementEntity = userManagementService.findById(userId);
+        UserEntity userEntity = userQueryService.findById(userId);
 
         ProductEntity productEntity = productService.findById(request.getProductId());
         if (productEntity.getQuantity().getValue() < request.getProductQuantity()) {
             throw CartErrorCode.INSUFFICIENT_STOCK.toException();
         }
 
-        cartRepository.save(request.toEntity(userManagementEntity, productEntity));
+        cartRepository.save(request.toEntity(userEntity, productEntity));
     }
 
     public void updateCartQuantity(UUID cartId, Integer quantity) {

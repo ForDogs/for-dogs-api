@@ -3,7 +3,7 @@ package com.fordogs.cart.presentation.request;
 import com.fordogs.cart.domain.entity.CartEntity;
 import com.fordogs.core.domain.vo.wapper.Quantity;
 import com.fordogs.product.domain.entity.ProductEntity;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -27,9 +27,9 @@ public class CartCreateRequest {
     @NotNull(message = "상품 수량을 입력해주세요.")
     private Integer productQuantity;
 
-    public CartEntity toEntity(UserManagementEntity userManagementEntity, ProductEntity productEntity) {
+    public CartEntity toEntity(UserEntity userEntity, ProductEntity productEntity) {
         return CartEntity.builder()
-                .user(userManagementEntity)
+                .user(userEntity)
                 .product(productEntity)
                 .quantity(Quantity.builder().value(productQuantity).build())
                 .build();

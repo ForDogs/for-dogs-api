@@ -10,8 +10,8 @@ import com.fordogs.order.presentation.request.OrderRegisterRequest;
 import com.fordogs.order.presentation.request.OrderStatusUpdateRequest;
 import com.fordogs.order.presentation.response.OrderRegisterResponse;
 import com.fordogs.payment.application.PaymentService;
-import com.fordogs.user.application.UserManagementService;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.application.UserQueryService;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,13 +31,13 @@ public class OrderService {
     private final OrderItemService orderItemService;
     private final OrderQueryService orderQueryService;
     private final PaymentService paymentService;
-    private final UserManagementService userManagementService;
+    private final UserQueryService userQueryService;
 
     public OrderRegisterResponse createOrder(OrderRegisterRequest request) {
         UUID userId = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
-        UserManagementEntity userManagementEntity = userManagementService.findById(userId);
+        UserEntity userEntity = userQueryService.findById(userId);
 
-        OrderEntity orderEntity = request.toEntity(userManagementEntity);
+        OrderEntity orderEntity = request.toEntity(userEntity);
 
         List<OrderItemEntity> orderItemEntities = orderItemService.createOrderItems(request.getOrderItems(), orderEntity);
 

@@ -2,7 +2,7 @@ package com.fordogs.user.domain.vo.wrapper;
 
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
 import com.fordogs.core.util.validator.StringValidator;
-import com.fordogs.user.error.UserManagementErrorCode;
+import com.fordogs.user.error.UserErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -21,7 +21,7 @@ public class Name extends ValueWrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!StringValidator.validateKoreanEnglish(value)) {
-            throw UserManagementErrorCode.INVALID_NAME_FORMAT.toException();
+            throw UserErrorCode.INVALID_NAME_FORMAT.toException();
         }
     }
 }

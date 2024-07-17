@@ -7,7 +7,7 @@ import com.fordogs.core.util.converter.JsonConverter;
 import com.fordogs.product.domain.enums.Category;
 import com.fordogs.product.domain.vo.wrapper.Description;
 import com.fordogs.product.error.ProductErrorCode;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +19,7 @@ public class ProductEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", referencedColumnName = "id", nullable = false)
-    private UserManagementEntity seller;
+    private UserEntity seller;
 
     private String name;
 
@@ -50,7 +50,7 @@ public class ProductEntity extends BaseEntity {
     private boolean enabled = true;
 
     @Builder
-    public ProductEntity(UserManagementEntity seller, String name, Price price, Quantity quantity, Description description, Category category, String[] images) {
+    public ProductEntity(UserEntity seller, String name, Price price, Quantity quantity, Description description, Category category, String[] images) {
         this.seller = seller;
         this.name = name;
         this.price = price;

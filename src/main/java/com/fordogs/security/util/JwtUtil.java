@@ -5,7 +5,7 @@ import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.constants.TokenConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.security.authentication.JwtAuthentication;
-import com.fordogs.user.domain.entity.mysql.UserManagementEntity;
+import com.fordogs.user.domain.entity.mysql.UserEntity;
 import com.fordogs.user.domain.vo.wrapper.AccessToken;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;
 import com.fordogs.user.domain.vo.wrapper.UUIDToken;
@@ -51,11 +51,11 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public AccessToken generateAccessToken(UserManagementEntity user, String encryptedUUIDToken) {
+    public AccessToken generateAccessToken(UserEntity user, String encryptedUUIDToken) {
         return AccessToken.createToken(user, encryptedUUIDToken, secretKey, tokenProperties.getAccessTokenExpirationMinutes());
     }
 
-    public RefreshToken generateRefreshToken(UserManagementEntity user) {
+    public RefreshToken generateRefreshToken(UserEntity user) {
         return RefreshToken.createToken(user, secretKey, tokenProperties.getRefreshTokenExpirationDays());
     }
 
