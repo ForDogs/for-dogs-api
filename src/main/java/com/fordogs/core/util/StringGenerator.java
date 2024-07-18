@@ -4,10 +4,11 @@ import com.fasterxml.uuid.Generators;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Random;
 import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UUIDGenerator {
+public class StringGenerator {
 
     private static final String UUID_SPLIT = "-";
 
@@ -24,5 +25,23 @@ public class UUIDGenerator {
                         .insert(23, UUID_SPLIT)
                         .toString()
         );
+    }
+
+    public static String generate4DigitString() {
+        Random random = new Random();
+        StringBuilder randomStringBuilder = new StringBuilder();
+
+        for (int i = 0; i < 4; i++) {
+            int randomOption = random.nextInt(2);
+            if (randomOption == 0) {
+                int randomNumber = random.nextInt(10);
+                randomStringBuilder.append(randomNumber);
+            } else {
+                char randomLetter = (char) (random.nextInt(26) + 'A');
+                randomStringBuilder.append(randomLetter);
+            }
+        }
+
+        return randomStringBuilder.toString();
     }
 }

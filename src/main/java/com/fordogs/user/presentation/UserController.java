@@ -7,15 +7,18 @@ import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.core.util.constants.HeaderConstants;
 import com.fordogs.core.util.logging.ApiLogging;
 import com.fordogs.security.exception.error.SecurityErrorCode;
+import com.fordogs.user.application.PasswordResetService;
 import com.fordogs.user.application.UserQueryService;
 import com.fordogs.user.application.UserService;
 import com.fordogs.user.error.RefreshTokenErrorCode;
 import com.fordogs.user.error.UserErrorCode;
 import com.fordogs.user.presentation.request.UserLoginRequest;
 import com.fordogs.user.presentation.request.UserPasswordResetRequest;
-import com.fordogs.user.presentation.request.UserPasswordResetVerifyRequest;
 import com.fordogs.user.presentation.request.UserSignupRequest;
-import com.fordogs.user.presentation.response.*;
+import com.fordogs.user.presentation.response.UserDetailsResponse;
+import com.fordogs.user.presentation.response.UserLoginResponse;
+import com.fordogs.user.presentation.response.UserRefreshResponse;
+import com.fordogs.user.presentation.response.UserSignupResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,6 +36,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserQueryService userQueryService;
+    private final PasswordResetService passwordResetService;
 
     @Operation(summary = "회원 가입", operationId = "/users")
     @ApiErrorCode(UserErrorCode.class)
@@ -108,21 +112,16 @@ public class UserController {
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
 
-    @Operation(summary = "비밀번호 초기화 요청", operationId = "/users/password-reset")
+    @Operation(
+            summary = "비밀번호 초기화 요청",
+            operationId = "/users/password-reset",
+            description = "이메일 인증 코드 유효 시간은 3분입니다."
+    )
     @PostMapping("/password-reset")
-    public ResponseEntity<SuccessResponse<UserPasswordResetResponse>> handlePasswordResetRequest(
+    public ResponseEntity<SuccessResponse<Object>> handlePasswordResetRequest(
             @Valid @RequestBody UserPasswordResetRequest request) {
-        UserPasswordResetResponse response = userService.requestPasswordReset(request);
+        passwordResetService.requestPasswordReset(request);
 
-        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
-    }
-
-    @Operation(summary = "비밀번호 초기화 인증 확인", operationId = "/users/password-reset/verify")
-    @PostMapping("/password-reset/verify")
-    public ResponseEntity<SuccessResponse<UserPasswordResetVerifyResponse>> handlePasswordVerifyRequest(
-            @Valid @RequestBody UserPasswordResetVerifyRequest request) {
-        UserPasswordResetVerifyResponse response = userService.verifyPasswordReset(request);
-
-        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

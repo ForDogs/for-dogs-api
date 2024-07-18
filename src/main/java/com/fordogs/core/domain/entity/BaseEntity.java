@@ -1,6 +1,6 @@
 package com.fordogs.core.domain.entity;
 
-import com.fordogs.core.util.UUIDGenerator;
+import com.fordogs.core.util.StringGenerator;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -27,6 +27,6 @@ public abstract class BaseEntity {
 
     @PrePersist
     public void initSequentialUUID() {
-        this.id = UUIDGenerator.generateSequentialUUID();
+        this.id = StringGenerator.generateSequentialUUID();
     }
 }

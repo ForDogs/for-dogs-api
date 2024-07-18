@@ -3,7 +3,7 @@ package com.fordogs.user.domain.vo.wrapper;
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
 import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.crypto.EncryptionUtil;
-import com.fordogs.core.util.UUIDGenerator;
+import com.fordogs.core.util.StringGenerator;
 import com.fordogs.core.util.validator.StringValidator;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -21,7 +21,7 @@ public class UUIDToken extends ValueWrapperObject<String> {
     }
 
     public static UUIDToken generate() {
-        return new UUIDToken(UUIDGenerator.generateSequentialUUID().toString());
+        return new UUIDToken(StringGenerator.generateSequentialUUID().toString());
     }
 
     public static UUIDToken from(String value) {

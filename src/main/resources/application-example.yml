@@ -19,6 +19,13 @@ spring:
       host:
       port:
 
+# Gmail SMTP
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
+
 # JWT
 token:
   secret-key:

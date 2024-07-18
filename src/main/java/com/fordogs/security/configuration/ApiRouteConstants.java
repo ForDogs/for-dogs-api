@@ -26,7 +26,9 @@ public class ApiRouteConstants {
             "/users/login", HttpMethod.POST,
             "/products/*", HttpMethod.GET,
             "/products", HttpMethod.GET,
-            "/health/status", HttpMethod.GET
+            "/health/status", HttpMethod.GET,
+            "/users/password-reset", HttpMethod.POST,
+            "/users/password-reset/verify", HttpMethod.POST
     );
 
     public static final Map<String, Set<HttpMethod>> MEMBER_ONLY_ENDPOINTS = Map.of(
