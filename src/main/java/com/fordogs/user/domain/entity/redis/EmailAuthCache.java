@@ -1,9 +1,6 @@
 package com.fordogs.user.domain.entity.redis;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
@@ -11,6 +8,7 @@ import org.springframework.data.redis.core.TimeToLive;
 import java.util.concurrent.TimeUnit;
 
 @Getter
+@EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @RedisHash(value = "emailAuth")
 public class EmailAuthCache {

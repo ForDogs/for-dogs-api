@@ -56,6 +56,12 @@ public class UserEntity extends BaseEntity {
         this.enabled = true;
     }
 
+    public void changePassword(Password newPassword) {
+        this.password = EncryptedPassword.builder()
+                .value(PasswordHasherUtil.encode(newPassword.getValue()))
+                .build();
+    }
+
     public void disable() {
         this.enabled = false;
     }

@@ -4,8 +4,11 @@ import com.fasterxml.uuid.Generators;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StringGenerator {
@@ -43,5 +46,27 @@ public class StringGenerator {
         }
 
         return randomStringBuilder.toString();
+    }
+
+    public static String generatePassword() {
+        int minPasswordLength = 10;
+        int maxPasswordLength = 16;
+        int passwordLength = (int) (Math.random() * (maxPasswordLength - minPasswordLength + 1)) + minPasswordLength;
+        SecureRandom random = new SecureRandom();
+
+        return IntStream.range(0, passwordLength)
+                .mapToObj(i -> String.valueOf((char) generateCharacter(random)))
+                .collect(Collectors.joining());
+    }
+
+    private static char generateCharacter(SecureRandom random) {
+        int charType = random.nextInt(4);
+
+        return switch (charType) {
+            case 0 -> (char) (random.nextInt(26) + 'a');
+            case 1 -> (char) (random.nextInt(26) + 'A');
+            case 2 -> (char) (random.nextInt(10) + '0');
+            default -> "!@#$%^&*()_+".charAt(random.nextInt("!@#$%^&*()_+".length()));
+        };
     }
 }

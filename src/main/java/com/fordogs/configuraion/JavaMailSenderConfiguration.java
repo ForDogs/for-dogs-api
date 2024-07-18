@@ -1,7 +1,7 @@
 package com.fordogs.configuraion;
 
-import com.fordogs.configuraion.properties.MailProperties;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,21 +13,24 @@ import java.util.Properties;
 @RequiredArgsConstructor
 public class JavaMailSenderConfiguration {
 
-    private final MailProperties mailProperties;
+    @Bean
+    public MailProperties mailProperties() {
+        return new MailProperties();
+    }
 
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
-        javaMailSender.setHost(mailProperties.getHost());
-        javaMailSender.setPort(mailProperties.getPort());
-        javaMailSender.setUsername(mailProperties.getUsername());
-        javaMailSender.setPassword(mailProperties.getPassword());
-        javaMailSender.setJavaMailProperties(getMailProperties());
+        javaMailSender.setHost(mailProperties().getHost());
+        javaMailSender.setPort(mailProperties().getPort());
+        javaMailSender.setUsername(mailProperties().getUsername());
+        javaMailSender.setPassword(mailProperties().getPassword());
+        javaMailSender.setJavaMailProperties(getEmailProperties());
 
         return javaMailSender;
     }
 
-    private Properties getMailProperties() {
+    private Properties getEmailProperties() {
         Properties properties = new Properties();
         properties.setProperty("mail.transport.protocol", "smtp");
         properties.setProperty("mail.smtp.auth", "true");
