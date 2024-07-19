@@ -11,6 +11,8 @@ import com.fordogs.user.domain.vo.wrapper.Password;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,6 +32,8 @@ public class UserEntity extends BaseEntity {
     })
     private Name name;
 
+    private LocalDate birthDate;
+
     @Embedded
     private Email email;
 
@@ -45,9 +49,10 @@ public class UserEntity extends BaseEntity {
     private boolean enabled = true;
 
     @Builder
-    public UserEntity(Account account, Name name, Email email, Password password, Role role) {
+    public UserEntity(Account account, Name name, Email email, Password password, Role role, LocalDate birthDate) {
         this.account = account;
         this.name = name;
+        this.birthDate = birthDate;
         this.email = email;
         this.password = EncryptedPassword.builder()
                 .value(PasswordHasherUtil.encode(password.getValue()))

@@ -8,10 +8,13 @@ import com.fordogs.user.domain.vo.wrapper.Name;
 import com.fordogs.user.domain.vo.wrapper.Password;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Schema(description = "회원 가입 요청")
 @Getter
@@ -30,6 +33,10 @@ public class UserSignupRequest {
     @Schema(description = "회원 이메일 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "honggildong")
     @NotBlank(message = "이메일 ID를 입력해주세요.")
     private String userEmailId;
+
+    @Schema(description = "회원 생년월일", requiredMode = Schema.RequiredMode.REQUIRED, example = "1990-01-01")
+    @NotNull(message = "생년월일을 입력해주세요.")
+    private LocalDate birthDate;
 
     @Schema(description = "회원 이메일 도메인", requiredMode = Schema.RequiredMode.REQUIRED, example = "gmail.com")
     @NotBlank(message = "이메일 도메인을 입력해주세요.")
@@ -50,6 +57,7 @@ public class UserSignupRequest {
                 .name(Name.builder()
                         .value(this.userName)
                         .build())
+                .birthDate(this.birthDate)
                 .email(Email.builder()
                         .id(this.userEmailId)
                         .domain(this.userEmailDomain)

@@ -6,16 +6,17 @@ CREATE INDEX idx_orders_createdAt ON orders (created_at);
 -- TABLE
 CREATE TABLE `for_dog_db`.`user`
 (
-    `id`           BINARY(16)               NOT NULL COMMENT '회원 ID',
-    `account`      VARCHAR(50)              NOT NULL UNIQUE COMMENT '회원 계정 ID',
-    `name`         VARCHAR(100)             NOT NULL COMMENT '회원명',
-    `email_id`     VARCHAR(50)              NOT NULL COMMENT '이메일 ID',
-    `email_domain` VARCHAR(50)              NOT NULL COMMENT '이메일 도메인',
-    `password`     VARCHAR(100)             NOT NULL COMMENT '비밀번호',
+    `id`           BINARY(16) NOT NULL COMMENT '회원 ID',
+    `account`      VARCHAR(50)  NOT NULL UNIQUE COMMENT '회원 계정 ID',
+    `name`         VARCHAR(100) NOT NULL COMMENT '회원명',
+    `birth_date`   DATE         NOT NULL COMMENT '생년월일(YYYY-MM-DD)',
+    `email_id`     VARCHAR(50)  NOT NULL COMMENT '이메일 ID',
+    `email_domain` VARCHAR(50)  NOT NULL COMMENT '이메일 도메인',
+    `password`     VARCHAR(100) NOT NULL COMMENT '비밀번호',
     `role`         ENUM ('SELLER', 'BUYER') NOT NULL DEFAULT 'BUYER' COMMENT '회원 역할 (SELLER: 판매자, BUYER: 구매자)',
-    `enabled`      TINYINT(1)               NOT NULL DEFAULT 1 COMMENT '회원 활성화 여부 (1: 활성화, 0: 비활성화)',
-    `created_at`   DATETIME                 NULL     DEFAULT NOW() COMMENT '최초 생성 일시',
-    `updated_at`   DATETIME                 NULL     DEFAULT NOW() COMMENT '최종 수정 일시',
+    `enabled`      TINYINT(1) NOT NULL DEFAULT 1 COMMENT '회원 활성화 여부 (1: 활성화, 0: 비활성화)',
+    `created_at`   DATETIME NULL DEFAULT NOW() COMMENT '최초 생성 일시',
+    `updated_at`   DATETIME NULL DEFAULT NOW() COMMENT '최종 수정 일시',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='회원 정보';

@@ -19,6 +19,9 @@ public class UserDetailsResponse {
     @Schema(description = "회원명")
     private String userName;
 
+    @Schema(description = "회원 생년월일")
+    private String userBirthDate;
+
     @Schema(description = "회원 이메일")
     private String userEmail;
 
@@ -29,6 +32,7 @@ public class UserDetailsResponse {
         return UserDetailsResponse.builder()
                 .userId(userEntity.getAccount().getValue())
                 .userName(userEntity.getName().getValue())
+                .userBirthDate(userEntity.getBirthDate().toString())
                 .userEmail(userEntity.getEmail().formattedEmail())
                 .userRole(userEntity.getRole())
                 .build();
