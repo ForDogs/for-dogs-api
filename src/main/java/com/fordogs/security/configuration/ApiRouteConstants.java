@@ -26,6 +26,7 @@ public class ApiRouteConstants {
             "/users/login", HttpMethod.POST,
             "/users/password-reset", HttpMethod.POST,
             "/users/password-reset/verify", HttpMethod.POST,
+            "/users/find-id", HttpMethod.POST,
 
             "/products/*", HttpMethod.GET,
             "/products", HttpMethod.GET,

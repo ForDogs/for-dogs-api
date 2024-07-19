@@ -145,4 +145,14 @@ public class UserController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @Operation(summary = "아이디 찾기", operationId = "/users/find-id")
+    @ApiErrorCode(UserErrorCode.class)
+    @PostMapping("/find-id")
+    public ResponseEntity<SuccessResponse<UserFindIdResponse>> handleFindIdRequest(
+            @Valid @RequestBody UserFindIdRequest request) {
+        UserFindIdResponse response = userQueryService.findUserAccountByNameAndBirthDate(request);
+
+        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+    }
 }
