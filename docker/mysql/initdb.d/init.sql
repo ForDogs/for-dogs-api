@@ -25,7 +25,7 @@ CREATE TABLE `for_dog_db`.`user`
 CREATE TABLE `for_dog_db`.`product`
 (
     `id`          BINARY(16)                                                           NOT NULL COMMENT '상품 ID',
-    `seller_id`   BINARY(16)                                                           NOT NULL COMMENT '판매자 ID',
+    `user_id`     BINARY(16)                                                           NOT NULL COMMENT '판매자 회원 ID',
     `name`        VARCHAR(255)                                                         NOT NULL UNIQUE COMMENT '상품명',
     `price`       INT                                                                  NOT NULL COMMENT '상품 가격',
     `quantity`    INT                                                                  NOT NULL COMMENT '상품 수량',
@@ -36,7 +36,7 @@ CREATE TABLE `for_dog_db`.`product`
     `created_at`  DATETIME                                                             NULL     DEFAULT NOW() COMMENT '최초 생성 일시',
     `updated_at`  DATETIME                                                             NULL     DEFAULT NOW() COMMENT '최종 수정 일시',
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_product_seller_id` FOREIGN KEY (`seller_id`) REFERENCES `for_dog_db`.`user` (`id`) ON DELETE CASCADE
+    CONSTRAINT `fk_product_seller_id` FOREIGN KEY (`user_id`) REFERENCES `for_dog_db`.`user` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='상품 정보';
 
