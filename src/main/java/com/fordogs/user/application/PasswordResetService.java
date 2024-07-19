@@ -1,6 +1,7 @@
 package com.fordogs.user.application;
 
 import com.fordogs.core.util.StringGenerator;
+import com.fordogs.core.util.crypto.PasswordHasherUtil;
 import com.fordogs.user.application.email.EmailSender;
 import com.fordogs.user.domain.entity.mysql.UserEntity;
 import com.fordogs.user.domain.entity.redis.EmailAuthCache;
@@ -8,13 +9,17 @@ import com.fordogs.user.domain.vo.wrapper.Account;
 import com.fordogs.user.domain.vo.wrapper.Password;
 import com.fordogs.user.error.PasswordResetErrorCode;
 import com.fordogs.user.infrastructure.EmailAuthRepository;
+import com.fordogs.user.presentation.request.UserPasswordChangeRequest;
 import com.fordogs.user.presentation.request.UserPasswordResetRequest;
 import com.fordogs.user.presentation.request.UserPasswordResetVerifyRequest;
 import com.fordogs.user.presentation.response.UserPasswordResetVerifyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -64,5 +69,15 @@ public class PasswordResetService {
         return UserPasswordResetVerifyResponse.builder()
                 .temporaryPassword(newPassword)
                 .build();
+    }
+
+    public void changePassword(UserPasswordChangeRequest request) {
+        UUID userId = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
+        UserEntity userEntity = userQueryService.findById(userId);
+
+        if (!PasswordHasherUtil.matches(request.getCurrentPassword(), userEntity.getPassword().getValue())) {
+            throw PasswordResetErrorCode.EXISTING_PASSWORD_MISMATCH.toException();
+        }
+        userEntity.changePassword(Password.builder().value(request.getNewPassword()).build());
     }
 }

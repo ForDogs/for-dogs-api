@@ -24,17 +24,20 @@ public class ApiRouteConstants {
     public static final Map<String, HttpMethod> PUBLIC_ENDPOINTS = Map.of(
             "/users", HttpMethod.POST,
             "/users/login", HttpMethod.POST,
+            "/users/password-reset", HttpMethod.POST,
+            "/users/password-reset/verify", HttpMethod.POST,
+
             "/products/*", HttpMethod.GET,
             "/products", HttpMethod.GET,
-            "/health/status", HttpMethod.GET,
-            "/users/password-reset", HttpMethod.POST,
-            "/users/password-reset/verify", HttpMethod.POST
+
+            "/health/status", HttpMethod.GET
     );
 
     public static final Map<String, Set<HttpMethod>> MEMBER_ONLY_ENDPOINTS = Map.of(
             "/users/profile", Set.of(HttpMethod.DELETE, HttpMethod.GET),
             "/users/refresh", Set.of(HttpMethod.POST),
             "/users/logout", Set.of(HttpMethod.POST),
+            "/users/password-change", Set.of(HttpMethod.PATCH),
 
             "/health/token", Set.of(HttpMethod.GET),
 

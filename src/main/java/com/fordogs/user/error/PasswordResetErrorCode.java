@@ -11,7 +11,8 @@ import org.springframework.http.HttpStatus;
 public enum PasswordResetErrorCode implements BaseErrorCode<DomainException> {
 
     USER_NOT_FOUND(UserErrorCode.USER_NOT_FOUND.getHttpStatus(), UserErrorCode.USER_NOT_FOUND.getMessage()),
-    AUTH_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "인증 코드를 찾을 수 없습니다.");
+    AUTH_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "인증 코드를 찾을 수 없습니다."),
+    EXISTING_PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "기존 비밀번호가 일치하지 않습니다.");
 
     private final HttpStatus httpStatus;
 

@@ -13,10 +13,7 @@ import com.fordogs.user.application.UserService;
 import com.fordogs.user.error.PasswordResetErrorCode;
 import com.fordogs.user.error.RefreshTokenErrorCode;
 import com.fordogs.user.error.UserErrorCode;
-import com.fordogs.user.presentation.request.UserLoginRequest;
-import com.fordogs.user.presentation.request.UserPasswordResetRequest;
-import com.fordogs.user.presentation.request.UserPasswordResetVerifyRequest;
-import com.fordogs.user.presentation.request.UserSignupRequest;
+import com.fordogs.user.presentation.request.*;
 import com.fordogs.user.presentation.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -137,5 +134,15 @@ public class UserController {
         UserPasswordResetVerifyResponse response = passwordResetService.verifyPasswordReset(request);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
+    }
+
+    @Operation(summary = "비밀번호 변경", operationId = "/users/password-change")
+    @ApiErrorCode({PasswordResetErrorCode.class, SecurityErrorCode.class})
+    @PatchMapping("/password-change")
+    public ResponseEntity<SuccessResponse<Object>> handlePasswordChangeRequest(
+            @Valid @RequestBody UserPasswordChangeRequest request) {
+        passwordResetService.changePassword(request);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
