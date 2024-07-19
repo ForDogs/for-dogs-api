@@ -1,6 +1,7 @@
 package com.fordogs.user.application.email;
 
 import com.fordogs.core.exception.error.GlobalErrorCode;
+import com.fordogs.user.domain.vo.Email;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,11 @@ public class EmailSender {
     private final SpringTemplateEngine templateEngine;
 
     @Async
-    public void sendMail(String userEmail, String authenticationCode) {
+    public void sendMail(Email email, String authenticationCode) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
-            mimeMessageHelper.setTo(userEmail);
+            mimeMessageHelper.setTo(email.formattedEmail());
             mimeMessageHelper.setSubject(EMAIL_SUBJECT);
             mimeMessageHelper.setText(setContext(authenticationCode), true);
 

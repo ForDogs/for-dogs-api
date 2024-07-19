@@ -1,9 +1,7 @@
 package com.fordogs.user.application;
 
 import com.fordogs.user.domain.entity.mysql.UserEntity;
-import com.fordogs.user.domain.vo.Email;
 import com.fordogs.user.domain.vo.wrapper.Account;
-import com.fordogs.user.domain.vo.wrapper.Name;
 import com.fordogs.user.error.UserErrorCode;
 import com.fordogs.user.infrastructure.UserRepository;
 import com.fordogs.user.presentation.request.UserFindIdRequest;
@@ -32,9 +30,9 @@ public class UserQueryService {
 
     public UserFindIdResponse findUserAccountByNameAndBirthDate(UserFindIdRequest request) {
         UserEntity userEntity = userRepository.findByNameAndBirthDateAndEmail(
-                Name.builder().value(request.getUserName()).build(),
-                request.getBirthDate(),
-                Email.fromEmailAddress(request.getUserEmail())
+                request.toName(),
+                request.getUserBirthDate(),
+                request.toEmail()
         ).orElseThrow(UserErrorCode.USER_NOT_FOUND::toException);
 
         return UserFindIdResponse.toResponse(userEntity);

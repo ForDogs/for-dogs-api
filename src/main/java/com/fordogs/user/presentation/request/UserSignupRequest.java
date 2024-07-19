@@ -30,13 +30,13 @@ public class UserSignupRequest {
     @NotBlank(message = "회원명을 입력해주세요.")
     private String userName;
 
+    @Schema(description = "회원 생년월일", requiredMode = Schema.RequiredMode.REQUIRED, example = "1990-01-01")
+    @NotNull(message = "생년월일을 입력해주세요.")
+    private LocalDate userBirthDate;
+
     @Schema(description = "회원 이메일 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "honggildong")
     @NotBlank(message = "이메일 ID를 입력해주세요.")
     private String userEmailId;
-
-    @Schema(description = "회원 생년월일", requiredMode = Schema.RequiredMode.REQUIRED, example = "1990-01-01")
-    @NotNull(message = "생년월일을 입력해주세요.")
-    private LocalDate birthDate;
 
     @Schema(description = "회원 이메일 도메인", requiredMode = Schema.RequiredMode.REQUIRED, example = "gmail.com")
     @NotBlank(message = "이메일 도메인을 입력해주세요.")
@@ -57,7 +57,7 @@ public class UserSignupRequest {
                 .name(Name.builder()
                         .value(this.userName)
                         .build())
-                .birthDate(this.birthDate)
+                .birthDate(this.userBirthDate)
                 .email(Email.builder()
                         .id(this.userEmailId)
                         .domain(this.userEmailDomain)

@@ -30,24 +30,6 @@ public class Email extends ValueObject {
     public String formattedEmail() {
         return getId() + "@" + getDomain();
     }
-    public static Email fromEmailAddress(String emailAddress) {
-        if (emailAddress == null || emailAddress.isEmpty()) {
-            throw GlobalErrorCode.internalServerException("이메일 주소가 존재하지 않습니다.");
-        }
-
-        int atIndex = emailAddress.indexOf("@");
-        if (atIndex == -1) {
-            throw UserErrorCode.INVALID_EMAIL_ADDRESS.toException();
-        }
-
-        String id = emailAddress.substring(0, atIndex);
-        String domain = emailAddress.substring(atIndex + 1);
-
-        return Email.builder()
-                .id(id)
-                .domain(domain)
-                .build();
-    }
 
     private void validate(String id, String domain) {
         if (id == null || id.isEmpty()) {

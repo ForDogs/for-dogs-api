@@ -17,6 +17,7 @@ CREATE TABLE `for_dog_db`.`user`
     `enabled`      TINYINT(1) NOT NULL DEFAULT 1 COMMENT '회원 활성화 여부 (1: 활성화, 0: 비활성화)',
     `created_at`   DATETIME NULL DEFAULT NOW() COMMENT '최초 생성 일시',
     `updated_at`   DATETIME NULL DEFAULT NOW() COMMENT '최종 수정 일시',
+    UNIQUE KEY (`email_id`, `email_domain`),
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='회원 정보';

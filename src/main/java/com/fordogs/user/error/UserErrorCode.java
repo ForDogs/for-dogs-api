@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 public enum UserErrorCode implements BaseErrorCode<DomainException> {
 
     DUPLICATE_USER_ID(HttpStatus.CONFLICT, "이미 사용 중인 회원 ID입니다."),
+    DUPLICATE_EMAIL(HttpStatus.CONFLICT, "이미 사용 중인 회원 이메일입니다."),
     LOGIN_PASSWORD_FAILED(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
     USER_ROLE_MISMATCH(HttpStatus.FORBIDDEN, "회원 역할이 일치하지 않습니다."),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "일치하는 회원을 찾을 수 없습니다."),

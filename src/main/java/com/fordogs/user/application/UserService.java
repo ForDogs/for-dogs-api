@@ -41,6 +41,9 @@ public class UserService {
         if (userRepository.existsByAccount(userEntity.getAccount())) {
             throw UserErrorCode.DUPLICATE_USER_ID.toException();
         }
+        if (userRepository.existsByEmail(userEntity.getEmail())) {
+            throw UserErrorCode.DUPLICATE_EMAIL.toException();
+        }
         UserEntity savedUserEntity = userRepository.save(userEntity);
 
         return UserSignupResponse.toResponse(savedUserEntity);

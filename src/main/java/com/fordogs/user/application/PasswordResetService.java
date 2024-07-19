@@ -5,6 +5,7 @@ import com.fordogs.core.util.crypto.PasswordHasherUtil;
 import com.fordogs.user.application.email.EmailSender;
 import com.fordogs.user.domain.entity.mysql.UserEntity;
 import com.fordogs.user.domain.entity.redis.EmailAuthCache;
+import com.fordogs.user.domain.vo.Email;
 import com.fordogs.user.domain.vo.wrapper.Account;
 import com.fordogs.user.domain.vo.wrapper.Password;
 import com.fordogs.user.error.PasswordResetErrorCode;
@@ -34,15 +35,16 @@ public class PasswordResetService {
     private final UserQueryService userQueryService;
 
     public void requestPasswordReset(UserPasswordResetRequest request) {
+        Email requestEmail = request.toEmail();
         UserEntity userEntity = userQueryService.findByAccount(Account.builder().value(request.getUserId()).build());
 
         if (!request.getUserId().equals(userEntity.getAccount().getValue())
-                || !request.getUserEmail().equals(userEntity.getEmail().formattedEmail())) {
+                || !requestEmail.equals(userEntity.getEmail())) {
             throw PasswordResetErrorCode.USER_NOT_FOUND.toException();
         }
 
         String authenticationCode = StringGenerator.generate4DigitString();
-        emailSender.sendMail(request.getUserEmail(), authenticationCode);
+        emailSender.sendMail(requestEmail, authenticationCode);
 
         EmailAuthCache emailAuthCache = EmailAuthCache.builder()
                 .authCode(authenticationCode)
