@@ -101,12 +101,19 @@ public class JwtUtil {
     }
 
     public boolean validateUUIDToken(String accessToken, String providedUUIDToken) {
+        if (providedUUIDToken == null || providedUUIDToken.isEmpty()) {
+            throw SecurityErrorCode.UUID_TOKEN_VALIDATION_FAILED.toException();
+        }
+
         Claims claims = extractAllClaims(accessToken);
         String extractedUUIDToken = claims.get(TokenConstants.UUID_TOKEN_CLAIM, String.class);
+
         String decryptedUUIDToken = UUIDToken.decryptToken(extractedUUIDToken);
+
         if (!decryptedUUIDToken.equals(providedUUIDToken)) {
             throw SecurityErrorCode.UUID_TOKEN_VALIDATION_FAILED.toException();
         }
+
         return true;
     }
 

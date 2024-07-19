@@ -6,7 +6,6 @@ import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.core.util.constants.HeaderConstants;
 import com.fordogs.security.configuration.ApiRouteConstants;
 import com.fordogs.security.exception.SecurityAuthenticationException;
-import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.security.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -42,23 +41,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            if (!jwtUtil.validateToken(accessToken)) {
-                filterChain.doFilter(request, response);
-                return;
+            if (jwtUtil.validateToken(accessToken)) {
+                String uuidToken = CookieUtil.extractCookie(request, CookieConstants.COOKIE_NAME_UUID_TOKEN);
+                if (!jwtUtil.validateUUIDToken(accessToken, uuidToken)) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+                Authentication authentication = jwtUtil.getAuthentication(accessToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-
-            String uuidToken = CookieUtil.extractCookie(request, CookieConstants.COOKIE_NAME_UUID_TOKEN);
-            if (uuidToken == null || uuidToken.isEmpty()) {
-                throw SecurityErrorCode.UUID_TOKEN_VALIDATION_FAILED.toException();
-            }
-
-            if (!jwtUtil.validateUUIDToken(accessToken, uuidToken)) {
-                filterChain.doFilter(request, response);
-                return;
-            }
-
-            Authentication authentication = jwtUtil.getAuthentication(accessToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (SecurityAuthenticationException e) {
             SecurityContextHolder.clearContext();
             request.setAttribute(SecurityAuthenticationException.getExceptionName(), e);
