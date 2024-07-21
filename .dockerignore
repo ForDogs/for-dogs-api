@@ -1,5 +1,29 @@
-.idea
+# Gradle files and directories
+.gradle/
+build/
+out/
+
+# IDE related files
+.idea/
+*.iml
+
+# OS related files
+.DS_Store
+Thumbs.db
+
+# Git related files
 .git
 .gitignore
-docker
+
+# Local environment Docker files
+docker/
+
+# Other unnecessary files
+*.log
+*.tmp
+*.bak
 *.md
+
+
+
+

@@ -16,22 +16,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '17'
-
-      - name: Grant execute permission for Gradle Wrapper
-        run: chmod 777 ./gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew -x test build
-
-      - name: Verify JAR file exists
-        run: ls -la build/libs/
+        uses: actions/checkout@v3
 
       - name: Bump version and push tag
         id: tag_version
@@ -48,15 +33,5 @@ jobs:
           body: ${{ steps.tag_version.outputs.changelog }}
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/libs/for-dogs-api-0.0.1-SNAPSHOT.jar
-          asset_name: for-dogs-api-0.0.1-SNAPSHOT.jar
-          asset_content_type: application/java-archive
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

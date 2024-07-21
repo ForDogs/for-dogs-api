@@ -21,7 +21,6 @@ services:
       AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
       AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
       REGION: 'ap-northeast-2'
-      GRADLE_OPTS: "-Xmx1g"
       TZ: Asia/Seoul
 
   mysql:
