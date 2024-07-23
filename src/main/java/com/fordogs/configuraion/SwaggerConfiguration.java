@@ -65,12 +65,12 @@ public class SwaggerConfiguration {
     }
 
     private List<Server> createServers(String serverDomain) {
-        Server prodHttpsServer = new Server()
-                .url("https://" + serverDomain);
         Server localServer = new Server()
                 .url("https://localhost");
+        Server prodServer = new Server()
+                .url("https://" + serverDomain);
 
-        return List.of(localServer, prodHttpsServer);
+        return List.of(prodServer, localServer);
     }
 
     private SecurityRequirement createSecurityRequirement() {
