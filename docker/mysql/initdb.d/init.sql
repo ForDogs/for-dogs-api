@@ -1,7 +1,7 @@
 -- INDEX
 CREATE INDEX idx_orders_createdAt_buyerId ON orders (created_at, user_id);
-CREATE INDEX idx_product_sellerId ON product (seller_id);
 CREATE INDEX idx_orders_createdAt ON orders (created_at);
+CREATE INDEX idx_product_userId ON product (user_id);
 
 -- TABLE
 CREATE TABLE `for_dog_db`.`user`
