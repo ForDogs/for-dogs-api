@@ -16,11 +16,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
-    open-in-view: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
 
 springdoc:
   use-fqn: true
