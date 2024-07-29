@@ -40,7 +40,12 @@ public class ProductService {
         UUID userId = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
         UserEntity userEntity = userQueryService.findById(userId);
 
+        if (request.getProductQuantity() <= 0) {
+            throw ProductErrorCode.PRODUCT_QUANTITY_INVALID.toException();
+        }
+
         checkProductNameDuplicate(request.getProductName());
+
         ProductEntity savedProductEntity = productRepository.save(request.toEntity(userEntity));
 
         return ProductRegisterResponse.toResponse(savedProductEntity);
@@ -98,6 +103,10 @@ public class ProductService {
     public ProductEntity findById(UUID productId) {
         return productRepository.findById(productId)
                 .orElseThrow(ProductErrorCode.PRODUCT_NOT_FOUND::toException);
+    }
+
+    public List<ProductEntity> findLowStockProducts(int quantity) {
+        return productRepository.findByStockQuantityLessThan(quantity);
     }
 
     private ProductEntity findActiveProductWithActiveUserById(UUID productId) {

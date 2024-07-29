@@ -18,8 +18,11 @@ public class Quantity extends ValueWrapperObject<Integer> {
 
     @Override
     protected void validate(Integer value) {
-        if (value <= 0) {
-            throw GlobalDomainErrorCode.INVALID_QUANTITY.toException();
+        if (value < 0) {
+            throw GlobalDomainErrorCode.INVALID_QUANTITY_NEGATIVE.toException();
+        }
+        if (value > 999) {
+            throw GlobalDomainErrorCode.INVALID_QUANTITY_EXCEEDS_MAX.toException();
         }
     }
 }
