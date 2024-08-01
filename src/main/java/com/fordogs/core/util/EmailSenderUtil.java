@@ -1,4 +1,4 @@
-package com.fordogs.user.application.email;
+package com.fordogs.core.util;
 
 import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.user.domain.vo.Email;
@@ -12,34 +12,34 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import java.util.Map;
+
 @Component
 @RequiredArgsConstructor
-public class EmailSender {
-
-    private static final String EMAIL_SUBJECT = "[For Dogs] 비밀번호 찾기 인증코드 안내";
+public class EmailSenderUtil {
 
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
 
     @Async
-    public void sendMail(Email email, String authenticationCode) {
+    public void sendMail(Email email, String subject, String templateName, Map<String, Object> variables) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
             mimeMessageHelper.setTo(email.formattedEmail());
-            mimeMessageHelper.setSubject(EMAIL_SUBJECT);
-            mimeMessageHelper.setText(setContext(authenticationCode), true);
+            mimeMessageHelper.setSubject(subject);
+            mimeMessageHelper.setText(setContext(templateName, variables), true);
 
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            throw GlobalErrorCode.internalServerException("인증 이메일 전송 중 오류가 발생하였습니다.");
+            throw GlobalErrorCode.internalServerException("이메일 전송 중 오류가 발생하였습니다.");
         }
     }
 
-    private String setContext(String code) {
+    private String setContext(String templateName, Map<String, Object> variables) {
         Context context = new Context();
-        context.setVariable("code", code);
+        variables.forEach(context::setVariable);
 
-        return templateEngine.process("email", context);
+        return templateEngine.process(templateName, context);
     }
 }

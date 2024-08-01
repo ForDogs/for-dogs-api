@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Dogs - 상품 재고 알림</title>
+</head>
+<body style="font-family: Arial, sans-serif; background: linear-gradient(to bottom right, #FFA500, #FF6B6B); margin: 0; padding: 0;">
+<div style="max-width: 600px; margin: 100px auto; background-color: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <h3 style="text-align: center; color: #333;">For Dogs</h3>
+    <h1 style="text-align: center; color: #333;">상품 재고 알림</h1>
+    <br>
+    <p style="line-height: 1.5; color: #555;">안녕하세요, <b><span th:text="${sellerName}"></span></b>님.</p>
+    <p style="line-height: 1.5; color: #555;">귀하의 상품의 재고가 <span style="font-weight: bold; color: #FF0000;"><span th:text="${minimumStock}"></span>개</span> 미만으로 감소했습니다.</p>
+    <p style="line-height: 1.5; color: #555;">다음과 같은 상품에 대해 재고를 확인해 주시기 바랍니다.</p>
+    <br>
+    <div th:each="product : ${products}" style="background-color: #f4f4f4; padding: 20px; border-radius: 6px; font-size: 20px; font-weight: bold; color: #333; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); display: flex; align-items: center;">
+        <img th:src="${product.getImagesAsArray()[0]}" alt="상품 이미지" style="width: 100px; height: 100px; border-radius: 5px; margin-right: 20px;">
+        <div style="flex: 1; text-align: left;">
+            <div>상품명: <span th:text="${product.name}"></span></div>
+            <div>카테고리: <span th:text="${product.category.description}"></span></div>
+            <div>남은 재고: <span th:text="${product.quantity.value}"></span>개</div>
+        </div>
+    </div>
+    <br/>
+    <div style="text-align: center; color: #777; margin-top: 20px;">
+        <p><b>For Dogs | www.fordogs.store</b></p>
+    </div>
+</div>
+</body>
+</html>

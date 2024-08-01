@@ -1,8 +1,9 @@
 package com.fordogs.user.application;
 
 import com.fordogs.core.util.StringGenerator;
+import com.fordogs.core.util.constants.EmailConstants;
 import com.fordogs.core.util.crypto.PasswordHasherUtil;
-import com.fordogs.user.application.email.EmailSender;
+import com.fordogs.core.util.EmailSenderUtil;
 import com.fordogs.user.domain.entity.mysql.UserEntity;
 import com.fordogs.user.domain.entity.redis.EmailAuthCache;
 import com.fordogs.user.domain.vo.Email;
@@ -20,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -31,7 +33,7 @@ public class PasswordResetService {
     private long authCodeExpirationMinutes;
 
     private final EmailAuthRepository emailAuthRepository;
-    private final EmailSender emailSender;
+    private final EmailSenderUtil emailSenderUtil;
     private final UserQueryService userQueryService;
 
     public void requestPasswordReset(UserPasswordResetRequest request) {
@@ -44,7 +46,7 @@ public class PasswordResetService {
         }
 
         String authenticationCode = StringGenerator.generate4DigitString();
-        emailSender.sendMail(requestEmail, authenticationCode);
+        emailSenderUtil.sendMail(requestEmail, EmailConstants.PASSWORD_RESET_EMAIL_SUBJECT, "email", Map.of("code", authenticationCode));
 
         EmailAuthCache emailAuthCache = EmailAuthCache.builder()
                 .authCode(authenticationCode)

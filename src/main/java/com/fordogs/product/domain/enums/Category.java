@@ -2,8 +2,10 @@ package com.fordogs.product.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fordogs.product.error.ProductErrorCode;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum Category {
     FOOD("식품"),

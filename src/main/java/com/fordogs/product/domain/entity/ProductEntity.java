@@ -103,4 +103,8 @@ public class ProductEntity extends BaseEntity {
                 .value(this.quantity.getValue() + quantityToIncrease)
                 .build();
     }
+
+    public String[] getImagesAsArray() {
+        return JsonConverter.convertJsonToArray(this.images);
+    }
 }
