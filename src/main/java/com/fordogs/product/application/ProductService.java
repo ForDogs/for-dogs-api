@@ -65,7 +65,6 @@ public class ProductService {
     @Transactional
     public ProductUpdateResponse updateProduct(UUID productId, ProductUpdateRequest request) {
         ProductEntity productEntity = findActiveProductWithActiveUserById(productId);
-        checkProductNameDuplicate(request.getProductName());
         productEntity.update(request.getProductName(), request.getProductPrice(), request.getProductQuantity(),
                 request.getProductDescription(), request.getProductImages(), request.getProductCategory());
 
