@@ -30,7 +30,7 @@ spring:
 token:
   secret-key:
   access-token-expiration-minutes:
-  refresh-token-expiration-days:
+  refresh-token-expiration-minutes:
 
 # AWS
 cloud:

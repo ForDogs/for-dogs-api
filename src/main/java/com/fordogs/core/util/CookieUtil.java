@@ -20,7 +20,7 @@ public class CookieUtil {
     public static String serviceDomain;
 
     public static String createRefreshTokenCookie(RefreshToken refreshToken) {
-        return createCookie(CookieConstants.COOKIE_NAME_REFRESH_TOKEN, refreshToken.getValue(), refreshToken.getExpirationTime());
+        return createCookie(CookieConstants.COOKIE_NAME_REFRESH_TOKEN, refreshToken.getValue(), refreshToken.getMetadata().getExpirationTime());
     }
 
     public static String createUUIDTokenCookie(UUIDToken uuidToken, Long expirationTime) {

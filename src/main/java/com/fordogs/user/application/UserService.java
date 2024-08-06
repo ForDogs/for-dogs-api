@@ -97,7 +97,7 @@ public class UserService {
 
     private void addTokensToResponseHeaders(RefreshToken refreshToken, UUIDToken uuidToken) {
         HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createRefreshTokenCookie(refreshToken));
-        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createUUIDTokenCookie(uuidToken, refreshToken.getExpirationTime()));
+        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createUUIDTokenCookie(uuidToken, refreshToken.getMetadata().getExpirationTime()));
     }
 
     private void removeTokensFromResponseHeaders() {

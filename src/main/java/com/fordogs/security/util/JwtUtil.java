@@ -56,7 +56,7 @@ public class JwtUtil {
     }
 
     public RefreshToken generateRefreshToken(UserEntity user) {
-        return RefreshToken.createToken(user, secretKey, tokenProperties.getRefreshTokenExpirationDays());
+        return RefreshToken.createToken(user, secretKey, tokenProperties.getRefreshTokenExpirationMinutes());
     }
 
     public Authentication getAuthentication(String token) {

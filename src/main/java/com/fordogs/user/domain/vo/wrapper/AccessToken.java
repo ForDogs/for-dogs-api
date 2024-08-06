@@ -5,6 +5,7 @@ import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.constants.TokenConstants;
 import com.fordogs.core.util.validator.StringValidator;
 import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.vo.TokenMetadata;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -21,12 +22,12 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AccessToken extends ValueWrapperObject<String> {
 
-    private Long expirationTime;
+    private TokenMetadata metadata;
 
     @Builder
     public AccessToken(String value, Long expirationTime) {
         super(value);
-        this.expirationTime = expirationTime;
+        this.metadata = new TokenMetadata(expirationTime);
         validate(value);
     }
 

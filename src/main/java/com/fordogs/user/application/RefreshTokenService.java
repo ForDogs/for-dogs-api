@@ -25,7 +25,7 @@ public class RefreshTokenService {
         RefreshTokenCache refreshTokenCache = RefreshTokenCache.builder()
                 .token(refreshToken)
                 .userAccount(userEntity.getAccount())
-                .expirationTime((long) tokenProperties.getRefreshTokenExpirationDays())
+                .expirationTime((long) tokenProperties.getRefreshTokenExpirationMinutes())
                 .build();
 
         refreshTokenRepository.save(refreshTokenCache);

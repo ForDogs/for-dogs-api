@@ -4,6 +4,7 @@ import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
 import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.validator.StringValidator;
 import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.vo.TokenMetadata;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Transient;
@@ -22,12 +23,12 @@ import java.util.Date;
 public class RefreshToken extends ValueWrapperObject<String> {
 
     @Transient
-    private Long expirationTime;
+    private TokenMetadata metadata;
 
     @Builder
     public RefreshToken(String value, Long expirationTime) {
         super(value);
-        this.expirationTime = expirationTime;
+        this.metadata = new TokenMetadata(expirationTime);
         validate(value);
     }
 

@@ -15,5 +15,5 @@ public class TokenProperties {
 
     private int accessTokenExpirationMinutes;
 
-    private int refreshTokenExpirationDays;
+    private int refreshTokenExpirationMinutes;
 }
