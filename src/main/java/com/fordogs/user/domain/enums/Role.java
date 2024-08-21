@@ -1,7 +1,7 @@
 package com.fordogs.user.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fordogs.user.error.UserErrorCode;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -18,6 +18,7 @@ public enum Role {
                 return role;
             }
         }
-        throw UserErrorCode.INVALID_USER_ROLE_NAME.toException();
+
+        throw GlobalErrorCode.badRequestException("유효하지 않은 회원 역할입니다.");
     }
 }

@@ -7,6 +7,7 @@ import com.fordogs.cart.presentation.request.CartCreateRequest;
 import com.fordogs.cart.presentation.request.CartQuantityUpdateRequest;
 import com.fordogs.cart.presentation.response.CartSearchResponse;
 import com.fordogs.configuraion.swagger.ApiErrorCode;
+import com.fordogs.core.domain.vo.error.QuantityErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,7 @@ public class CartController {
     private final CartQueryService cartQueryService;
 
     @Operation(summary = "장바구니 등록", operationId = "/carts")
-    @ApiErrorCode({CartErrorCode.class, SecurityErrorCode.class})
+    @ApiErrorCode({CartErrorCode.class, QuantityErrorCode.class, SecurityErrorCode.class})
     @PostMapping
     public ResponseEntity<SuccessResponse<Object>> handleCreateCartRequest(
             @Valid @RequestBody CartCreateRequest request) {

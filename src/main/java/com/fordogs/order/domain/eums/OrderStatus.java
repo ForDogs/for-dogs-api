@@ -1,7 +1,7 @@
 package com.fordogs.order.domain.eums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fordogs.order.error.OrderErrorCode;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +26,7 @@ public enum OrderStatus {
                 return orderStatus;
             }
         }
-        throw OrderErrorCode.INVALID_ORDER_STATUS_NAME.toException();
+
+        throw GlobalErrorCode.badRequestException("유효하지 않은 주문 상태 이름입니다.");
     }
 }

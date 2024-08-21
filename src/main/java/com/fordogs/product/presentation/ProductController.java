@@ -1,10 +1,13 @@
 package com.fordogs.product.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
+import com.fordogs.core.domain.vo.error.PriceErrorCode;
+import com.fordogs.core.domain.vo.error.QuantityErrorCode;
 import com.fordogs.product.domain.enums.Category;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.product.application.ProductService;
 import com.fordogs.product.error.ProductErrorCode;
+import com.fordogs.product.error.ProductValidationErrorCode;
 import com.fordogs.product.error.S3ErrorCode;
 import com.fordogs.product.presentation.request.ProductRegisterRequest;
 import com.fordogs.product.presentation.request.ProductUpdateRequest;
@@ -37,7 +40,7 @@ public class ProductController {
     private final ProductService productService;
 
     @Operation(summary = "상품 등록", operationId = "/products")
-    @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
+    @ApiErrorCode({ProductErrorCode.class, ProductValidationErrorCode.class, PriceErrorCode.class, QuantityErrorCode.class, SecurityErrorCode.class})
     @PostMapping
     public ResponseEntity<SuccessResponse<ProductRegisterResponse>> handleCreateProductRequest(
             @Valid @RequestBody ProductRegisterRequest request) {
@@ -69,7 +72,7 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 수정", operationId = "/products/{productId}")
-    @ApiErrorCode({ProductErrorCode.class, SecurityErrorCode.class})
+    @ApiErrorCode({ProductErrorCode.class, ProductValidationErrorCode.class, PriceErrorCode.class, QuantityErrorCode.class, SecurityErrorCode.class})
     @PatchMapping("/{productId}")
     public ResponseEntity<SuccessResponse<ProductUpdateResponse>> handleUpdateProductRequest(
             @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") UUID productId,

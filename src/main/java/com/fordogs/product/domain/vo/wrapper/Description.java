@@ -1,7 +1,7 @@
 package com.fordogs.product.domain.vo.wrapper;
 
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
-import com.fordogs.product.error.ProductErrorCode;
+import com.fordogs.product.error.ProductValidationErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -28,10 +28,10 @@ public class Description extends ValueWrapperObject<String> {
     @Override
     protected void validate(String value) {
         if (!validateLength(value, MIN_LENGTH, MAX_LENGTH)) {
-            throw ProductErrorCode.INVALID_DESCRIPTION_LENGTH.toException();
+            throw ProductValidationErrorCode.INVALID_DESCRIPTION_LENGTH.toException();
         }
         if (validateContainsProfanity(value, PROFANITY_REGEX)) {
-            throw ProductErrorCode.INVALID_DESCRIPTION_PROFANITY.toException();
+            throw ProductValidationErrorCode.INVALID_DESCRIPTION_PROFANITY.toException();
         }
     }
 }

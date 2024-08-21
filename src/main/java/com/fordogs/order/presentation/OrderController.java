@@ -1,6 +1,7 @@
 package com.fordogs.order.presentation;
 
 import com.fordogs.configuraion.swagger.ApiErrorCode;
+import com.fordogs.core.domain.vo.error.PriceErrorCode;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.order.application.OrderQueryService;
 import com.fordogs.order.application.OrderService;
@@ -36,7 +37,7 @@ public class OrderController {
     private final OrderQueryService orderQueryService;
 
     @Operation(summary = "주문 등록", operationId = "/orders")
-    @ApiErrorCode({OrderErrorCode.class, SecurityErrorCode.class})
+    @ApiErrorCode({OrderErrorCode.class, PriceErrorCode.class, SecurityErrorCode.class})
     @PostMapping
     public ResponseEntity<SuccessResponse<OrderRegisterResponse>> handleCreateOrderRequest(
             @Valid @RequestBody OrderRegisterRequest request) {

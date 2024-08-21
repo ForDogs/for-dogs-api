@@ -1,6 +1,6 @@
 package com.fordogs.core.domain.vo.wapper;
 
-import com.fordogs.core.exception.error.GlobalDomainErrorCode;
+import com.fordogs.core.domain.vo.error.QuantityErrorCode;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
@@ -19,10 +19,10 @@ public class Quantity extends ValueWrapperObject<Integer> {
     @Override
     protected void validate(Integer value) {
         if (value < 0) {
-            throw GlobalDomainErrorCode.INVALID_QUANTITY_NEGATIVE.toException();
+            throw QuantityErrorCode.INVALID_QUANTITY_NEGATIVE.toException();
         }
         if (value > 999) {
-            throw GlobalDomainErrorCode.INVALID_QUANTITY_EXCEEDS_MAX.toException();
+            throw QuantityErrorCode.INVALID_QUANTITY_EXCEEDS_MAX.toException();
         }
     }
 }

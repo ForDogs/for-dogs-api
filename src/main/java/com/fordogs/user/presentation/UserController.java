@@ -13,6 +13,7 @@ import com.fordogs.user.application.UserService;
 import com.fordogs.user.error.PasswordResetErrorCode;
 import com.fordogs.user.error.RefreshTokenErrorCode;
 import com.fordogs.user.error.UserErrorCode;
+import com.fordogs.user.error.UserValidationErrorCode;
 import com.fordogs.user.presentation.request.*;
 import com.fordogs.user.presentation.response.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +36,7 @@ public class UserController {
     private final PasswordResetService passwordResetService;
 
     @Operation(summary = "회원 가입", operationId = "/users")
-    @ApiErrorCode(UserErrorCode.class)
+    @ApiErrorCode({UserErrorCode.class, UserValidationErrorCode.class})
     @PostMapping
     public ResponseEntity<SuccessResponse<UserSignupResponse>> handleSignupUserRequest(
             @Valid @RequestBody UserSignupRequest request) {

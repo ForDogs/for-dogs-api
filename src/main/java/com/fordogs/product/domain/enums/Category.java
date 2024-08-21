@@ -1,7 +1,7 @@
 package com.fordogs.product.domain.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fordogs.product.error.ProductErrorCode;
+import com.fordogs.core.exception.error.GlobalErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +24,8 @@ public enum Category {
                 return category;
             }
         }
-        throw ProductErrorCode.INVALID_CATEGORY_NAME.toException();
+
+        throw GlobalErrorCode.badRequestException("유효하지 않은 카테고리 이름입니다.");
     }
 
     public static Category validateCategoryName(String name) {
@@ -34,7 +35,7 @@ public enum Category {
         try {
             return Category.valueOf(name);
         } catch (IllegalArgumentException e) {
-            throw ProductErrorCode.INVALID_CATEGORY_NAME.toException();
+            throw GlobalErrorCode.badRequestException("유효하지 않은 카테고리 이름입니다.");
         }
     }
 }

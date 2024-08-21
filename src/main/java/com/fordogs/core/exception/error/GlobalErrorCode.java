@@ -25,4 +25,8 @@ public enum GlobalErrorCode implements BaseErrorCode<GlobalException> {
     public static GlobalException internalServerException(String message) {
         return new GlobalException(HttpStatus.INTERNAL_SERVER_ERROR, message);
     }
+
+    public static GlobalException badRequestException(String message) {
+        return new GlobalException(HttpStatus.BAD_REQUEST, message);
+    }
 }
