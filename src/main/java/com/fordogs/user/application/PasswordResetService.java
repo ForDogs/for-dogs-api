@@ -1,9 +1,10 @@
 package com.fordogs.user.application;
 
+import com.fordogs.core.exception.DomainException;
+import com.fordogs.core.util.EmailSenderUtil;
 import com.fordogs.core.util.StringGenerator;
 import com.fordogs.core.util.constants.EmailConstants;
 import com.fordogs.core.util.crypto.PasswordHasherUtil;
-import com.fordogs.core.util.EmailSenderUtil;
 import com.fordogs.user.domain.entity.mysql.UserEntity;
 import com.fordogs.user.domain.entity.redis.EmailAuthCache;
 import com.fordogs.user.domain.vo.Email;
@@ -61,18 +62,31 @@ public class PasswordResetService {
         EmailAuthCache emailAuthCache = emailAuthRepository.findById(request.getAuthCode())
                 .orElseThrow(PasswordResetErrorCode.AUTH_CODE_NOT_FOUND::toException);
 
-        String newPassword = StringGenerator.generatePassword();
-
-        UserEntity userEntity = userQueryService.findByAccount(Account.builder().value(emailAuthCache.getUserAccount()).build());
-        userEntity.changePassword(Password.builder()
-                .value(newPassword)
-                .build());
-
-        emailAuthRepository.delete(emailAuthCache);
+        String newPassword = generateAndSetPassword(emailAuthCache);
 
         return UserPasswordResetVerifyResponse.builder()
                 .temporaryPassword(newPassword)
                 .build();
+    }
+
+    private String generateAndSetPassword(EmailAuthCache emailAuthCache) {
+        String newPassword = StringGenerator.generatePassword();
+
+        try {
+            UserEntity userEntity = userQueryService.findByAccount(Account.builder()
+                    .value(emailAuthCache.getUserAccount())
+                    .build());
+
+            userEntity.changePassword(Password.builder()
+                    .value(newPassword)
+                    .build());
+
+            emailAuthRepository.delete(emailAuthCache);
+
+            return newPassword;
+        } catch (DomainException e) {
+            return generateAndSetPassword(emailAuthCache);
+        }
     }
 
     public void changePassword(UserPasswordChangeRequest request) {

@@ -5,10 +5,11 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.security.SecureRandom;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class StringGenerator {
@@ -54,14 +55,33 @@ public class StringGenerator {
         int passwordLength = (int) (Math.random() * (maxPasswordLength - minPasswordLength + 1)) + minPasswordLength;
         SecureRandom random = new SecureRandom();
 
-        return IntStream.range(0, passwordLength)
-                .mapToObj(i -> String.valueOf((char) generateCharacter(random)))
+        StringBuilder password = new StringBuilder();
+
+        password.append(generateCharacter(random, 0));
+        password.append(generateCharacter(random, 1));
+        password.append(generateCharacter(random, 2));
+        password.append(generateCharacter(random, 3));
+
+        for (int i = 4; i < passwordLength; i++) {
+            password.append(generateCharacter(random));
+        }
+
+        List<Character> passwordList = password.chars()
+                .mapToObj(c -> (char) c)
+                .collect(Collectors.toList());
+        Collections.shuffle(passwordList);
+
+        return passwordList.stream()
+                .map(String::valueOf)
                 .collect(Collectors.joining());
     }
 
     private static char generateCharacter(SecureRandom random) {
         int charType = random.nextInt(4);
+        return generateCharacter(random, charType);
+    }
 
+    private static char generateCharacter(SecureRandom random, int charType) {
         return switch (charType) {
             case 0 -> (char) (random.nextInt(26) + 'a');
             case 1 -> (char) (random.nextInt(26) + 'A');
