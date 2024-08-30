@@ -30,7 +30,8 @@ public class ApiLoggingAspect extends ApiLoggingPointCut {
         apiLogger.afterLog(response);
     }
 
-    @AfterReturning(value = "within(com.fordogs.core.exception.GlobalExceptionHandler)", returning = "response")
+    // TODO: 2024.08.30 DynamoDB 과금으로 인한 에러 로깅 중지
+    // @AfterReturning(value = "within(com.fordogs.core.exception.GlobalExceptionHandler)", returning = "response")
     public void apiThrowException(ResponseEntity<ErrorResponse> response) {
         apiLogger.failLog(response);
     }
