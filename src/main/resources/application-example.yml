@@ -1,7 +1,7 @@
 # HTTPS
 server:
   ssl:
-    key-store: classpath:ssl/keystore.p12
+    key-store: # classpath:ssl/keystore.p12
     key-store-password:
     key-store-type: PKCS12
 
@@ -25,6 +25,36 @@ spring:
     port: 587
     username:
     password:
+
+# OAuth
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id:
+            client-secret:
+            scope:
+              - profile
+              - email
+
+          kakao:
+            client-id:
+            client-secret:
+            redirect-uri:
+            client-name: kakao
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - account_email
+
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
 # JWT
 token:

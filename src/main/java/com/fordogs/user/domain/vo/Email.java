@@ -21,7 +21,7 @@ public class Email extends ValueObject {
     private String domain;
 
     @Builder
-    private Email(String id, String domain) {
+    public Email(String id, String domain) {
         validate(id, domain);
         this.id = id;
         this.domain = domain;
@@ -29,6 +29,25 @@ public class Email extends ValueObject {
 
     public String formattedEmail() {
         return getId() + "@" + getDomain();
+    }
+
+    public static Email fromFormattedEmail(String formattedEmail) {
+        if (formattedEmail == null || formattedEmail.isEmpty()) {
+            throw GlobalErrorCode.internalServerException("이메일 형식이 유효하지 않습니다.");
+        }
+
+        String[] parts = formattedEmail.split("@");
+        if (parts.length != 2) {
+            throw GlobalErrorCode.internalServerException("이메일 형식이 유효하지 않습니다.");
+        }
+
+        String id = parts[0];
+        String domain = parts[1];
+
+        return Email.builder()
+                .id(id)
+                .domain(domain)
+                .build();
     }
 
     private void validate(String id, String domain) {

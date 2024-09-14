@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>소셜 로그인</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+      margin: 0;
+    }
+    .login-container {
+      text-align: center;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .login-button {
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      text-decoration: none;
+    }
+    .google-button {
+      background-color: #4285F4;
+    }
+    .google-button:hover {
+      background-color: #357AE8;
+    }
+    .kakao-button {
+      background-color: #FEE500;
+      color: black;
+    }
+    .kakao-button:hover {
+      background-color: #E0C700;
+    }
+    .icon {
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>소셜 로그인</h1>
+    <button onclick="login('google')" class="login-button google-button">
+      <i class="fab fa-google icon"></i> 구글로 로그인
+    </button>
+    <br/>
+    <button onclick="login('kakao')" class="login-button kakao-button">
+      <i class="fab fa-kakao icon"></i> 카카오로 로그인
+    </button>
+  </div>
+</body>
+<script>
+  function login(provider) {
+    window.location.href = `https://localhost/oauth2/authorization/${provider}`;
+  }
+</script>
+</html>

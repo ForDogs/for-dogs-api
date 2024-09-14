@@ -34,7 +34,8 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e);
         logErrorWithException(e);
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(response);
     }
 
@@ -43,7 +44,8 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e);
         logErrorWithException(e);
 
-        return ResponseEntity.status(e.getHttpStatus())
+        return ResponseEntity
+                .status(e.getHttpStatus())
                 .body(response);
     }
 
@@ -52,7 +54,8 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e);
         logErrorWithException(e);
 
-        return ResponseEntity.status(e.getHttpStatus())
+        return ResponseEntity
+                .status(e.getHttpStatus())
                 .body(response);
     }
 
@@ -61,7 +64,8 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e);
         logErrorWithException(e);
 
-        return ResponseEntity.status(e.getHttpStatus())
+        return ResponseEntity
+                .status(e.getHttpStatus())
                 .body(response);
     }
 
@@ -70,7 +74,8 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e, getMethodArgumentNotValidErrorMessage(e));
         logErrorWithException(e);
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 
@@ -88,7 +93,8 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e, getMaxUploadSizeErrorMessage());
         logErrorWithException(e);
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 
@@ -106,7 +112,8 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e, errorMessage);
         logErrorWithException(e);
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 
@@ -116,7 +123,8 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e, errorMessage);
         logErrorWithException(e);
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 
@@ -125,7 +133,8 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e);
         logErrorWithException(e);
 
-        return ResponseEntity.status(e.statusCode())
+        return ResponseEntity
+                .status(e.statusCode())
                 .body(response);
     }
 
@@ -134,7 +143,8 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e, GlobalErrorCode.ACCESS_DENIED.getMessage());
         logErrorWithException(e);
 
-        return ResponseEntity.status(GlobalErrorCode.ACCESS_DENIED.getHttpStatus())
+        return ResponseEntity
+                .status(GlobalErrorCode.ACCESS_DENIED.getHttpStatus())
                 .body(response);
     }
 
@@ -143,7 +153,8 @@ public class GlobalExceptionHandler {
         ErrorResponse response = ErrorResponse.of(e, GlobalErrorCode.UNAUTHORIZED_ACCESS.getMessage());
         logErrorWithException(e);
 
-        return ResponseEntity.status(GlobalErrorCode.UNAUTHORIZED_ACCESS.getHttpStatus())
+        return ResponseEntity
+                .status(GlobalErrorCode.UNAUTHORIZED_ACCESS.getHttpStatus())
                 .body(response);
     }
 

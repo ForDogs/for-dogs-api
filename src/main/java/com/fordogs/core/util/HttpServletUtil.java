@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -78,7 +79,21 @@ public class HttpServletUtil {
                 .orElseThrow(() -> GlobalErrorCode.internalServerException("요청 속성을 가져오는 중 예외가 발생했습니다."));
     }
 
-    public static void addHeaderToResponse(String headerName, String headerValue) {
+    public static String getRequestParameter(String parameterName) {
+        return getCurrentHttpServletRequest()
+                .map(request -> request.getParameter(parameterName))
+                .orElseThrow(() -> GlobalErrorCode.internalServerException("요청 파라미터를 가져오는 중 예외가 발생했습니다."));
+    }
+
+    public static void addCookieToResponse(String cookie) {
+        addHeaderToResponse(HttpHeaders.SET_COOKIE, cookie);
+    }
+
+    public static void removeCookieFromResponse(String cookieName) {
+        addHeaderToResponse(HttpHeaders.SET_COOKIE, CookieUtil.createExpiredCookie(cookieName));
+    }
+
+    private static void addHeaderToResponse(String headerName, String headerValue) {
         getCurrentHttpServletResponse()
                 .ifPresent(response -> response.addHeader(headerName, headerValue));
     }

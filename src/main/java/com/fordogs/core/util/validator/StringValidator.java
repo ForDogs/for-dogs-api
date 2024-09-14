@@ -29,8 +29,8 @@ public class StringValidator {
         return Pattern.matches("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d\\s]).*$", value);
     }
 
-    public static boolean validateKoreanEnglish(String value) {
-        return Pattern.matches("^[a-zA-Zㄱ-ㅎ가-힣]+$", value);
+    public static boolean validateKoreanEnglishSpecial(String value) {
+        return Pattern.matches("^[a-zA-Zㄱ-ㅎ가-힣\\-_.\\/]+$", value);
     }
 
     public static boolean validateJWTToken(String value) {

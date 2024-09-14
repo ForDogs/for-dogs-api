@@ -18,8 +18,7 @@ public class ApiRouteConstants {
             "/swagger-ui/**", HttpMethod.GET,
             "/api-docs/**", HttpMethod.GET,
             "/docs", HttpMethod.GET,
-            "/swagger-ui.html", HttpMethod.GET,
-            "/favicon.ico", HttpMethod.GET
+            "/swagger-ui.html", HttpMethod.GET
     );
 
     public static final Map<String, HttpMethod> PUBLIC_ENDPOINTS = Map.of(

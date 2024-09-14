@@ -4,7 +4,7 @@ import com.fordogs.configuraion.properties.TokenProperties;
 import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.constants.TokenConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
-import com.fordogs.security.authentication.JwtAuthentication;
+import com.fordogs.security.model.CustomAuthentication;
 import com.fordogs.user.domain.entity.mysql.UserEntity;
 import com.fordogs.user.domain.vo.wrapper.AccessToken;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;
@@ -62,7 +62,7 @@ public class JwtUtil {
     public Authentication getAuthentication(String token) {
         Claims claims = extractAllClaims(token);
 
-        return JwtAuthentication.builder()
+        return CustomAuthentication.builder()
                 .account(claims.getSubject())
                 .id(claims.get(TokenConstants.USER_ID_CLAIM, String.class))
                 .role(claims.get(TokenConstants.ROLE_CLAIM, String.class))

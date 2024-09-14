@@ -14,14 +14,18 @@ public class Name extends ValueWrapperObject<String> {
 
     @Builder
     public Name(String value) {
-        super(value);
+        super(removeWhitespace(value));
         validate(value);
     }
 
     @Override
     protected void validate(String value) {
-        if (!StringValidator.validateKoreanEnglish(value)) {
+        if (!StringValidator.validateKoreanEnglishSpecial(value)) {
             throw UserValidationErrorCode.INVALID_NAME_FORMAT.toException();
         }
+    }
+
+    private static String removeWhitespace(String value) {
+        return value.replaceAll("\\s+", "");
     }
 }

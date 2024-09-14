@@ -1,15 +1,19 @@
 package com.fordogs.security.configuration;
 
 
+import com.fordogs.security.application.CustomOAuth2UserService;
 import com.fordogs.security.filter.JwtAuthenticationFilter;
 import com.fordogs.security.handler.CustomAccessDeniedHandler;
 import com.fordogs.security.handler.CustomAuthenticationEntryPoint;
+import com.fordogs.security.handler.CustomOAuth2FailureHandler;
+import com.fordogs.security.handler.CustomOAuth2SuccessHandler;
 import com.fordogs.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,17 +28,24 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfiguration {
 
     private final JwtUtil jwtUtil;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
+    private final CustomOAuth2FailureHandler customOAuth2FailureHandler;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring()
+                .requestMatchers("/error", "/favicon.ico");
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
-
         http.sessionManagement(sessionManagement -> sessionManagement
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
         http.cors(corsConfig -> corsConfig
                 .configurationSource(corsConfigurationSource())
         );
@@ -68,6 +79,13 @@ public class SecurityConfiguration {
 
             authorizeRequest.anyRequest().authenticated();
         });
+
+        // Redirect URI: {baseUrl}/login/oauth2/code/{registrationId}
+        http.oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userinfo -> userinfo.userService(customOAuth2UserService))
+                .successHandler(customOAuth2SuccessHandler)
+                .failureHandler(customOAuth2FailureHandler)
+        );
 
         http.exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer
                 .authenticationEntryPoint(customAuthenticationEntryPoint)

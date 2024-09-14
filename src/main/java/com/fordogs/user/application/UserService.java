@@ -37,55 +37,32 @@ public class UserService {
 
     public UserSignupResponse signupUser(UserSignupRequest request) {
         UserEntity userEntity = request.toEntity();
-
-        if (userRepository.existsByAccount(userEntity.getAccount())) {
-            throw UserErrorCode.DUPLICATE_USER_ID.toException();
-        }
-        if (userRepository.existsByEmail(userEntity.getEmail())) {
-            throw UserErrorCode.DUPLICATE_EMAIL.toException();
-        }
+        validateUserSignup(userEntity);
         UserEntity savedUserEntity = userRepository.save(userEntity);
-
         return UserSignupResponse.toResponse(savedUserEntity);
     }
 
     public UserLoginResponse performLogin(UserLoginRequest request) {
         UserEntity userEntity = userQueryService.findByAccount(Account.builder().value(request.getUserId()).build());
+        validateUserLogin(request, userEntity);
+        return generateTokensAndResponse(userEntity);
+    }
 
-        if (!userEntity.getRole().equals(request.getUserRole())) {
-            throw UserErrorCode.USER_ROLE_MISMATCH.toException();
-        }
-        if (!PasswordHasherUtil.matches(request.getUserPassword(), userEntity.getPassword().getValue())) {
-            throw UserErrorCode.LOGIN_PASSWORD_FAILED.toException();
-        }
-        if (!userEntity.isEnabled()) {
-            throw UserErrorCode.USER_DISABLED.toException();
-        }
-
-        UUIDToken uuidToken = UUIDToken.generate();
-        AccessToken accessToken = jwtUtil.generateAccessToken(userEntity, uuidToken.toEncryptedString());
-        RefreshToken refreshToken = jwtUtil.generateRefreshToken(userEntity);
-        refreshTokenService.saveRefreshToken(userEntity, refreshToken);
-
-        addTokensToResponseHeaders(refreshToken, uuidToken);
-
-        return UserLoginResponse.toResponse(userEntity, accessToken);
+    public UserLoginResponse performSocialLogin(UserEntity userEntity) {
+        validateUserStatus(userEntity);
+        return generateTokensAndResponse(userEntity);
     }
 
     public void performLogout(String refreshToken) {
         refreshTokenService.deleteRefreshToken(refreshToken);
-        removeTokensFromResponseHeaders();
+        removeCookies();
     }
 
     public UserRefreshResponse renewAccessToken(String accessToken, String refreshToken, String uuidToken) {
         RefreshTokenCache tokenCache = refreshTokenService.getRefreshToken(refreshToken, accessToken);
         UserEntity userEntity = userQueryService.findByAccount(Account.builder().value(tokenCache.getUserAccount()).build());
-        if (!userEntity.isEnabled()) {
-            throw UserErrorCode.USER_DISABLED.toException();
-        }
-
+        validateUserStatus(userEntity);
         AccessToken newAccessToken = jwtUtil.generateAccessToken(userEntity, UUIDToken.from(uuidToken).toEncryptedString());
-
         return UserRefreshResponse.toResponse(userEntity, newAccessToken);
     }
 
@@ -95,13 +72,47 @@ public class UserService {
         userEntity.disable();
     }
 
-    private void addTokensToResponseHeaders(RefreshToken refreshToken, UUIDToken uuidToken) {
-        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createRefreshTokenCookie(refreshToken));
-        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createUUIDTokenCookie(uuidToken, refreshToken.getMetadata().getExpirationTime()));
+    private void validateUserSignup(UserEntity userEntity) {
+        if (userRepository.existsByAccount(userEntity.getAccount())) {
+            throw UserErrorCode.DUPLICATE_USER_ID.toException();
+        }
+        if (userRepository.existsByEmail(userEntity.getEmail())) {
+            throw UserErrorCode.DUPLICATE_EMAIL.toException();
+        }
     }
 
-    private void removeTokensFromResponseHeaders() {
-        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createExpiredCookie(CookieConstants.COOKIE_NAME_REFRESH_TOKEN));
-        HttpServletUtil.addHeaderToResponse("Set-Cookie", CookieUtil.createExpiredCookie(CookieConstants.COOKIE_NAME_UUID_TOKEN));
+    private void validateUserLogin(UserLoginRequest request, UserEntity userEntity) {
+        if (!userEntity.getRole().equals(request.getUserRole())) {
+            throw UserErrorCode.USER_ROLE_MISMATCH.toException();
+        }
+        if (!PasswordHasherUtil.matches(request.getUserPassword(), userEntity.getPassword().getValue())) {
+            throw UserErrorCode.LOGIN_PASSWORD_FAILED.toException();
+        }
+        validateUserStatus(userEntity);
+    }
+
+    private void validateUserStatus(UserEntity userEntity) {
+        if (!userEntity.isEnabled()) {
+            throw UserErrorCode.USER_DISABLED.toException();
+        }
+    }
+
+    private UserLoginResponse generateTokensAndResponse(UserEntity userEntity) {
+        UUIDToken uuidToken = UUIDToken.generate();
+        AccessToken accessToken = jwtUtil.generateAccessToken(userEntity, uuidToken.toEncryptedString());
+        RefreshToken refreshToken = jwtUtil.generateRefreshToken(userEntity);
+        refreshTokenService.saveRefreshToken(userEntity, refreshToken);
+        addCookies(uuidToken, refreshToken);
+        return UserLoginResponse.toResponse(userEntity, accessToken);
+    }
+
+    private void addCookies(UUIDToken uuidToken, RefreshToken refreshToken) {
+        HttpServletUtil.addCookieToResponse(CookieUtil.createRefreshTokenCookie(refreshToken));
+        HttpServletUtil.addCookieToResponse(CookieUtil.createUUIDTokenCookie(uuidToken, refreshToken.getMetadata().getExpirationTime()));
+    }
+
+    private void removeCookies() {
+        HttpServletUtil.removeCookieFromResponse(CookieConstants.COOKIE_NAME_REFRESH_TOKEN);
+        HttpServletUtil.removeCookieFromResponse(CookieConstants.COOKIE_NAME_UUID_TOKEN);
     }
 }
