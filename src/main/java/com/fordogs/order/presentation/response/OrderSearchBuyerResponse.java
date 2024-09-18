@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,9 @@ public class OrderSearchBuyerResponse {
     @Schema(description = "주문 총 금액")
     private Integer orderTotalPrice;
 
+    @Schema(description = "주문 날짜")
+    private LocalDateTime orderDate;
+
     @Schema(description = "주문 아이템 정보")
     private List<OrderItemResponse> orderItems;
 
@@ -37,6 +41,7 @@ public class OrderSearchBuyerResponse {
                 .paymentId(orderEntity.getPayment() != null ? orderEntity.getPayment().getId().toString() : null)
                 .orderStatus(orderEntity.getStatus())
                 .orderTotalPrice(orderEntity.getTotalPrice().getValue())
+                .orderDate(orderEntity.getCreatedAt())
                 .orderItems(orderEntity.getOrderItems().stream()
                         .map(OrderItemResponse::toResponse)
                         .collect(Collectors.toList()))
