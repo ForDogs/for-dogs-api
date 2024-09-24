@@ -2,7 +2,7 @@ package com.fordogs.security.application.dto;
 
 import com.fordogs.core.util.StringGenerator;
 import com.fordogs.security.exception.error.SecurityErrorCode;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import com.fordogs.user.domain.enums.Provider;
 import com.fordogs.user.domain.enums.Role;
 import com.fordogs.user.domain.vo.Email;

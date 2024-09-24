@@ -3,7 +3,7 @@ package com.fordogs.user.domain.vo.wrapper;
 import com.fordogs.core.domain.vo.wapper.ValueWrapperObject;
 import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.validator.StringValidator;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import com.fordogs.user.domain.vo.TokenMetadata;
 import io.jsonwebtoken.Jwts;
 import jakarta.persistence.Embeddable;

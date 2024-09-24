@@ -4,7 +4,7 @@ import com.fordogs.core.util.EmailSenderUtil;
 import com.fordogs.core.util.constants.EmailConstants;
 import com.fordogs.product.application.ProductService;
 import com.fordogs.product.domain.entity.ProductEntity;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.StepScope;

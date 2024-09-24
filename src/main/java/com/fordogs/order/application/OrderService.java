@@ -11,7 +11,7 @@ import com.fordogs.order.presentation.request.OrderStatusUpdateRequest;
 import com.fordogs.order.presentation.response.OrderRegisterResponse;
 import com.fordogs.payment.application.PaymentService;
 import com.fordogs.user.application.UserQueryService;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

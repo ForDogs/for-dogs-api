@@ -1,6 +1,6 @@
 package com.fordogs.user.presentation.response;
 
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import com.fordogs.user.domain.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

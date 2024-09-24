@@ -2,7 +2,7 @@ package com.fordogs.security.application;
 
 import com.fordogs.security.application.dto.CustomOAuth2User;
 import com.fordogs.security.application.dto.OAuth2UserInfo;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import com.fordogs.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

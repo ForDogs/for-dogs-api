@@ -3,7 +3,7 @@ package com.fordogs.cart.domain.entity;
 import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.domain.vo.wapper.Quantity;
 import com.fordogs.product.domain.entity.ProductEntity;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

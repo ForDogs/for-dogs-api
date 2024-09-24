@@ -11,7 +11,7 @@ import com.fordogs.product.presentation.request.ProductRegisterRequest;
 import com.fordogs.product.presentation.request.ProductUpdateRequest;
 import com.fordogs.product.presentation.response.*;
 import com.fordogs.user.application.UserQueryService;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,7 +1,7 @@
 package com.fordogs.product.domain.specification;
 
 import com.fordogs.product.domain.entity.ProductEntity;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import com.fordogs.product.domain.enums.Category;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;

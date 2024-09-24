@@ -5,7 +5,7 @@ import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.constants.TokenConstants;
 import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.security.model.CustomAuthentication;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import com.fordogs.user.domain.vo.wrapper.AccessToken;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;
 import com.fordogs.user.domain.vo.wrapper.UUIDToken;

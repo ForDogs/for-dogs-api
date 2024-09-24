@@ -1,4 +1,4 @@
-package com.fordogs.user.domain.entity.redis;
+package com.fordogs.user.domain.cache;
 
 import com.fordogs.user.domain.vo.wrapper.Account;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;

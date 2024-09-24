@@ -8,7 +8,7 @@ import com.fordogs.core.domain.vo.wapper.Quantity;
 import com.fordogs.product.application.ProductService;
 import com.fordogs.product.domain.entity.ProductEntity;
 import com.fordogs.user.application.UserQueryService;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

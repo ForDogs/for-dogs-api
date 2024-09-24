@@ -2,8 +2,8 @@ package com.fordogs.user.application;
 
 import com.fordogs.configuraion.properties.TokenProperties;
 import com.fordogs.security.util.JwtUtil;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
-import com.fordogs.user.domain.entity.redis.RefreshTokenCache;
+import com.fordogs.user.domain.entity.UserEntity;
+import com.fordogs.user.domain.cache.RefreshTokenCache;
 import com.fordogs.user.domain.vo.wrapper.RefreshToken;
 import com.fordogs.user.error.RefreshTokenErrorCode;
 import com.fordogs.user.infrastructure.RefreshTokenRepository;

@@ -1,4 +1,4 @@
-package com.fordogs.user.domain.entity.redis;
+package com.fordogs.user.domain.cache;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

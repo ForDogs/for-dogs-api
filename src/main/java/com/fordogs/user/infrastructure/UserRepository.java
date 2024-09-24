@@ -1,6 +1,6 @@
 package com.fordogs.user.infrastructure;
 
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import com.fordogs.user.domain.vo.Email;
 import com.fordogs.user.domain.vo.wrapper.Account;
 import com.fordogs.user.domain.vo.wrapper.Name;

@@ -7,7 +7,7 @@ import com.fordogs.core.util.converter.JsonConverter;
 import com.fordogs.product.domain.enums.Category;
 import com.fordogs.product.domain.vo.wrapper.Description;
 import com.fordogs.product.error.ProductErrorCode;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

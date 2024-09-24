@@ -1,4 +1,4 @@
-package com.fordogs.user.domain.entity.mysql;
+package com.fordogs.user.domain.entity;
 
 import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.util.crypto.PasswordHasherUtil;

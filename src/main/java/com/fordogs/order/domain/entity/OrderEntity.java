@@ -6,7 +6,7 @@ import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.order.domain.eums.OrderStatus;
 import com.fordogs.order.error.OrderErrorCode;
 import com.fordogs.payment.domain.entity.PaymentEntity;
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

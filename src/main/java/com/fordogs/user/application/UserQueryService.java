@@ -1,6 +1,6 @@
 package com.fordogs.user.application;
 
-import com.fordogs.user.domain.entity.mysql.UserEntity;
+import com.fordogs.user.domain.entity.UserEntity;
 import com.fordogs.user.domain.vo.wrapper.Account;
 import com.fordogs.user.error.UserErrorCode;
 import com.fordogs.user.infrastructure.UserRepository;
