@@ -1,7 +1,7 @@
 package com.fordogs.security.application.dto;
 
 import com.fordogs.core.util.StringGenerator;
-import com.fordogs.security.exception.error.SecurityErrorCode;
+import com.fordogs.security.exception.error.OAuth2ErrorCode;
 import com.fordogs.user.domain.entity.UserEntity;
 import com.fordogs.user.domain.enums.Provider;
 import com.fordogs.user.domain.enums.Role;
@@ -24,7 +24,7 @@ public record OAuth2UserInfo(
         return switch (registrationId) {
             case "google" -> ofGoogle(attributes);
             case "kakao" -> ofKakao(attributes);
-            default -> throw SecurityErrorCode.ILLEGAL_REGISTRATION_ID.toException();
+            default -> throw OAuth2ErrorCode.ILLEGAL_REGISTRATION_ID.toException();
         };
     }
 

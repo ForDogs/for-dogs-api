@@ -7,6 +7,7 @@ import com.fordogs.security.handler.CustomAccessDeniedHandler;
 import com.fordogs.security.handler.CustomAuthenticationEntryPoint;
 import com.fordogs.security.handler.CustomOAuth2FailureHandler;
 import com.fordogs.security.handler.CustomOAuth2SuccessHandler;
+import com.fordogs.security.infrastructure.CustomAuthorizationRequestRepository;
 import com.fordogs.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -33,6 +34,7 @@ public class SecurityConfiguration {
     private final CustomOAuth2FailureHandler customOAuth2FailureHandler;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAuthorizationRequestRepository customAuthorizationRequestRepository;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -85,6 +87,9 @@ public class SecurityConfiguration {
                 .userInfoEndpoint(userinfo -> userinfo.userService(customOAuth2UserService))
                 .successHandler(customOAuth2SuccessHandler)
                 .failureHandler(customOAuth2FailureHandler)
+                .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint
+                        .authorizationRequestRepository(customAuthorizationRequestRepository)
+                )
         );
 
         http.exceptionHandling(exceptionHandlingConfigurer -> exceptionHandlingConfigurer

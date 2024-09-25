@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             if (jwtUtil.validateToken(accessToken)) {
-                String uuidToken = CookieUtil.extractCookie(request, CookieConstants.COOKIE_NAME_UUID_TOKEN);
+                String uuidToken = CookieUtil.getCookie(request, CookieConstants.COOKIE_NAME_UUID_TOKEN).toString();
                 if (!jwtUtil.validateUUIDToken(accessToken, uuidToken)) {
                     filterChain.doFilter(request, response);
                     return;

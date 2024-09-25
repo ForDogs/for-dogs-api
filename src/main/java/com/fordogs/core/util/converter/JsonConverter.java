@@ -2,6 +2,7 @@ package com.fordogs.core.util.converter;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -15,6 +16,7 @@ public class JsonConverter {
     private static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     public static String convertArrayToJson(String[] array) {
@@ -38,6 +40,14 @@ public class JsonConverter {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw GlobalErrorCode.internalServerException("객체를 JSON으로 변환하는 중 오류가 발생했습니다.");
+        }
+    }
+
+    public static <T> T convertJsonToObject(String json, Class<T> clazz) {
+        try {
+            return objectMapper.readValue(json, clazz);
+        } catch (JsonProcessingException e) {
+            throw GlobalErrorCode.internalServerException("JSON 문자열을 객체로 변환하는 중 오류가 발생했습니다.");
         }
     }
 }
