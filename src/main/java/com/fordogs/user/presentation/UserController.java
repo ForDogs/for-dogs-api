@@ -61,6 +61,21 @@ public class UserController {
     }
 
     @Operation(
+            summary = "OAuth2 인증코드 로그인",
+            operationId = "/users/login-with-code",
+            description = "로그인 시 RefreshToken과 UUIDToken은 Set-Cookie 헤더를 통해 응답으로 전달됩니다."
+    )
+    @ApiLogging
+    @ApiErrorCode(UserErrorCode.class)
+    @PostMapping("/login-with-code")
+    public ResponseEntity<SuccessResponse<UserLoginResponse>> handleLoginWithAuthCodeRequest(
+            @Valid @RequestBody AuthCodeLoginRequest request) {
+        UserLoginResponse response = userService.performLoginWithAuthCode(request);
+
+        return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.CREATED);
+    }
+
+    @Operation(
             summary = "로그아웃",
             operationId = "/users/logout",
             description = "로그아웃 시 클라이언트의 쿠키에 저장되어 있던 UUID 토큰과 Refresh 토큰이 만료되며, 서버에 저장된 해당 Refresh 토큰도 삭제됩니다."

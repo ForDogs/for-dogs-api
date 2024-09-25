@@ -24,6 +24,7 @@ public class ApiRouteConstants {
     public static final Map<String, HttpMethod> PUBLIC_ENDPOINTS = Map.of(
             "/users", HttpMethod.POST,
             "/users/login", HttpMethod.POST,
+            "/users/login-with-code", HttpMethod.POST,
             "/users/password-reset", HttpMethod.POST,
             "/users/password-reset/verify", HttpMethod.POST,
             "/users/find-id", HttpMethod.POST,
