@@ -6,7 +6,7 @@ import com.fordogs.core.util.converter.JsonConverter;
 import com.fordogs.core.util.crypto.EncryptionUtil;
 import com.fordogs.security.application.dto.CustomOAuth2User;
 import com.fordogs.security.exception.error.OAuth2ErrorCode;
-import com.fordogs.security.infrastructure.CustomAuthorizationRequestRepository;
+import com.fordogs.security.infrastructure.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.fordogs.user.domain.entity.UserEntity;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.fordogs.security.infrastructure.CustomAuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static com.fordogs.security.infrastructure.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @RequiredArgsConstructor
 @Component
@@ -34,7 +34,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
     @Value("${service.domain}")
     public String serviceDomain;
 
-    private final CustomAuthorizationRequestRepository customAuthorizationRequestRepository;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     private static final long AUTH_CODE_EXPIRATION_TIME_MILLIS = 180_000;
     private static final String AUTH_CODE_PARAM = "code";
@@ -44,7 +44,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
                                         Authentication authentication) throws IOException {
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         handleSuccessfulAuthentication(request, response, customOAuth2User.userEntity());
-        customAuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+        httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 
     private void handleSuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, UserEntity userEntity) throws IOException {

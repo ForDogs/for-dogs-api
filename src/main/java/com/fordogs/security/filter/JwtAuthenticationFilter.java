@@ -6,9 +6,11 @@ import com.fordogs.core.util.constants.CookieConstants;
 import com.fordogs.core.util.constants.HeaderConstants;
 import com.fordogs.security.configuration.ApiRouteConstants;
 import com.fordogs.security.exception.SecurityAuthenticationException;
+import com.fordogs.security.exception.error.SecurityErrorCode;
 import com.fordogs.security.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -42,7 +45,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             if (jwtUtil.validateToken(accessToken)) {
-                String uuidToken = CookieUtil.getCookie(request, CookieConstants.COOKIE_NAME_UUID_TOKEN).toString();
+                Optional<Cookie> cookie = CookieUtil.getCookie(request, CookieConstants.COOKIE_NAME_UUID_TOKEN);
+                String uuidToken = cookie.orElseThrow(SecurityErrorCode.UUID_TOKEN_VALIDATION_FAILED::toException).getValue();
                 if (!jwtUtil.validateUUIDToken(accessToken, uuidToken)) {
                     filterChain.doFilter(request, response);
                     return;

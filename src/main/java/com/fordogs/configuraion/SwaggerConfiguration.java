@@ -66,7 +66,7 @@ public class SwaggerConfiguration {
 
     private List<Server> createServers(String serverDomain) {
         Server localServer = new Server()
-                .url("https://localhost");
+                .url("https://www.localhost");
         Server prodServer = new Server()
                 .url("https://" + serverDomain);
 
