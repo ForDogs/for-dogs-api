@@ -3,7 +3,7 @@ package com.fordogs.payment.domain.entity;
 import com.fordogs.core.domain.entity.BaseEntity;
 import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.order.domain.entity.OrderEntity;
-import com.fordogs.payment.application.integration.response.PaymentResponse;
+import com.fordogs.payment.application.portone.response.PaymentResponse;
 import com.fordogs.payment.domain.vo.PaymentCancellation;
 import jakarta.persistence.*;
 import lombok.*;

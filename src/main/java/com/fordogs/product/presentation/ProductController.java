@@ -3,6 +3,7 @@ package com.fordogs.product.presentation;
 import com.fordogs.configuraion.swagger.ApiErrorCode;
 import com.fordogs.core.domain.vo.error.PriceErrorCode;
 import com.fordogs.core.domain.vo.error.QuantityErrorCode;
+import com.fordogs.product.application.ProductQueryService;
 import com.fordogs.product.domain.enums.Category;
 import com.fordogs.core.presentation.SuccessResponse;
 import com.fordogs.product.application.ProductService;
@@ -38,6 +39,7 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductQueryService productQueryService;
 
     @Operation(summary = "상품 등록", operationId = "/products")
     @ApiErrorCode({ProductErrorCode.class, ProductValidationErrorCode.class, PriceErrorCode.class, QuantityErrorCode.class, SecurityErrorCode.class})
@@ -56,7 +58,7 @@ public class ProductController {
             @Parameter(name = "seller", description = "판매자 ID", example = "hong1234") @RequestParam(required = false, value = "seller") String sellerId,
             @Parameter(name = "category", description = "상품 카테고리") @RequestParam(required = false, value = "category") Category category,
             @ParameterObject @PageableDefault Pageable pageable) {
-        Page<ProductSearchResponse> response = productService.searchProducts(sellerId, category, pageable);
+        Page<ProductSearchResponse> response = productQueryService.searchProducts(sellerId, category, pageable);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
@@ -66,7 +68,7 @@ public class ProductController {
     @GetMapping("/{productId}")
     public ResponseEntity<SuccessResponse<ProductDetailsResponse>> handleFindProductDetailsRequest(
             @Schema(name = "productId", description = "상품 ID", example = "caa62dd1-1a87-11ef-b72d-9713d59057a1") @PathVariable(name = "productId") UUID productId) {
-        ProductDetailsResponse response = productService.findProductDetails(productId);
+        ProductDetailsResponse response = productQueryService.findProductDetails(productId);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
@@ -97,7 +99,7 @@ public class ProductController {
     @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SuccessResponse<ProductImageUploadResponse>> handleUploadProductImagesRequest(
             @RequestPart(value = "imageFiles") MultipartFile[] imageFiles) {
-        ProductImageUploadResponse response = productService.uploadProductImages(imageFiles);
+        ProductImageUploadResponse response = productQueryService.uploadProductImages(imageFiles);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
@@ -107,7 +109,7 @@ public class ProductController {
     @DeleteMapping(value = "/images")
     public ResponseEntity<SuccessResponse<Object>> handleDeleteProductImagesRequest(
             @Parameter(name = "imageUrls", description = "상품 이미지 URL", required = true) @RequestParam("imageUrls") String[] imageUrls) {
-        productService.deleteProductImages(imageUrls);
+        productQueryService.deleteProductImages(imageUrls);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

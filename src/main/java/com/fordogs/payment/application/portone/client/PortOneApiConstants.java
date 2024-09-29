@@ -1,4 +1,4 @@
-package com.fordogs.payment.application.integration.client;
+package com.fordogs.payment.application.portone.client;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

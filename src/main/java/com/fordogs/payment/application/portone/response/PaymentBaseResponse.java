@@ -1,4 +1,4 @@
-package com.fordogs.payment.application.integration.response;
+package com.fordogs.payment.application.portone.response;
 
 import lombok.*;
 

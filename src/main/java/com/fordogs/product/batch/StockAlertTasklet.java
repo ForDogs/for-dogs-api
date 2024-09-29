@@ -2,6 +2,7 @@ package com.fordogs.product.batch;
 
 import com.fordogs.core.util.EmailSenderUtil;
 import com.fordogs.core.util.constants.EmailConstants;
+import com.fordogs.product.application.ProductQueryService;
 import com.fordogs.product.application.ProductService;
 import com.fordogs.product.domain.entity.ProductEntity;
 import com.fordogs.user.domain.entity.UserEntity;
@@ -27,10 +28,11 @@ public class StockAlertTasklet implements Tasklet {
 
     private final EmailSenderUtil emailSenderUtil;
     private final ProductService productService;
+    private final ProductQueryService productQueryService;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
-        List<ProductEntity> lowStockProducts = productService.findLowStockProducts(LOW_STOCK_THRESHOLD);
+        List<ProductEntity> lowStockProducts = productQueryService.findLowStockProducts(LOW_STOCK_THRESHOLD);
         if (!lowStockProducts.isEmpty()) {
             Map<UserEntity, List<ProductEntity>> productsBySeller = lowStockProducts.stream()
                 .collect(Collectors.groupingBy(ProductEntity::getSeller));

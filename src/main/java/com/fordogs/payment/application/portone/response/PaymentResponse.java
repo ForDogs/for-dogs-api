@@ -1,4 +1,4 @@
-package com.fordogs.payment.application.integration.response;
+package com.fordogs.payment.application.portone.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fordogs.order.domain.entity.OrderEntity;

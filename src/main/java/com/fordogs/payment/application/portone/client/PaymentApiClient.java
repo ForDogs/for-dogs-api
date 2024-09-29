@@ -1,10 +1,10 @@
-package com.fordogs.payment.application.integration.client;
+package com.fordogs.payment.application.portone.client;
 
 import com.fordogs.configuraion.properties.PortOneProperties;
 import com.fordogs.core.exception.error.GlobalErrorCode;
 import com.fordogs.core.util.WebClientUtil;
-import com.fordogs.payment.application.integration.response.PaymentResponse;
-import com.fordogs.payment.application.integration.response.PaymentTokenResponse;
+import com.fordogs.payment.application.portone.response.PaymentResponse;
+import com.fordogs.payment.application.portone.response.PaymentTokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

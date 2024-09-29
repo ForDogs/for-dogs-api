@@ -2,8 +2,8 @@ package com.fordogs.configuraion;
 
 import com.fordogs.core.exception.ExternalApiException;
 import com.fordogs.core.exception.error.GlobalErrorCode;
-import com.fordogs.payment.application.integration.client.PortOneApiConstants;
-import com.fordogs.payment.application.integration.response.PaymentBaseResponse;
+import com.fordogs.payment.application.portone.client.PortOneApiConstants;
+import com.fordogs.payment.application.portone.response.PaymentBaseResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;

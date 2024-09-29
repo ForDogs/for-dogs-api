@@ -5,7 +5,7 @@ import com.fordogs.cart.error.CartErrorCode;
 import com.fordogs.cart.infrastructure.CartRepository;
 import com.fordogs.cart.presentation.request.CartCreateRequest;
 import com.fordogs.core.domain.vo.wapper.Quantity;
-import com.fordogs.product.application.ProductService;
+import com.fordogs.product.application.ProductQueryService;
 import com.fordogs.product.domain.entity.ProductEntity;
 import com.fordogs.user.application.UserQueryService;
 import com.fordogs.user.domain.entity.UserEntity;
@@ -22,7 +22,7 @@ import java.util.UUID;
 public class CartService {
 
     private final CartQueryService cartQueryService;
-    private final ProductService productService;
+    private final ProductQueryService productQueryService;
     private final UserQueryService userQueryService;
     private final CartRepository cartRepository;
 
@@ -30,7 +30,7 @@ public class CartService {
         UUID userId = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
         UserEntity userEntity = userQueryService.findById(userId);
 
-        ProductEntity productEntity = productService.findById(request.getProductId());
+        ProductEntity productEntity = productQueryService.findById(request.getProductId());
         if (productEntity.getQuantity().getValue() < request.getProductQuantity()) {
             throw CartErrorCode.INSUFFICIENT_STOCK.toException();
         }
