@@ -31,8 +31,8 @@ public class ProductQueryService {
     private final ProductRepository productRepository;
     private final S3ImageUploader s3ImageUploader;
 
-    public Page<ProductSearchResponse> searchProducts(String sellerId, Category category, Pageable pageable) {
-        return productRepository.findAll(ProductSpecification.withSellerAndCategory(sellerId, category), pageable)
+    public Page<ProductSearchResponse> searchProducts(String sellerId, Category category, String productName, Pageable pageable) {
+        return productRepository.findAll(ProductSpecification.withSellerAndCategory(sellerId, category, productName), pageable)
                 .map(ProductSearchResponse::toResponse);
     }
 

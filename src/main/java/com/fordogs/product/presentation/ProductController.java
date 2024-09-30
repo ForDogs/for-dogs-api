@@ -57,8 +57,9 @@ public class ProductController {
     public ResponseEntity<SuccessResponse<Page<ProductSearchResponse>>> handleSearchProductsRequest(
             @Parameter(name = "seller", description = "판매자 ID", example = "hong1234") @RequestParam(required = false, value = "seller") String sellerId,
             @Parameter(name = "category", description = "상품 카테고리") @RequestParam(required = false, value = "category") Category category,
+            @Parameter(name = "name", description = "상품 이름") @RequestParam(required = false, value = "name") String productName,
             @ParameterObject @PageableDefault Pageable pageable) {
-        Page<ProductSearchResponse> response = productQueryService.searchProducts(sellerId, category, pageable);
+        Page<ProductSearchResponse> response = productQueryService.searchProducts(sellerId, category, productName, pageable);
 
         return new ResponseEntity<>(SuccessResponse.of(response), HttpStatus.OK);
     }
