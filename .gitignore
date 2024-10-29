@@ -45,6 +45,7 @@ src/main/resources/application-prod.yml
 /docker/server/dumps
 /docker/mysql/db
 /docker/redis/data
+/docker/dynamodb/data
 
 ### KEYSTORE ###
 src/main/resources/ssl
