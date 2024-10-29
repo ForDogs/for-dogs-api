@@ -58,6 +58,6 @@ services:
     ports:
       - '8000:8000'
     volumes:
-      - './docker/dynamodb/data:/home/dynamodblocal/data"
+      - ./docker/dynamodb/data:/home/dynamodblocal/data
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
     working_dir: /home/dynamodblocal
