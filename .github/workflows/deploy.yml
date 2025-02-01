@@ -82,6 +82,7 @@ jobs:
             docker pull $DOCKER_IMAGE_NAME
         
             docker run -d -p 80:80 -p 443:443 \
+            --restart always \
             --name $DOCKER_CONTAINER_NAME \
             -v /etc/letsencrypt/live/api.fordogs.store:/etc/letsencrypt/live/api.fordogs.store \
             --log-driver=json-file --log-opt max-size=10m --log-opt max-file=3 \
